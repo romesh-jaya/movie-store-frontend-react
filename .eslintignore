@@ -1,0 +1,6 @@
+// .eslintignore
+ 
+node_modules
+*.svg
+*.css
+*.scss
