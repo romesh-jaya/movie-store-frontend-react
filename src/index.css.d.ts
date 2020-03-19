@@ -1,6 +1,8 @@
 declare namespace IndexCssModule {
   export interface IIndexCss {
     'margin-b-20': string;
+    'margin-r-10': string;
+    'margin-r-30': string;
     'red-color': string;
   }
 }

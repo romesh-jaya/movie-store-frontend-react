@@ -25,6 +25,14 @@ textarea {
   margin-bottom: 20px;
 }
 
+.margin-r-10 {
+  margin-right: 10px;
+}
+
+.margin-r-30 {
+  margin-right: 30px;
+}
+
 .red-color {
   color: red;
 }

@@ -1,0 +1,25 @@
+.MovieDetails {
+    padding: 20px;
+    width: 80%;
+    margin: 20px auto;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 3px #ccc;
+    text-align: center;
+}
+
+.header-custom {
+    height: 40px;
+    font-weight: 500;
+    background-color: darkblue;
+    color: white;
+    display: flex; 
+}
+
+.header-custom-span {
+    margin: auto; /* Important */ 
+}
+
+.Button:disabled {
+    color: #ccc;
+    cursor: not-allowed;
+}
