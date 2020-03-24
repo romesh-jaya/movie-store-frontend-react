@@ -21,6 +21,14 @@ module.exports = {
   entry: {
     app: path.join(__dirname, 'src', 'index.tsx')
   },
+  output: {
+    // `filename` provides a template for naming your bundles (remember to use `[name]`)
+    filename: '[name].bundle.js',
+    // `chunkFilename` provides a template for naming code-split bundles (optional)
+    chunkFilename: '[name].bundle.js',
+    // `path` is the folder where Webpack will place your bundles
+    path: `${__dirname  }/dist`
+  },
   resolve: {
     extensions: ['.ts', '.tsx', '.js']
   },

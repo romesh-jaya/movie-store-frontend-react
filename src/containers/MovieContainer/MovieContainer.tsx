@@ -1,21 +1,50 @@
-import React from 'react';
+import React, {useState, useCallback, useEffect, Suspense} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
+
+import KeyContext from '../../context/KeyContext';
 import logo from '../../assets/img/movie.png';
 import * as styles from './MovieContainer.css';
+import * as globStyles from '../../index.css';
 import MovieSearch from '../../components/Movies/MovieSearch/MovieSearch';
+import MovieContainerSkeleton from './MovieContainerSkeleton';
+import axios from '../../axios';
 
+const Settings = React.lazy(() => import('../../components/Settings/Settings'));
 const ZERO = 0;
+
+interface IState {
+  isLoading: boolean;
+  settingsError: string;
+  apiKey: string;
+  value: number
+};
  
 const MovieContainer: React.FC = () => {
-  const [value, setValue] = React.useState(ZERO);
+  const [state, setState] = useState<IState>({
+    isLoading: true,
+    settingsError: '',
+    apiKey: '',
+    value: ZERO,
+  });
+
+  const mergeState = useCallback((name: string, value: any) : void => {
+    setState(oldState => ({
+      ...oldState,
+      [name]: value
+    }));
+  }, []);
+
+  const setAPIKey = (apiKey: string) : void => {
+    mergeState('apiKey', apiKey);
+  };
 
   const handleChange = (_ : React.ChangeEvent<{}>, newValue : number) : void => {
-    setValue(newValue);
+    mergeState('value', newValue);
   };
 
   const TabPanel = (tPanelProps : any) : React.ReactElement => {
@@ -33,26 +62,66 @@ const MovieContainer: React.FC = () => {
       </Typography>
     );
   };
+
+  // load the settings
+  useEffect(() => {
+    mergeState('isLoading', TextTrackCueList);
+    axios.get(`${process.env.REACT_APP_NODE_SERVER  }/settings/apiKey`)
+      .then(response => {
+        if (response) {
+          mergeState('isLoading', false);
+          if (response.data.value)
+          {
+            console.log('Retrieved API key.');
+            mergeState('apiKey', response.data.value);
+          }
+          else
+          {
+            mergeState('settingsError', 'API key was returned blank.');
+          }
+        }
+      })
+      .catch((err : any) => {
+        console.log(err);
+        mergeState('isLoading', false);
+        mergeState('settingsError', 'Cannot connect to Node Server.');
+      });
+  }, [mergeState]);
   
-  return (
+  const content = (
     <>
       <div className={styles.header}>
-        <div className={`${styles.nowrapDiv  } ${  styles.div1}`}>
+        <span className={`${styles.nowrapDiv  } ${  styles.div1}`}>
           <img src={logo} height="50px" alt="movies" />
-        </div>
-        <div className={`${styles.nowrapDiv  } ${  styles.div2} ${  styles.headerText}`}>
+        </span>
+        <h1 className={`${styles.nowrapDiv  } ${  styles.headerText}`}>
             Ultra Movie Shop
-        </div>
+        </h1>
       </div>
       <AppBar position="static">
-        <Tabs value={value} onChange={handleChange}>
+        <Tabs value={state.value} onChange={handleChange}>
           <Tab label="Movie Search - OMDB" id="simple-tab-0" />
+          <Tab label="Settings" id="simple-tab-1" />
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0}>
+      <TabPanel value={state.value} index={0}>
         <MovieSearch />
       </TabPanel>
+      <TabPanel value={state.value} index={1}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Settings setAPIKey={setAPIKey} /> 
+        </Suspense>
+      </TabPanel>
     </>
+  );
+
+
+  return (
+    <KeyContext.Provider value={state.apiKey}>
+      {state.isLoading && <MovieContainerSkeleton /> }
+      {!state.isLoading && !state.settingsError ? content : null }
+      {!state.isLoading && state.settingsError ?  <p className={globStyles['error-text']}>{state.settingsError}</p> : null }
+    </KeyContext.Provider>
   );
 };
  

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/jsx-no-duplicate-props */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
@@ -15,7 +16,7 @@ import MovieDetailsSkeleton from './MovieDetailsSkeleton';
 const errorText = 'Error while accessing Node Server';
 
 interface IProps {
-  selectedMovie: IMovie
+  selectedMovie: IMovie | undefined
 }
 
 const ZERO = 0;
@@ -27,6 +28,7 @@ const MovieDetails: React.FC<IProps> = (props) => {
   const [movieLoading, setMovieLoading] = useState(true);
   const [movError, SetMovError] = useState('');
   const { selectedMovie} = props;
+  
   
   const onAddClicked = () : void => {
     setMovieTotal(prevTotal => prevTotal + ONE);
@@ -41,7 +43,7 @@ const MovieDetails: React.FC<IProps> = (props) => {
   const onSaveClicked = () : void => {
     axios.patch(`${process.env.REACT_APP_NODE_SERVER  }/movies`,
       {
-        imdbID: selectedMovie.imdbID,
+        imdbID: selectedMovie && selectedMovie.imdbID,
         count: movieTotal
       });
     setMovieTotalChanged(false);
@@ -49,24 +51,46 @@ const MovieDetails: React.FC<IProps> = (props) => {
 
   // load the total existing in library
   useEffect(() => {
+    // this var is to avoid the warning 'can't perform a react state update on an unmounted component.'
+    let isMounted = true;
+      
     setMovieLoading(true);
-    axios.get(`${process.env.REACT_APP_NODE_SERVER  }/movies/${  selectedMovie.imdbID}`)
+    axios.get(`${process.env.REACT_APP_NODE_SERVER  }/movies/${selectedMovie &&  selectedMovie.imdbID}`)
       .then(response => {
-        if (response) {
+        if (response && isMounted) {
           setMovieTotal(response.data.count);
+          SetMovError('');
           setMovieLoading(false);
         }
       })
       .catch((err : any) => {
         console.log(err);
         SetMovError(errorText);
+        setMovieLoading(false);
       });
+    
+
+    return () => {
+      isMounted = false;
+    };
+
   }, [selectedMovie]);
 
 
 
-  const heading = selectedMovie.type === MovieType.TvSeries ? '(TV series)' : '(Movie)';
+  const isValidUrl = (toValidate: string | undefined) :boolean => {
+    try {
+      // eslint-disable-next-line no-unused-vars
+      const url = new URL(toValidate || '');
+      return true;
+    } catch (_) {
+      return false;  
+    }
+  };
 
+  const heading = (selectedMovie && (selectedMovie.type === MovieType.TvSeries)) ? '(TV series)' : '(Movie)';
+
+  const image = isValidUrl(selectedMovie && selectedMovie.mediaURL) ? <img src={selectedMovie && selectedMovie.mediaURL} alt={selectedMovie && selectedMovie.title} /> : null;
 
   const content = (
     <div className={styles.MovieDetails}>
@@ -74,17 +98,17 @@ const MovieDetails: React.FC<IProps> = (props) => {
         <div className={globStyles['margin-b-20']}>
           <h1 className={styles['header-custom']}>
             <span className={styles['header-custom-span']}>
-              {selectedMovie.title}  
+              {selectedMovie && selectedMovie.title}  
               {' '}
               {heading}
               {' '}
             </span>
           </h1>
-          <p>{selectedMovie.year}</p>
-          <p>{selectedMovie.actors}</p>
-          <small>{selectedMovie.plot}</small>
+          <p>{selectedMovie && selectedMovie.year}</p>
+          <p>{selectedMovie &&selectedMovie.actors}</p>
+          <small>{selectedMovie && selectedMovie.plot}</small>
         </div>
-        <img src={selectedMovie.mediaURL} alt={selectedMovie.title} />
+        {image}
       </div>
       <div className={globStyles['margin-b-20']}>
         <span className={globStyles['margin-r-10']}>
@@ -125,9 +149,11 @@ const MovieDetails: React.FC<IProps> = (props) => {
   return (
     <>
       <article>
-        {movieLoading && !movError && <MovieDetailsSkeleton /> }
-        {!movieLoading && !movError && {content}}
-        {movError? <p className={globStyles['red-color']}>{movError}</p> : null}
+        <div>
+          {movieLoading && <MovieDetailsSkeleton /> }
+          {!movieLoading && !movError && content}
+          {movError? <p className={globStyles['error-text']}>{movError}</p> : null}
+        </div>
       </article>
     </>
   );

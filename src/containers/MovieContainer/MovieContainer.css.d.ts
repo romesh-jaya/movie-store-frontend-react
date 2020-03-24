@@ -1,7 +1,6 @@
 declare namespace MovieContainerCssModule {
   export interface IMovieContainerCss {
     div1: string;
-    div2: string;
     header: string;
     headerText: string;
     nowrapDiv: string;
