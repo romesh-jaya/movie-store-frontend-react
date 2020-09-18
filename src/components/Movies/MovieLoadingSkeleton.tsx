@@ -5,7 +5,7 @@ import React from 'react';
    Separate Skeleton component 
   - It is created with the same shape as Movie Search component
 */
-const MovieSearchSkeleton: React.FC = () => {
+const MovieLoadingSkeleton: React.FC = () => {
   return (
     <section>
       <h2 className="section-title">
@@ -24,4 +24,4 @@ const MovieSearchSkeleton: React.FC = () => {
   );
 };
 
-export default MovieSearchSkeleton;
+export default MovieLoadingSkeleton;

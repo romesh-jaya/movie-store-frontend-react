@@ -1,4 +1,13 @@
-This app is used for managing movie library in a movie store. 
+This app is used for managing movie library in a movie store. It uses OMDB API queries to search for the required movie. Then stores a reference (IMDB ID) in the library. It then displays the movies stored in the library.
+
+Tech Stack used: 
+- Webpack
+- React Skeletons
+- REST API 
+- Lazy loading of code
+- Material UI
+- Pagination
+- React Context
 
 ## Available Scripts
 

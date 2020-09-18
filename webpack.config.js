@@ -7,7 +7,7 @@ const webpack = require('webpack');
 const dotenv = require('dotenv');
 
 const appDirectory = fs.realpathSync(process.cwd());
-const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
 
 const env = dotenv.config().parsed;
 const envKeys = Object.keys(env).reduce((prev, next) => {
@@ -27,12 +27,12 @@ module.exports = {
     // `chunkFilename` provides a template for naming code-split bundles (optional)
     chunkFilename: '[name].bundle.js',
     // `path` is the folder where Webpack will place your bundles
-    path: `${__dirname  }/dist`
+    path: `${__dirname}/dist`
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js']
   },
-  watch: true,// watch for changes
+  watch: true, // watch for changes
   devServer: {
     historyApiFallback: true
   },
@@ -43,8 +43,8 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: 'static/media/[name].[hash:8].[ext]',
-        },
+          name: 'static/media/[name].[hash:8].[ext]'
+        }
       },
       {
         test: /\.ts(x?)$/,
@@ -77,9 +77,12 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       inject: true,
-      template: resolveApp('public/index.html'),
+      template: resolveApp('public/index.html')
     }),
 
     new webpack.DefinePlugin(envKeys)
-  ]
+  ],
+  // vendor: ['xlsx', 'file-saver'],
+  node: { fs: 'empty' },
+  externals: [{ './cptable': 'var cptable' }, { './jszip': 'jszip' }]
 };

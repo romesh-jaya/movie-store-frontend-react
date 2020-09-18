@@ -5,6 +5,10 @@ export default interface IMovie {
   year: string; 
   imdbID: string; 
   actors: string;
+  id?: string;
+  pGRating?: string;
+  language?: string;
+  genre?: string[];
   mediaURL?: string; 
   plot?: string; 
   type?: MovieType;

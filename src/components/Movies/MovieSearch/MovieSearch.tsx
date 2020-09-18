@@ -7,11 +7,10 @@ import Pagination from '@material-ui/lab/Pagination';
 import axios from '../../../axios';
 
 import Movie from '../Movie/Movie';
-import * as styles from './MovieSearch.css';
 import * as globStyles from '../../../index.css';
 import IMovie from '../../../interfaces/IMovie';
 import MovieDetails from '../MovieDetails/MovieDetails';
-import MovieSearchSkeleton from './MovieSearchSkeleton';
+import MovieLoadingSkeleton from '../MovieLoadingSkeleton';
 import KeyContext from '../../../context/KeyContext';
 
 const searchURL = process.env.REACT_APP_SEARCH_URL|| '';
@@ -27,7 +26,6 @@ interface IState {
   selectedMovie: IMovie | undefined;
   movieQuery: string;
   isLoading: boolean;
-  settingsError: string;
   currentPage: number
 }
  
@@ -40,7 +38,6 @@ const MovieSearch: React.FC = () => {
     selectedMovie: undefined,
     movieQuery: '',
     isLoading: false,
-    settingsError: '',
     currentPage: ONE,
   });
   const apiKey = useContext(KeyContext);
@@ -59,12 +56,11 @@ const MovieSearch: React.FC = () => {
     const page = pageNo? '&page=' + pageNo.toFixed(ZERO) : '';
     mergeState('isLoading', true);
 
-    axios.get(`${searchURL  }?apikey=${  apiKey}&s=${  state.movieQuery}${page}`)
+    axios.get(`${searchURL}?apikey=${apiKey}&s=${state.movieQuery}${page}`)
       .then((response : any) => {
         console.log(response);
         if (!response.data || response.data.Response === 'False')
         {
-          mergeState('isLoading', true);
           mergeState('selectedMovie', undefined);
           mergeState('movies', []);
           mergeState('movError', '');
@@ -101,9 +97,10 @@ const MovieSearch: React.FC = () => {
         const getMovieDetails = async (movieOne: any): Promise<any> => {
           const res = await axios.get(`${searchURL  }?apikey=${  apiKey}&i=${  movieOne.imdbID}`);
           const movie = res.data;
+          const genres = movie.Genre ? movie.Genre.split(', ') : 'None';
           enhancedMovies.push({
             title: movie.Title, year: movie.Year, imdbID: movie.imdbID, mediaURL: movie.Poster, actors: movie.Actors,
-            plot: movie.Plot, type: movie.Type
+            plot: movie.Plot, type: movie.Type, pGRating: movie.Rated, language: movie.Language, genre: genres
           });
         };
         
@@ -220,7 +217,7 @@ const MovieSearch: React.FC = () => {
         </Button>
       </div>
       {state.wasLastSearchSuccess? <Pagination count={10} onChange={onPageNoChanged} page={state.currentPage} /> : null}
-      <section className={styles.Movies}>
+      <section className={globStyles.movies}>
         {moviesRender}
       </section>
       <section>
@@ -234,9 +231,8 @@ const MovieSearch: React.FC = () => {
 
   return (
     <>
-      {state.isLoading && <MovieSearchSkeleton /> }
-      {!state.isLoading && !state.settingsError ? content : null }
-      {!state.isLoading && state.settingsError ?  <p className={globStyles['error-text']}>{state.settingsError}</p> : null }
+      {state.isLoading && <MovieLoadingSkeleton /> }
+      {!state.isLoading ? content : null }
     </>
   );
 };

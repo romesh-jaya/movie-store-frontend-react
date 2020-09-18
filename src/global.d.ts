@@ -3,6 +3,7 @@ declare module 'enzyme';
 declare module 'uuid';
 declare module 'lodash/orderBy';
 declare module '*.png';
+declare module 'react-export-excel';
 
 declare module '*.css' {
   interface IClassNames {

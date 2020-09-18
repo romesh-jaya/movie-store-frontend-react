@@ -1,13 +1,13 @@
-declare namespace MovieCssModule {
+declare namespace MovieCssNamespace {
   export interface IMovieCss {
     Author: string;
     Movie: string;
   }
 }
 
-declare const MovieCssModule: MovieCssModule.IMovieCss & {
+declare const MovieCssModule: MovieCssNamespace.IMovieCss & {
   /** WARNING: Only available when `css-loader` is used without `style-loader` or `mini-css-extract-plugin` */
-  locals: MovieCssModule.IMovieCss;
+  locals: MovieCssNamespace.IMovieCss;
 };
 
 export = MovieCssModule;

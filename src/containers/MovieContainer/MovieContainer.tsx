@@ -15,6 +15,7 @@ import MovieContainerSkeleton from './MovieContainerSkeleton';
 import axios from '../../axios';
 
 const Settings = React.lazy(() => import('../../components/Settings/Settings'));
+const MyLibrary = React.lazy(() => import('../../components/MyLibrary/MyLibrary'));
 const ZERO = 0;
 
 interface IState {
@@ -101,13 +102,19 @@ const MovieContainer: React.FC = () => {
       <AppBar position="static">
         <Tabs value={state.value} onChange={handleChange}>
           <Tab label="Movie Search - OMDB" id="simple-tab-0" />
-          <Tab label="Settings" id="simple-tab-1" />
+          <Tab label="My Library" id="simple-tab-1" />
+          <Tab label="Settings" id="simple-tab-2" />
         </Tabs>
       </AppBar>
       <TabPanel value={state.value} index={0}>
         <MovieSearch />
       </TabPanel>
       <TabPanel value={state.value} index={1}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <MyLibrary /> 
+        </Suspense>
+      </TabPanel>
+      <TabPanel value={state.value} index={2}>
         <Suspense fallback={<div>Loading...</div>}>
           <Settings setAPIKey={setAPIKey} /> 
         </Suspense>

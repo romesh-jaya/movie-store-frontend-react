@@ -1,5 +1,4 @@
-import React, {useContext, useState, useEffect, useRef} from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -7,33 +6,32 @@ import KeyContext from '../../context/KeyContext';
 import axios from '../../axios';
 
 interface IProps {
-  setAPIKey : (apiKey: string) => void
+  setAPIKey: (apiKey: string) => void
 }
- 
-const Settings: React.FC<IProps> = (props) => {
+
+const Settings: React.FC<IProps> = (props: IProps) => {
   const apiKey = useContext(KeyContext);
   const [omdbAPIKeyEntered, SetOmdbAPIKeyEntered] = useState('');
   const [settingsChanged, SetSettingsChanged] = useState(false);
-  const  {setAPIKey} = props;
+  const { setAPIKey } = props;
   const isMountedRef = useRef(false);
 
-  const omdbAPIKeyEnteredOnChange = (event: React.ChangeEvent<HTMLTextAreaElement>) : void => {
+  const omdbAPIKeyEnteredOnChange = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
     SetOmdbAPIKeyEntered(event.target.value.trim());
     SetSettingsChanged(true);
   };
 
-  const onSaveClicked= () : void => {
+  const onSaveClicked = (): void => {
     // this var is to avoid the warning 'can't perform a react state update on an unmounted component.'
-    
-    axios.patch(`${process.env.REACT_APP_NODE_SERVER  }/settings`,
+
+    axios.patch(`${process.env.REACT_APP_NODE_SERVER}/settings`,
       {
-        id: 'apiKey',
+        name: 'apiKey',
         value: omdbAPIKeyEntered
       })
       .then(() => {
         setAPIKey(omdbAPIKeyEntered);
-        if (isMountedRef.current)
-        {
+        if (isMountedRef.current) {
           SetSettingsChanged(false);
         }
       });
@@ -52,7 +50,7 @@ const Settings: React.FC<IProps> = (props) => {
   return (
     <>
       <h2>
-            Settings
+        Settings
       </h2>
       <form>
         <TextField
@@ -69,14 +67,10 @@ const Settings: React.FC<IProps> = (props) => {
         />
       </form>
       <Button variant="outlined" color="primary" onClick={onSaveClicked} disabled={!settingsChanged}>
-                Save
+        Save
       </Button>
     </>
   );
 };
 
-Settings.propTypes = {
-  setAPIKey : PropTypes.func.isRequired
-};
- 
 export default Settings;

@@ -1,7 +1,7 @@
 // Some settings automatically inherited from .editorconfig
 
 module.exports = {
-  printWidth: 200,
+  printWidth: 80,
   tabWidth: 2,
   useTabs: false,
   semi: true,

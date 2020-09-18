@@ -1,6 +1,8 @@
 // .eslintignore
  
 node_modules
-*.svg
-*.css
-*.scss
+**/*.svg
+**/*.css
+**/*.scss
+**/*.json
+**/*.js
