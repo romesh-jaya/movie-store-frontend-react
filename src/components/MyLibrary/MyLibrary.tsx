@@ -1,17 +1,32 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useContext, ReactNode, forwardRef } from 'react';
+
+import MaterialTable from 'material-table';
+import { Chip } from '@material-ui/core';
+
+import AddBox from '@material-ui/icons/AddBox';
+import ArrowUpward from '@material-ui/icons/ArrowUpward';
+import Check from '@material-ui/icons/Check';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+import Clear from '@material-ui/icons/Clear';
+import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import Edit from '@material-ui/icons/Edit';
+import FilterList from '@material-ui/icons/FilterList';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import Remove from '@material-ui/icons/Remove';
+import SaveAlt from '@material-ui/icons/SaveAlt';
+import Search from '@material-ui/icons/Search';
+import ViewColumn from '@material-ui/icons/ViewColumn';
 
 import axios from '../../axios';
-import KeyContext from '../../context/KeyContext';
 import IMovie from '../../interfaces/IMovie';
-import Movie from '../Movies/Movie/Movie';
 
 import * as globStyles from '../../index.css';
 import MovieDetails from '../Movies/MovieDetails/MovieDetails';
 import MovieLoadingSkeleton from '../Movies/MovieLoadingSkeleton';
+import { MovieType } from '../../enums/MovieType';
 
-const ZERO = 0;
-const ONE = 1;
-const searchURL = process.env.REACT_APP_SEARCH_URL || '';
 const errorText = 'Error while retrieving movie data.';
 
 interface IState {
@@ -30,9 +45,28 @@ const MyLibrary: React.FC = () => {
     movInfo: '',
     selectedMovie: undefined,
     isLoading: false,
-    currentPage: ONE,
+    currentPage: 1,
   });
-  const apiKey = useContext(KeyContext);
+
+  const tableIcons = {
+    Add: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <AddBox {...props} ref={ref} />),
+    Check: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <Check {...props} ref={ref} />),
+    Clear: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <Clear {...props} ref={ref} />),
+    Delete: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <DeleteOutline {...props} ref={ref} />),
+    DetailPanel: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <ChevronRight {...props} ref={ref} />),
+    Edit: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <Edit {...props} ref={ref} />),
+    Export: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <SaveAlt {...props} ref={ref} />),
+    Filter: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <FilterList {...props} ref={ref} />),
+    FirstPage: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <FirstPage {...props} ref={ref} />),
+    LastPage: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <LastPage {...props} ref={ref} />),
+    NextPage: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <ChevronRight {...props} ref={ref} />),
+    PreviousPage: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <ChevronLeft {...props} ref={ref} />),
+    ResetSearch: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <Clear {...props} ref={ref} />),
+    Search: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <Search {...props} ref={ref} />),
+    SortArrow: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <ArrowUpward {...props} ref={ref} />),
+    ThirdStateCheck: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <Remove {...props} ref={ref} />),
+    ViewColumn: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <ViewColumn {...props} ref={ref} />)
+  };
 
   const mergeState = useCallback((name: string, value: any): void => {
     setState(oldState => ({
@@ -43,12 +77,10 @@ const MyLibrary: React.FC = () => {
 
 
   const loadMovies = useCallback((): void => {
-    const enhancedMovies: IMovie[] = [];
     mergeState('isLoading', true);
 
     axios.get(`${process.env.REACT_APP_NODE_SERVER}/movies`)
       .then((response: any) => {
-        console.log(response);
         if (!response.data.length) {
           mergeState('selectedMovie', undefined);
           mergeState('movies', []);
@@ -58,30 +90,12 @@ const MyLibrary: React.FC = () => {
           return;
         }
 
-        const libMovies = response.data;
-
-        // loop through the filteredMovies to get additional actors info using the OMDB details URL
-        const getMovieDetails = async (movieOne: any): Promise<any> => {
-          const res = await axios.get(`${searchURL}?apikey=${apiKey}&i=${movieOne.imdbID}`);
-          const movie = res.data;
-          enhancedMovies.push({
-            title: movie.Title, year: movie.Year, imdbID: movie.imdbID, mediaURL: movie.Poster, actors: movie.Actors,
-            plot: movie.Plot, type: movie.Type
-          });
-        };
-
-        const getData = async () => {
-          return Promise.all(libMovies.map((movie: any) => getMovieDetails(movie)));
-        };
-
-        getData().then(() => {
-          mergeState('selectedMovie', undefined);
-          mergeState('movies', enhancedMovies);
-          mergeState('movError', '');
-          mergeState('movInfo', '');
-          mergeState('isLoading', false);
-          mergeState('currentPage', ONE);
-        });
+        mergeState('selectedMovie', undefined);
+        mergeState('movies', response.data);
+        mergeState('movError', '');
+        mergeState('movInfo', '');
+        mergeState('isLoading', false);
+        mergeState('currentPage', 1);
       })
       .catch((err: any) => {
         console.log(err);
@@ -97,57 +111,105 @@ const MyLibrary: React.FC = () => {
           mergeState('movError', errorText);
         }
       });
+  }, [mergeState]);
 
-
-  }, [apiKey, mergeState]);
-
-  const movieSelectedHandler = (movieSel: IMovie): void => {
-    mergeState('selectedMovie', movieSel);
-  };
 
   useEffect(() => {
     loadMovies();
   }, [loadMovies]);
 
-
-  const moviesRender = state.movies.map(movie => {
+  const renderTable = (): ReactNode => {
     return (
-      <Movie
-        key={movie.imdbID}
-        title={movie.title}
-        body={movie.actors}
-        year={movie.year}
-        clicked={() => movieSelectedHandler(movie)}
-      />
+      <div style={{ maxWidth: '100%' }}>
+        <MaterialTable
+          columns={
+            [
+              {
+                title: 'Title',
+                field: 'title',
+                width: '45%'
+              },
+              {
+                title: 'Type',
+                field: 'type',
+                width: '3%',
+                render: rowData => <p>{(rowData.type === MovieType.TvSeries) ? 'TV' : 'MOV'}</p>
+              },
+              {
+                title: 'Year',
+                field: 'year',
+                type: 'numeric',
+                width: '3%'
+              },
+              {
+                title: 'Genre',
+                field: 'genre',
+                width: '39%',
+                sorting: false,
+                render: rowData => {
+                  return (
+                    <>
+                      {
+                        rowData.genre ? rowData.genre?.map(genre => (
+                          <span className={globStyles['chip-spacer']}>
+                            <Chip label={genre} />
+                          </span>
+                        )) : null
+                      }
+                    </>
+                  );
+                }
+              },
+              {
+                title: 'PG Rating',
+                field: 'pGRating',
+                width: '10%'
+              }
+            ]
+          }
+          data={state.movies}
+          options={
+            {
+              showTitle: false,
+              search: false,
+              paging: false,
+              sorting: true,
+              headerStyle: { fontSize: '1rem' },
+              rowStyle: { fontSize: '0.95rem' }
+            }
+          }
+          icons={tableIcons}
+        />
+      </div>
     );
-  });
+  };
 
-  const error = state.movError ? (
-    <p className={globStyles['error-text']}>
-      Movies can&#39;t be loaded!
-      {' '}
-      {state.movError}
-    </p>
-  ) : null;
+  const renderError = (): ReactNode | null => {
+    return state.movError ? (
+      <p className={globStyles['error-text']}>
+        Movies can&#39;t be loaded!
+        {' '}
+        {state.movError}
+      </p>
+    ) : null;
+  };
 
-  const content = (
-    <div>
-      <section className={globStyles.movies}>
-        {moviesRender}
-      </section>
-      <section>
-        {state.selectedMovie && !state.movError ? <MovieDetails selectedMovie={state.selectedMovie} /> : null}
-        {(!state.selectedMovie && !state.movError && state.movies.length) ? <p>Click on movie to see details</p> : null}
-      </section>
-      {error}
-      {state.movInfo ? <p>{state.movInfo}</p> : null}
-    </div>
-  );
+  const renderContent = (): ReactNode => {
+    return (
+      <>
+        {renderTable()}
+        <section>
+          {state.selectedMovie && !state.movError ? <MovieDetails selectedMovie={state.selectedMovie} /> : null}
+        </section>
+        {renderError()}
+        {state.movInfo ? <p>{state.movInfo}</p> : null}
+      </>
+    );
+  };
 
   return (
     <>
-      {state.isLoading && <MovieLoadingSkeleton />}
-      {!state.isLoading ? content : null}
+      {state.isLoading ? <MovieLoadingSkeleton /> : renderContent()}
     </>
   );
 };

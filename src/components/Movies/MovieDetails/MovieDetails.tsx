@@ -103,7 +103,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
     }
   };
 
-  const heading = ((selectedMovie.type === MovieType.TvSeries)) ? '(TV series)' : '(Movie)';
+  const heading = (selectedMovie.type === MovieType.TvSeries) ? '(TV series)' : '(Movie)';
 
   const image = isValidUrl(selectedMovie.mediaURL) ? <img src={selectedMovie.mediaURL} alt={selectedMovie.title} /> : null;
 

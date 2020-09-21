@@ -3,11 +3,11 @@
   font-family: 'Roboto', sans-serif;
 }
 
-
-html, body {
+html,
+body {
   font-size: 1rem;
   justify-content: center;
-  
+
   margin: auto;
   text-align: center;
 }
@@ -18,7 +18,7 @@ input {
 
 textarea {
   resize: none;
-  font-size: 1rem!important;
+  font-size: 1rem !important;
 }
 
 .margin-b-20 {
@@ -44,3 +44,58 @@ textarea {
   width: 80%;
   margin: auto;
 }
+
+/* 
+-----------------------------------------------------------------------------
+ UI related styles START
+-- Note: some styles, if they are to be assigned individually within the instance itself
+--       will require styles to be set at each and every instance of that class. Therefore, setting them globally. 
+-----------------------------------------------------------------------------
+*/
+
+:global(table td) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-all;
+  max-width: 0;
+}
+
+:global(tr > td:hover) {
+  overflow: visible;
+  white-space: unset;
+}
+
+/* 
+-----------------------------------------------------------------------------
+ UI related styles END
+-----------------------------------------------------------------------------
+*/
+
+/* 
+-----------------------------------------------------------------------------
+Material UI related styles START
+-- Note: some styles, if they are to be assigned individually within the instance itself
+--       will require styles to be set at each and every instance of that class. E.g. TableCell
+--       This is tedious. Therefore, setting them globally. 
+-----------------------------------------------------------------------------
+*/
+
+.chip-spacer {
+  margin-right: 3px;
+}
+
+:global(.MuiChip-root) {
+  height: 26px !important;
+}
+
+:global(.MuiTableCell-root) {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+/* 
+-----------------------------------------------------------------------------
+Material UI related styles END
+-----------------------------------------------------------------------------
+*/

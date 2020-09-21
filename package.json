@@ -20,6 +20,7 @@
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.4",
     "lodash": "^4.17.20",
+    "material-table": "^1.69.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-confirm-alert": "^2.6.2",
