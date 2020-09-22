@@ -66,6 +66,22 @@ textarea {
   white-space: unset;
 }
 
+:global(.MuiToolbar-regular) {
+  min-height: auto !important;
+}
+
+:global(.right-spacer) {
+  margin-right: 15px !important;
+}
+
+:global(.bottom-spacer) {
+  margin-bottom: 20px;
+}
+
+:global(.top-spacer) {
+  margin-top: 20px;
+}
+
 /* 
 -----------------------------------------------------------------------------
  UI related styles END

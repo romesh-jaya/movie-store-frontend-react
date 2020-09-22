@@ -1,0 +1,84 @@
+.label-and-input-div {
+  margin-right: 20px;
+  justify-content: left !important;
+  text-align: left !important;
+  float: left;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+}
+
+.input-style-add-user {
+  width: 350px;
+  height: 30px;
+}
+
+.input-style-add-user-half {
+  width: 185px;
+  height: 30px;
+  margin-bottom: 5px;
+}
+
+.card-style-add-user {
+  width: 400px;
+  margin: auto;
+}
+
+.input-div-style {
+  text-align: left;
+}
+
+.right-spacer-control {
+  margin-right: 20px;
+}
+
+.actions-div {
+  padding-bottom: 0px !important;
+  padding-right: 0px !important;
+}
+
+.error-div {
+  background-color: red;
+  color: white;
+  border-radius: 4px;
+  font-weight: bold;
+  display: table;
+  width: 390px;
+}
+
+.error-container {
+  display: table-row;
+}
+
+.error-div-icon {
+  padding: 8px;
+  width: 4%;
+  display: table-cell;
+  font-size: 24px !important;
+  vertical-align: middle;
+}
+
+.error-div-content {
+  padding: 8px;
+  display: table-cell;
+}
+
+.card-style {
+  width: 400px;
+  margin: auto;
+  padding: 20px;
+}
+
+.inter-control-spacing {
+  padding-top: 8px;
+}
+
+.table-style {
+  max-width: '100%';
+  margin-top: 10px;
+}
+
+.card-title {
+  margin: auto;
+  padding: 15px;
+  font-weight: bold;
+}

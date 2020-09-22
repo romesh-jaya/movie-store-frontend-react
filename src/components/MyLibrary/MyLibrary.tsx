@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback, useContext, ReactNode, forwardRef } from 'react';
+import React, { useState, useEffect, useCallback, ReactNode, forwardRef } from 'react';
 
 import MaterialTable from 'material-table';
-import { Chip } from '@material-ui/core';
+import { Button, Chip, Typography } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
@@ -19,34 +20,37 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 
+import styles from './MyLibrary.css';
+import * as globStyles from '../../index.css';
 import axios from '../../axios';
 import IMovie from '../../interfaces/IMovie';
-
-import * as globStyles from '../../index.css';
 import MovieDetails from '../Movies/MovieDetails/MovieDetails';
 import MovieLoadingSkeleton from '../Movies/MovieLoadingSkeleton';
 import { MovieType } from '../../enums/MovieType';
 
 const errorText = 'Error while retrieving movie data.';
 
-interface IState {
-  movies: IMovie[];
-  movError: string;
-  movInfo: string;
-  selectedMovie: IMovie | undefined;
-  isLoading: boolean;
-  currentPage: number
-}
+interface ISearchInfo {
+  searchTitle?: string;
+  searchType?: string;
+  searchYear?: number;
+  searchGenre?: string;
+  searchPgRating?: string;
+};
 
 const MyLibrary: React.FC = () => {
-  const [state, setState] = useState<IState>({
-    movies: [],
-    movError: '',
-    movInfo: '',
-    selectedMovie: undefined,
-    isLoading: false,
-    currentPage: 1,
-  });
+  const [movies, setMovies] = useState<IMovie[]>([]);
+  const [movError, setMovError] = useState('');
+  const [movInfo, setMovInfo] = useState('');
+  const [selectedMovie, setSelectedMovie] = useState<IMovie>();
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  // Search related:
+  const [searchTitle, setSearchTitle] = useState('');
+  const [searchType, setSearchType] = useState('');
+  const [searchYear, setSearchYear] = useState<number>();
+  const [searchGenre, setSearchGenre] = useState('');
+  const [searchPgRating, setSearchPgRating] = useState('');
 
   const tableIcons = {
     Add: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <AddBox {...props} ref={ref} />),
@@ -68,59 +72,85 @@ const MyLibrary: React.FC = () => {
     ViewColumn: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <ViewColumn {...props} ref={ref} />)
   };
 
-  const mergeState = useCallback((name: string, value: any): void => {
-    setState(oldState => ({
-      ...oldState,
-      [name]: value
-    }));
-  }, []);
+  const searchMovies = useCallback((): void => {
+    setIsLoading(true);
 
+    const searchInfo: ISearchInfo = {};
+    if (searchTitle) {
+      searchInfo.searchTitle = searchTitle.trim();
+    }
+    if (searchType) {
+      searchInfo.searchType = searchType.trim();
+    }
+    if (searchYear) {
+      searchInfo.searchYear = searchYear;
+    }
+    if (searchGenre) {
+      searchInfo.searchGenre = searchGenre;
+    }
+    if (searchPgRating) {
+      searchInfo.searchPgRating = searchPgRating;
+    }
 
-  const loadMovies = useCallback((): void => {
-    mergeState('isLoading', true);
-
-    axios.get(`${process.env.REACT_APP_NODE_SERVER}/movies`)
+    axios.get(`${process.env.REACT_APP_NODE_SERVER}/movies`,
+      { params: searchInfo })
       .then((response: any) => {
         if (!response.data.length) {
-          mergeState('selectedMovie', undefined);
-          mergeState('movies', []);
-          mergeState('movError', '');
-          mergeState('movInfo', 'No movies have been added to library.');
-          mergeState('isLoading', false);
+          setSelectedMovie(undefined);
+          setMovies([]);
+          setMovError('');
+          setMovInfo('No movies have been added to library.');
+          setIsLoading(false);
           return;
         }
 
-        mergeState('selectedMovie', undefined);
-        mergeState('movies', response.data);
-        mergeState('movError', '');
-        mergeState('movInfo', '');
-        mergeState('isLoading', false);
-        mergeState('currentPage', 1);
+        setSelectedMovie(undefined);
+        setMovies(response.data);
+        setMovError('');
+        setMovInfo('');
+        setIsLoading(false);
+        setCurrentPage(1);
       })
       .catch((err: any) => {
         console.log(err);
-        mergeState('selectedMovie', undefined);
-        mergeState('movies', []);
 
-        mergeState('movInfo', '');
-        mergeState('isLoading', false);
-
+        setSelectedMovie(undefined);
+        setMovies([]);
+        setMovInfo('');
+        setIsLoading(false);
         if (err && err.response && err.response.data && err.response.data.Error) {
-          mergeState('movError', `${errorText}: ${err.response.data.Error}`);
+          setMovError(`${errorText}: ${err.response.data.Error}`);
         } else {
-          mergeState('movError', errorText);
+          setMovError(errorText);
         }
       });
-  }, [mergeState]);
+  }, [searchGenre, searchPgRating, searchTitle, searchType, searchYear]);
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    switch (event.target.name) {
+      case 'searchTitle':
+        setSearchTitle(event.target.value);
+        break;
+      case 'searchType':
+        setSearchType(event.target.value);
+        break;
+      case 'searchYear':
+        setSearchYear(parseFloat(event.target.value));
+        break;
+      case 'searchGenre':
+        setSearchGenre(event.target.value);
+        break;
+      case 'searchPgRating':
+        setSearchPgRating(event.target.value);
+        break;
+      default:
+        break;
+    }
+  };
 
-  useEffect(() => {
-    loadMovies();
-  }, [loadMovies]);
-
-  const renderTable = (): ReactNode => {
-    return (
-      <div style={{ maxWidth: '100%' }}>
+  const renderTable = (): ReactNode | null => {
+    return movies.length ? (
+      <div className={styles['table-style']}>
         <MaterialTable
           columns={
             [
@@ -150,7 +180,7 @@ const MyLibrary: React.FC = () => {
                   return (
                     <>
                       {
-                        rowData.genre ? rowData.genre?.map(genre => (
+                        rowData.genre ? rowData.genre?.map((genre: string) => (
                           <span className={globStyles['chip-spacer']}>
                             <Chip label={genre} />
                           </span>
@@ -167,7 +197,7 @@ const MyLibrary: React.FC = () => {
               }
             ]
           }
-          data={state.movies}
+          data={movies}
           options={
             {
               showTitle: false,
@@ -181,35 +211,116 @@ const MyLibrary: React.FC = () => {
           icons={tableIcons}
         />
       </div>
-    );
+    ) : null;
   };
 
   const renderError = (): ReactNode | null => {
-    return state.movError ? (
+    return movError ? (
       <p className={globStyles['error-text']}>
         Movies can&#39;t be loaded!
         {' '}
-        {state.movError}
+        {movError}
       </p>
     ) : null;
   };
 
+  const clearFields = (): void => {
+    setSearchTitle('');
+    setSearchType('');
+    setSearchYear(undefined);
+    setSearchGenre('');
+    setSearchPgRating('');
+  };
+
+  const isSearchTextValid = (): boolean => {
+    return !!(searchTitle.trim() || searchType.trim() || searchYear);
+  };
+
+  const onSearchClicked = (): void => {
+    searchMovies();
+  };
+
+  const onCancelButtonClicked = (): void => {
+    clearFields();
+  };
+
+  const renderButtons = (): ReactNode => (
+    <div className='top-spacer'>
+      <span className='right-spacer'>
+        <Button
+          disabled={!isSearchTextValid()}
+          onClick={onSearchClicked}
+          color="primary"
+          variant="contained"
+          autoFocus
+        >
+          Search
+        </Button>
+      </span>
+      <span className='right-spacer'>
+        <Button
+          onClick={onCancelButtonClicked}
+          color="secondary"
+          variant="contained"
+        >
+          Cancel
+        </Button>
+      </span>
+    </div>
+  );
+
+  const renderSearch = (): ReactNode => (
+    <>
+      <Card className={styles['card-style']}>
+        <Typography className={styles['card-title']} variant="h5" color="textSecondary" gutterBottom>
+          Search Library
+        </Typography>
+        <div className={styles['label-and-input-div']}>
+          <label htmlFor="lastName">
+            Title
+            <div className="inter-control-spacing">
+              <input type="text" name="searchTitle" value={searchTitle} className={styles['input-style-add-user']} onChange={handleChange} />
+            </div>
+          </label>
+        </div>
+        <div className={styles['label-and-input-div']}>
+          <label htmlFor="firstName">
+            Type
+            <div className="inter-control-spacing">
+              <input type="text" name="searchType" value={searchType} className={styles['input-style-add-user']} onChange={handleChange} />
+            </div>
+          </label>
+        </div>
+        <div className={styles['label-and-input-div']}>
+          <label htmlFor="email">
+            Year
+            <div className="inter-control-spacing">
+              <input type="number" name="searchYear" value={searchYear} className={styles['input-style-add-user']} onChange={handleChange} />
+            </div>
+          </label>
+        </div>
+        {renderButtons()}
+      </Card>
+    </>
+  );
+
   const renderContent = (): ReactNode => {
     return (
       <>
+        {renderSearch()}
         {renderTable()}
         <section>
-          {state.selectedMovie && !state.movError ? <MovieDetails selectedMovie={state.selectedMovie} /> : null}
+          {selectedMovie && !movError ? <MovieDetails selectedMovie={selectedMovie} /> : null}
         </section>
         {renderError()}
-        {state.movInfo ? <p>{state.movInfo}</p> : null}
+        {movInfo ? <p>{movInfo}</p> : null}
       </>
     );
   };
 
   return (
     <>
-      {state.isLoading ? <MovieLoadingSkeleton /> : renderContent()}
+      {isLoading ? <MovieLoadingSkeleton /> : renderContent()}
     </>
   );
 };
