@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback, ReactNode, forwardRef } from 'react';
+import React, { useState, useCallback, ReactNode, forwardRef, ChangeEvent } from 'react';
 
 import MaterialTable from 'material-table';
-import { Button, Chip, Typography } from '@material-ui/core';
+import { Button, Chip, FormControl, MenuItem, Select, Typography } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 
 import AddBox from '@material-ui/icons/AddBox';
@@ -99,7 +99,7 @@ const MyLibrary: React.FC = () => {
           setSelectedMovie(undefined);
           setMovies([]);
           setMovError('');
-          setMovInfo('No movies have been added to library.');
+          setMovInfo('No movies found for the search criteria.');
           setIsLoading(false);
           return;
         }
@@ -146,6 +146,10 @@ const MyLibrary: React.FC = () => {
       default:
         break;
     }
+  };
+
+  const handleChangeSearchType = (event: ChangeEvent<{ name?: string | undefined; value: unknown; }>): void => {
+    setSearchType(event.target.value as string);
   };
 
   const renderTable = (): ReactNode | null => {
@@ -240,7 +244,7 @@ const MyLibrary: React.FC = () => {
     searchMovies();
   };
 
-  const onCancelButtonClicked = (): void => {
+  const onResetClicked = (): void => {
     clearFields();
   };
 
@@ -259,11 +263,11 @@ const MyLibrary: React.FC = () => {
       </span>
       <span className='right-spacer'>
         <Button
-          onClick={onCancelButtonClicked}
+          onClick={onResetClicked}
           color="secondary"
           variant="contained"
         >
-          Cancel
+          Reset
         </Button>
       </span>
     </div>
@@ -276,7 +280,7 @@ const MyLibrary: React.FC = () => {
           Search Library
         </Typography>
         <div className={styles['label-and-input-div']}>
-          <label htmlFor="lastName">
+          <label htmlFor="searchTitle">
             Title
             <div className="inter-control-spacing">
               <input type="text" name="searchTitle" value={searchTitle} className={styles['input-style-add-user']} onChange={handleChange} />
@@ -284,15 +288,26 @@ const MyLibrary: React.FC = () => {
           </label>
         </div>
         <div className={styles['label-and-input-div']}>
-          <label htmlFor="firstName">
+          <label htmlFor="searchType">
             Type
-            <div className="inter-control-spacing">
-              <input type="text" name="searchType" value={searchType} className={styles['input-style-add-user']} onChange={handleChange} />
-            </div>
+            <FormControl variant="outlined" className="inter-control-spacing">
+              <Select
+                className={styles['input-style-add-user']}
+                value={searchType}
+                onChange={handleChangeSearchType}
+                name="searchType"
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value="MOV">Movie</MenuItem>
+                <MenuItem value="TV">TV Series</MenuItem>
+              </Select>
+            </FormControl>
           </label>
         </div>
         <div className={styles['label-and-input-div']}>
-          <label htmlFor="email">
+          <label htmlFor="searchYear">
             Year
             <div className="inter-control-spacing">
               <input type="number" name="searchYear" value={searchYear} className={styles['input-style-add-user']} onChange={handleChange} />

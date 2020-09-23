@@ -5,7 +5,7 @@
 
 html,
 body {
-  font-size: 1rem;
+  font-size: 0.95rem;
   justify-content: center;
 
   margin: auto;
@@ -108,6 +108,19 @@ Material UI related styles START
 :global(.MuiTableCell-root) {
   padding-top: 10px !important;
   padding-bottom: 10px !important;
+}
+
+:global(.MuiTabs-root) {
+  height: 38px !important;
+  min-height: auto !important;
+}
+
+:global(.MuiTab-root) {
+  min-height: auto !important;
+}
+
+:global(.MuiBox-root) {
+  padding-top: 5px !important;
 }
 
 /* 

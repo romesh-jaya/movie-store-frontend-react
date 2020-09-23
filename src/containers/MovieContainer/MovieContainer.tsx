@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect, Suspense} from 'react';
+import React, { useState, useCallback, useEffect, Suspense } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -13,9 +13,9 @@ import * as globStyles from '../../index.css';
 import MovieSearch from '../../components/Movies/MovieSearch/MovieSearch';
 import MovieContainerSkeleton from './MovieContainerSkeleton';
 import axios from '../../axios';
+import MyLibrary from '../../components/MyLibrary/MyLibrary';
 
 const Settings = React.lazy(() => import('../../components/Settings/Settings'));
-const MyLibrary = React.lazy(() => import('../../components/MyLibrary/MyLibrary'));
 const ZERO = 0;
 
 interface IState {
@@ -24,7 +24,7 @@ interface IState {
   apiKey: string;
   value: number
 };
- 
+
 const MovieContainer: React.FC = () => {
   const [state, setState] = useState<IState>({
     isLoading: true,
@@ -33,24 +33,24 @@ const MovieContainer: React.FC = () => {
     value: ZERO,
   });
 
-  const mergeState = useCallback((name: string, value: any) : void => {
+  const mergeState = useCallback((name: string, value: any): void => {
     setState(oldState => ({
       ...oldState,
       [name]: value
     }));
   }, []);
 
-  const setAPIKey = (apiKey: string) : void => {
+  const setAPIKey = (apiKey: string): void => {
     mergeState('apiKey', apiKey);
   };
 
-  const handleChange = (_ : React.ChangeEvent<{}>, newValue : number) : void => {
+  const handleChange = (_: React.ChangeEvent<{}>, newValue: number): void => {
     mergeState('value', newValue);
   };
 
-  const TabPanel = (tPanelProps : any) : React.ReactElement => {
-    const { children, value: tPanelValue, index} = tPanelProps;
-  
+  const TabPanel = (tPanelProps: any): React.ReactElement => {
+    const { children, value: tPanelValue, index } = tPanelProps;
+
     return (
       <Typography
         component="div"
@@ -67,56 +67,51 @@ const MovieContainer: React.FC = () => {
   // load the settings
   useEffect(() => {
     mergeState('isLoading', TextTrackCueList);
-    axios.get(`${process.env.REACT_APP_NODE_SERVER  }/settings/apiKey`)
+    axios.get(`${process.env.REACT_APP_NODE_SERVER}/settings/apiKey`)
       .then(response => {
         if (response) {
           mergeState('isLoading', false);
-          if (response.data.value)
-          {
+          if (response.data.value) {
             console.log('Retrieved API key.');
             mergeState('apiKey', response.data.value);
-          }
-          else
-          {
+          } else {
             mergeState('settingsError', 'API key was returned blank.');
           }
         }
       })
-      .catch((err : any) => {
+      .catch((err: any) => {
         console.log(err);
         mergeState('isLoading', false);
         mergeState('settingsError', 'Cannot connect to Node Server.');
       });
   }, [mergeState]);
-  
+
   const content = (
     <>
       <div className={styles.header}>
-        <span className={`${styles.nowrapDiv  } ${  styles.div1}`}>
+        <span className={`${styles.nowrapDiv} ${styles.div1}`}>
           <img src={logo} height="50px" alt="movies" />
         </span>
-        <h1 className={`${styles.nowrapDiv  } ${  styles.headerText}`}>
-            Ultra Movie Shop
+        <h1 className={`${styles.nowrapDiv} ${styles.headerText}`}>
+          Ultra Movie Shop
         </h1>
       </div>
       <AppBar position="static">
         <Tabs value={state.value} onChange={handleChange}>
-          <Tab label="Movie Search - OMDB" id="simple-tab-0" />
           <Tab label="My Library" id="simple-tab-1" />
+          <Tab label="Movie Search - OMDB" id="simple-tab-0" />
           <Tab label="Settings" id="simple-tab-2" />
         </Tabs>
       </AppBar>
       <TabPanel value={state.value} index={0}>
-        <MovieSearch />
+        <MyLibrary />
       </TabPanel>
       <TabPanel value={state.value} index={1}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <MyLibrary /> 
-        </Suspense>
+        <MovieSearch />
       </TabPanel>
       <TabPanel value={state.value} index={2}>
         <Suspense fallback={<div>Loading...</div>}>
-          <Settings setAPIKey={setAPIKey} /> 
+          <Settings setAPIKey={setAPIKey} />
         </Suspense>
       </TabPanel>
     </>
@@ -125,11 +120,11 @@ const MovieContainer: React.FC = () => {
 
   return (
     <KeyContext.Provider value={state.apiKey}>
-      {state.isLoading && <MovieContainerSkeleton /> }
-      {!state.isLoading && !state.settingsError ? content : null }
-      {!state.isLoading && state.settingsError ?  <p className={globStyles['error-text']}>{state.settingsError}</p> : null }
+      {state.isLoading && <MovieContainerSkeleton />}
+      {!state.isLoading && !state.settingsError ? content : null}
+      {!state.isLoading && state.settingsError ? <p className={globStyles['error-text']}>{state.settingsError}</p> : null}
     </KeyContext.Provider>
   );
 };
- 
+
 export default MovieContainer;
