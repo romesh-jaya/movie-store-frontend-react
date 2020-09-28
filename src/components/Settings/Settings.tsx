@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+
 import KeyContext from '../../context/KeyContext';
 import axios from '../../axios';
 
@@ -22,8 +22,6 @@ const Settings: React.FC<IProps> = (props: IProps) => {
   };
 
   const onSaveClicked = (): void => {
-    // this var is to avoid the warning 'can't perform a react state update on an unmounted component.'
-
     axios.patch(`${process.env.REACT_APP_NODE_SERVER}/settings`,
       {
         name: 'apiKey',
@@ -31,6 +29,7 @@ const Settings: React.FC<IProps> = (props: IProps) => {
       })
       .then(() => {
         setAPIKey(omdbAPIKeyEntered);
+        // this var is to avoid the warning 'can't perform a react state update on an unmounted component.'
         if (isMountedRef.current) {
           SetSettingsChanged(false);
         }

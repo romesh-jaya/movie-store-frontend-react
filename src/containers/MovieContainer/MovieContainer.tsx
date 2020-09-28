@@ -1,11 +1,11 @@
-import React, { useState, useCallback, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense, ReactNode } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
-
+import { TEXT_CONSTANTS } from '../../constants/constants';
 import KeyContext from '../../context/KeyContext';
 import logo from '../../assets/img/movie.png';
 import * as styles from './MovieContainer.css';
@@ -16,36 +16,19 @@ import axios from '../../axios';
 import MyLibrary from '../../components/MyLibrary/MyLibrary';
 
 const Settings = React.lazy(() => import('../../components/Settings/Settings'));
-const ZERO = 0;
-
-interface IState {
-  isLoading: boolean;
-  settingsError: string;
-  apiKey: string;
-  value: number
-};
 
 const MovieContainer: React.FC = () => {
-  const [state, setState] = useState<IState>({
-    isLoading: true,
-    settingsError: '',
-    apiKey: '',
-    value: ZERO,
-  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [settingsError, setSettingsError] = useState('');
+  const [apiKey, setApiKey] = useState('');
+  const [tabIndex, setTabIndex] = useState(0);
 
-  const mergeState = useCallback((name: string, value: any): void => {
-    setState(oldState => ({
-      ...oldState,
-      [name]: value
-    }));
-  }, []);
-
-  const setAPIKey = (apiKey: string): void => {
-    mergeState('apiKey', apiKey);
+  const setAPIKey = (apiKeyVal: string): void => {
+    setApiKey(apiKeyVal);
   };
 
   const handleChange = (_: React.ChangeEvent<{}>, newValue: number): void => {
-    mergeState('value', newValue);
+    setTabIndex(newValue);
   };
 
   const TabPanel = (tPanelProps: any): React.ReactElement => {
@@ -57,7 +40,6 @@ const MovieContainer: React.FC = () => {
         role="tabpanel"
         hidden={tPanelValue !== index}
         id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
       >
         {tPanelValue === index && <Box p={3}>{children}</Box>}
       </Typography>
@@ -66,63 +48,68 @@ const MovieContainer: React.FC = () => {
 
   // load the settings
   useEffect(() => {
-    mergeState('isLoading', TextTrackCueList);
     axios.get(`${process.env.REACT_APP_NODE_SERVER}/settings/apiKey`)
       .then(response => {
         if (response) {
-          mergeState('isLoading', false);
+          setIsLoading(false);
           if (response.data.value) {
             console.log('Retrieved API key.');
-            mergeState('apiKey', response.data.value);
+            setApiKey(response.data.value);
           } else {
-            mergeState('settingsError', 'API key was returned blank.');
+            console.log('API key was returned blank.');
           }
         }
       })
       .catch((err: any) => {
         console.log(err);
-        mergeState('isLoading', false);
-        mergeState('settingsError', 'Cannot connect to Node Server.');
+        setIsLoading(false);
+        setSettingsError(TEXT_CONSTANTS.CANNOTCONNECTSERVER);
       });
-  }, [mergeState]);
+  }, []);
 
-  const content = (
-    <>
-      <div className={styles.header}>
-        <span className={`${styles.nowrapDiv} ${styles.div1}`}>
-          <img src={logo} height="50px" alt="movies" />
-        </span>
-        <h1 className={`${styles.nowrapDiv} ${styles.headerText}`}>
-          Ultra Movie Shop
-        </h1>
-      </div>
-      <AppBar position="static">
-        <Tabs value={state.value} onChange={handleChange}>
-          <Tab label="My Library" id="simple-tab-1" />
-          <Tab label="Movie Search - OMDB" id="simple-tab-0" />
-          <Tab label="Settings" id="simple-tab-2" />
-        </Tabs>
-      </AppBar>
-      <TabPanel value={state.value} index={0}>
-        <MyLibrary />
-      </TabPanel>
-      <TabPanel value={state.value} index={1}>
-        <MovieSearch />
-      </TabPanel>
-      <TabPanel value={state.value} index={2}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Settings setAPIKey={setAPIKey} />
-        </Suspense>
-      </TabPanel>
-    </>
-  );
+  const renderNoApiKey = (): ReactNode => {
+    return <p>{TEXT_CONSTANTS.NOAPIKEYDEFINED}</p>;
+  };
+
+  const renderContent = (): ReactNode | null => {
+    return !isLoading && !settingsError ? (
+      <>
+        <div className={styles.header}>
+          <span className={`${styles.nowrapDiv} ${styles.div1}`}>
+            <img src={logo} height="50px" alt="movies" />
+          </span>
+          <h1 className={`${styles.nowrapDiv} ${styles.headerText}`}>
+            Ultra Movie Shop
+          </h1>
+        </div>
+        <AppBar position="static">
+          <Tabs value={tabIndex} onChange={handleChange}>
+            <Tab label="My Library" id="tab0" />
+            <Tab label="Movie Search - OMDB" id="tab1" />
+            <Tab label="Settings" id="tab2" />
+          </Tabs>
+        </AppBar>
+        <TabPanel value={tabIndex} index={0}>
+          {apiKey ? <MyLibrary /> : renderNoApiKey()}
+        </TabPanel>
+        <TabPanel value={tabIndex} index={1}>
+          {apiKey ? <MovieSearch /> : renderNoApiKey()}
+        </TabPanel>
+        <TabPanel value={tabIndex} index={2}>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Settings setAPIKey={setAPIKey} />
+          </Suspense>
+        </TabPanel>
+      </>
+    ) : null;
+  };
 
 
   return (
-    <KeyContext.Provider value={state.apiKey}>
-      {state.isLoading && <MovieContainerSkeleton />}
-      {!state.isLoading && !state.settingsError ? content : null}
-      {!state.isLoading && state.settingsError ? <p className={globStyles['error-text']}>{state.settingsError}</p> : null}
+    <KeyContext.Provider value={apiKey}>
+      {isLoading && <MovieContainerSkeleton />}
+      {renderContent()}
+      {!isLoading && settingsError ? <p className={globStyles['error-text']}>{settingsError}</p> : null}
     </KeyContext.Provider>
   );
 };

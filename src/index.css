@@ -82,6 +82,11 @@ textarea {
   margin-top: 20px;
 }
 
+:global(.error-text-small) {
+  color: red;
+  font-size: 0.8rem;
+}
+
 /* 
 -----------------------------------------------------------------------------
  UI related styles END

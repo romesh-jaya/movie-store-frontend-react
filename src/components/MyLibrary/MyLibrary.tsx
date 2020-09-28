@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useCallback, ReactNode, forwardRef, ChangeEvent } from 'react';
 
 import MaterialTable from 'material-table';
@@ -22,18 +23,22 @@ import ViewColumn from '@material-ui/icons/ViewColumn';
 
 import styles from './MyLibrary.css';
 import * as globStyles from '../../index.css';
+import { TEXT_CONSTANTS } from '../../constants/constants';
 import axios from '../../axios';
 import IMovie from '../../interfaces/IMovie';
 import MovieDetails from '../Movies/MovieDetails/MovieDetails';
 import MovieLoadingSkeleton from '../Movies/MovieLoadingSkeleton';
 import { MovieType } from '../../enums/MovieType';
+import NumberRangeInput from '../Controls/Input/NumberRangeInput/NumberRangeInput';
 
 const errorText = 'Error while retrieving movie data.';
 
 interface ISearchInfo {
   searchTitle?: string;
   searchType?: string;
-  searchYear?: number;
+  searchYearExact?: number;
+  searchYearFrom?: number;
+  searchYearTo?: number;
   searchGenre?: string;
   searchPgRating?: string;
 };
@@ -48,7 +53,12 @@ const MyLibrary: React.FC = () => {
   // Search related:
   const [searchTitle, setSearchTitle] = useState('');
   const [searchType, setSearchType] = useState('');
-  const [searchYear, setSearchYear] = useState<number>();
+  const [errorTextSearchYear, setErrorTextSearchYear] = useState('');
+  const [searchYearInput, setSearchYearInput] = useState<string>('');
+  const [searchYearExact, setSearchYearExact] = useState<number | undefined>();
+  const [searchYearFrom, setSearchYearFrom] = useState<number | undefined>();
+  const [searchYearTo, setSearchYearTo] = useState<number | undefined>();
+  const [searchYearIsBetweenValuesIncomplete, setSearchYearIsBetweenValuesIncomplete] = useState(false);
   const [searchGenre, setSearchGenre] = useState('');
   const [searchPgRating, setSearchPgRating] = useState('');
 
@@ -73,6 +83,22 @@ const MyLibrary: React.FC = () => {
   };
 
   const searchMovies = useCallback((): void => {
+    // validations
+    if (searchYearIsBetweenValuesIncomplete) {
+      setErrorTextSearchYear(TEXT_CONSTANTS.YEARINVALID1);
+      return;
+    }
+    if (searchYearFrom && searchYearTo && (searchYearFrom >= searchYearTo)) {
+      setErrorTextSearchYear(TEXT_CONSTANTS.YEARINVALID2);
+      return;
+    }
+    if ((searchYearExact && searchYearExact.toString().length !== 4) ||
+      (searchYearFrom && searchYearFrom.toString().length !== 4) ||
+      (searchYearTo && searchYearTo.toString().length !== 4)) {
+      setErrorTextSearchYear(TEXT_CONSTANTS.YEARINVALID3);
+      return;
+    }
+
     setIsLoading(true);
 
     const searchInfo: ISearchInfo = {};
@@ -82,8 +108,14 @@ const MyLibrary: React.FC = () => {
     if (searchType) {
       searchInfo.searchType = searchType.trim();
     }
-    if (searchYear) {
-      searchInfo.searchYear = searchYear;
+    if (searchYearExact) {
+      searchInfo.searchYearExact = searchYearExact;
+    }
+    if (searchYearFrom) {
+      searchInfo.searchYearFrom = searchYearFrom;
+    }
+    if (searchYearTo) {
+      searchInfo.searchYearTo = searchYearTo;
     }
     if (searchGenre) {
       searchInfo.searchGenre = searchGenre;
@@ -99,7 +131,7 @@ const MyLibrary: React.FC = () => {
           setSelectedMovie(undefined);
           setMovies([]);
           setMovError('');
-          setMovInfo('No movies found for the search criteria.');
+          setMovInfo(TEXT_CONSTANTS.NOMOVIESFOUND);
           setIsLoading(false);
           return;
         }
@@ -124,18 +156,12 @@ const MyLibrary: React.FC = () => {
           setMovError(errorText);
         }
       });
-  }, [searchGenre, searchPgRating, searchTitle, searchType, searchYear]);
+  }, [searchGenre, searchPgRating, searchTitle, searchType, searchYearExact, searchYearFrom, searchYearIsBetweenValuesIncomplete, searchYearTo]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     switch (event.target.name) {
       case 'searchTitle':
         setSearchTitle(event.target.value);
-        break;
-      case 'searchType':
-        setSearchType(event.target.value);
-        break;
-      case 'searchYear':
-        setSearchYear(parseFloat(event.target.value));
         break;
       case 'searchGenre':
         setSearchGenre(event.target.value);
@@ -146,6 +172,16 @@ const MyLibrary: React.FC = () => {
       default:
         break;
     }
+  };
+
+  const handleChangeSearchYear = (_: string, isBetweenValuesIncomplete: boolean, value: string, valueSingle?: number,
+    valueFrom?: number, valueTo?: number): void => {
+    setSearchYearInput(value);
+    setSearchYearExact(valueSingle);
+    setSearchYearFrom(valueFrom);
+    setSearchYearTo(valueTo);
+    setSearchYearIsBetweenValuesIncomplete(isBetweenValuesIncomplete);
+    setErrorTextSearchYear('');
   };
 
   const handleChangeSearchType = (event: ChangeEvent<{ name?: string | undefined; value: unknown; }>): void => {
@@ -221,7 +257,7 @@ const MyLibrary: React.FC = () => {
   const renderError = (): ReactNode | null => {
     return movError ? (
       <p className={globStyles['error-text']}>
-        Movies can&#39;t be loaded!
+        {TEXT_CONSTANTS.MOVIELOADERROR}
         {' '}
         {movError}
       </p>
@@ -231,13 +267,13 @@ const MyLibrary: React.FC = () => {
   const clearFields = (): void => {
     setSearchTitle('');
     setSearchType('');
-    setSearchYear(undefined);
+    setSearchYearInput('');
     setSearchGenre('');
     setSearchPgRating('');
   };
 
   const isSearchTextValid = (): boolean => {
-    return !!(searchTitle.trim() || searchType.trim() || searchYear);
+    return !!(searchTitle.trim() || searchType.trim() || searchYearExact || searchYearFrom || searchYearTo);
   };
 
   const onSearchClicked = (): void => {
@@ -246,6 +282,12 @@ const MyLibrary: React.FC = () => {
 
   const onResetClicked = (): void => {
     clearFields();
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (event.key === 'Enter') {
+      searchMovies();
+    }
   };
 
   const renderButtons = (): ReactNode => (
@@ -283,7 +325,14 @@ const MyLibrary: React.FC = () => {
           <label htmlFor="searchTitle">
             Title
             <div className="inter-control-spacing">
-              <input type="text" name="searchTitle" value={searchTitle} className={styles['input-style-add-user']} onChange={handleChange} />
+              <input
+                type="text"
+                name="searchTitle"
+                value={searchTitle}
+                className={styles['input-style-add-user']}
+                onChange={handleChange}
+                onKeyDown={handleKeyDown}
+              />
             </div>
           </label>
         </div>
@@ -300,8 +349,8 @@ const MyLibrary: React.FC = () => {
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value="MOV">Movie</MenuItem>
-                <MenuItem value="TV">TV Series</MenuItem>
+                <MenuItem value={MovieType.Movie}>Movie</MenuItem>
+                <MenuItem value={MovieType.TvSeries}>TV Series</MenuItem>
               </Select>
             </FormControl>
           </label>
@@ -310,9 +359,18 @@ const MyLibrary: React.FC = () => {
           <label htmlFor="searchYear">
             Year
             <div className="inter-control-spacing">
-              <input type="number" name="searchYear" value={searchYear} className={styles['input-style-add-user']} onChange={handleChange} />
+              <NumberRangeInput
+                name="searchYear"
+                classNameCustom='input-style-add-user'
+                value={searchYearInput}
+                handleReturnValue={handleChangeSearchYear}
+                enterPressed={searchMovies}
+              />
             </div>
           </label>
+          <div className="error-text-small">
+            <small>{errorTextSearchYear}</small>
+          </div>
         </div>
         {renderButtons()}
       </Card>

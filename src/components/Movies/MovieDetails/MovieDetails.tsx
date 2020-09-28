@@ -154,7 +154,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
             type="number"
           />
         </span>
-        <Button variant="outlined" color="secondary" onClick={onSaveClicked} disabled={!movieTotalChanged}>
+        <Button variant="contained" color="secondary" onClick={onSaveClicked} disabled={!movieTotalChanged}>
           Save
         </Button>
       </div>
