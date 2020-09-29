@@ -5,7 +5,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
-import { TEXT_CONSTANTS } from '../../constants/constants';
+import { TextConstants } from '../../constants/TextConstants';
 import KeyContext from '../../context/KeyContext';
 import logo from '../../assets/img/movie.png';
 import * as styles from './MovieContainer.css';
@@ -60,15 +60,14 @@ const MovieContainer: React.FC = () => {
           }
         }
       })
-      .catch((err: any) => {
-        console.log(err);
+      .catch(() => {
         setIsLoading(false);
-        setSettingsError(TEXT_CONSTANTS.CANNOTCONNECTSERVER);
+        setSettingsError(TextConstants.CANNOTCONNECTSERVER);
       });
   }, []);
 
   const renderNoApiKey = (): ReactNode => {
-    return <p>{TEXT_CONSTANTS.NOAPIKEYDEFINED}</p>;
+    return <p>{TextConstants.NOAPIKEYDEFINED}</p>;
   };
 
   const renderContent = (): ReactNode | null => {

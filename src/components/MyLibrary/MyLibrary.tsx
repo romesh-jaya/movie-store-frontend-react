@@ -1,37 +1,22 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useCallback, ReactNode, forwardRef, ChangeEvent } from 'react';
-
+import React, { useState, useCallback, ReactNode, ChangeEvent, useEffect } from 'react';
 import MaterialTable from 'material-table';
 import { Button, Chip, FormControl, MenuItem, Select, Typography } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 
-import AddBox from '@material-ui/icons/AddBox';
-import ArrowUpward from '@material-ui/icons/ArrowUpward';
-import Check from '@material-ui/icons/Check';
-import ChevronLeft from '@material-ui/icons/ChevronLeft';
-import ChevronRight from '@material-ui/icons/ChevronRight';
-import Clear from '@material-ui/icons/Clear';
-import DeleteOutline from '@material-ui/icons/DeleteOutline';
-import Edit from '@material-ui/icons/Edit';
-import FilterList from '@material-ui/icons/FilterList';
-import FirstPage from '@material-ui/icons/FirstPage';
-import LastPage from '@material-ui/icons/LastPage';
-import Remove from '@material-ui/icons/Remove';
-import SaveAlt from '@material-ui/icons/SaveAlt';
-import Search from '@material-ui/icons/Search';
-import ViewColumn from '@material-ui/icons/ViewColumn';
-
+import { Pagination } from '@material-ui/lab';
 import styles from './MyLibrary.css';
 import * as globStyles from '../../index.css';
-import { TEXT_CONSTANTS } from '../../constants/constants';
+import { TextConstants } from '../../constants/TextConstants';
 import axios from '../../axios';
 import IMovie from '../../interfaces/IMovie';
 import MovieDetails from '../Movies/MovieDetails/MovieDetails';
 import MovieLoadingSkeleton from '../Movies/MovieLoadingSkeleton';
 import { MovieType } from '../../enums/MovieType';
 import NumberRangeInput from '../Controls/Input/NumberRangeInput/NumberRangeInput';
+import TableIcons from '../../constants/TableIcons';
 
-const errorText = 'Error while retrieving movie data.';
+const pageSize = 10;
 
 interface ISearchInfo {
   searchTitle?: string;
@@ -49,7 +34,9 @@ const MyLibrary: React.FC = () => {
   const [movInfo, setMovInfo] = useState('');
   const [selectedMovie, setSelectedMovie] = useState<IMovie>();
   const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [lastSearchInfo, setLastSearchInfo] = useState<ISearchInfo | undefined>();
+  const [lastSearchMovieCount, setLastSearchMovieCount] = useState<number | undefined>();
   // Search related:
   const [searchTitle, setSearchTitle] = useState('');
   const [searchType, setSearchType] = useState('');
@@ -62,101 +49,109 @@ const MyLibrary: React.FC = () => {
   const [searchGenre, setSearchGenre] = useState('');
   const [searchPgRating, setSearchPgRating] = useState('');
 
-  const tableIcons = {
-    Add: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <AddBox {...props} ref={ref} />),
-    Check: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <Check {...props} ref={ref} />),
-    Clear: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <Clear {...props} ref={ref} />),
-    Delete: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <DeleteOutline {...props} ref={ref} />),
-    DetailPanel: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <ChevronRight {...props} ref={ref} />),
-    Edit: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <Edit {...props} ref={ref} />),
-    Export: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <SaveAlt {...props} ref={ref} />),
-    Filter: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <FilterList {...props} ref={ref} />),
-    FirstPage: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <FirstPage {...props} ref={ref} />),
-    LastPage: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <LastPage {...props} ref={ref} />),
-    NextPage: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <ChevronRight {...props} ref={ref} />),
-    PreviousPage: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <ChevronLeft {...props} ref={ref} />),
-    ResetSearch: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <Clear {...props} ref={ref} />),
-    Search: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <Search {...props} ref={ref} />),
-    SortArrow: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <ArrowUpward {...props} ref={ref} />),
-    ThirdStateCheck: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <Remove {...props} ref={ref} />),
-    ViewColumn: forwardRef((props, ref: React.Ref<SVGSVGElement>) => <ViewColumn {...props} ref={ref} />)
-  };
+  const isSearchTextValid = useCallback((): boolean => {
+    return !!(searchTitle.trim() || searchType.trim() || searchYearExact || searchYearFrom || searchYearTo);
+  }, [searchTitle, searchType, searchYearExact, searchYearFrom, searchYearTo]);
 
-  const searchMovies = useCallback((): void => {
-    // validations
-    if (searchYearIsBetweenValuesIncomplete) {
-      setErrorTextSearchYear(TEXT_CONSTANTS.YEARINVALID1);
-      return;
-    }
-    if (searchYearFrom && searchYearTo && (searchYearFrom >= searchYearTo)) {
-      setErrorTextSearchYear(TEXT_CONSTANTS.YEARINVALID2);
-      return;
-    }
-    if ((searchYearExact && searchYearExact.toString().length !== 4) ||
-      (searchYearFrom && searchYearFrom.toString().length !== 4) ||
-      (searchYearTo && searchYearTo.toString().length !== 4)) {
-      setErrorTextSearchYear(TEXT_CONSTANTS.YEARINVALID3);
-      return;
-    }
-
+  const queryMovies = useCallback((pageNo?: number): void => {
+    const page = pageNo ?? 1;
+    const newSearchInfo =
+    {
+      ...lastSearchInfo,
+      page: page - 1, // Note: the page always starts at 1 in Material UI, but 0 in the server
+      pageSize
+    };
     setIsLoading(true);
-
-    const searchInfo: ISearchInfo = {};
-    if (searchTitle) {
-      searchInfo.searchTitle = searchTitle.trim();
-    }
-    if (searchType) {
-      searchInfo.searchType = searchType.trim();
-    }
-    if (searchYearExact) {
-      searchInfo.searchYearExact = searchYearExact;
-    }
-    if (searchYearFrom) {
-      searchInfo.searchYearFrom = searchYearFrom;
-    }
-    if (searchYearTo) {
-      searchInfo.searchYearTo = searchYearTo;
-    }
-    if (searchGenre) {
-      searchInfo.searchGenre = searchGenre;
-    }
-    if (searchPgRating) {
-      searchInfo.searchPgRating = searchPgRating;
-    }
-
     axios.get(`${process.env.REACT_APP_NODE_SERVER}/movies`,
-      { params: searchInfo })
+      { params: newSearchInfo })
       .then((response: any) => {
-        if (!response.data.length) {
+        setCurrentPage(page);
+        if (!response.data[0].movies.length) {
           setSelectedMovie(undefined);
           setMovies([]);
           setMovError('');
-          setMovInfo(TEXT_CONSTANTS.NOMOVIESFOUND);
+          setMovInfo(TextConstants.NOMOVIESFOUND);
           setIsLoading(false);
+          setLastSearchMovieCount(0);
           return;
         }
 
         setSelectedMovie(undefined);
-        setMovies(response.data);
+        setMovies(response.data[0].movies);
         setMovError('');
         setMovInfo('');
         setIsLoading(false);
-        setCurrentPage(1);
+        setLastSearchMovieCount(response.data[0].movieCount[0].count);
       })
       .catch((err: any) => {
-        console.log(err);
-
         setSelectedMovie(undefined);
         setMovies([]);
         setMovInfo('');
         setIsLoading(false);
         if (err && err.response && err.response.data && err.response.data.Error) {
-          setMovError(`${errorText}: ${err.response.data.Error}`);
+          setMovError(`${TextConstants.MOVIELOADERROR}: ${err.response.data.Error}`);
         } else {
-          setMovError(errorText);
+          setMovError(TextConstants.MOVIELOADERROR);
         }
+        setLastSearchMovieCount(0);
       });
-  }, [searchGenre, searchPgRating, searchTitle, searchType, searchYearExact, searchYearFrom, searchYearIsBetweenValuesIncomplete, searchYearTo]);
+  }, [lastSearchInfo]);
+
+  const onPageNoChanged = (_: object, page: number): void => {
+    // Note: the page always starts at 1 in Material UI
+    queryMovies(page);
+  };
+
+  const newSearch = useCallback((): void => {
+    if (isSearchTextValid()) {
+      // validations
+      if (searchYearIsBetweenValuesIncomplete) {
+        setErrorTextSearchYear(TextConstants.YEARINVALID1);
+        return;
+      }
+      if (searchYearFrom && searchYearTo && (searchYearFrom >= searchYearTo)) {
+        setErrorTextSearchYear(TextConstants.YEARINVALID2);
+        return;
+      }
+      if ((searchYearExact && searchYearExact.toString().length !== 4) ||
+        (searchYearFrom && searchYearFrom.toString().length !== 4) ||
+        (searchYearTo && searchYearTo.toString().length !== 4)) {
+        setErrorTextSearchYear(TextConstants.YEARINVALID3);
+        return;
+      }
+
+      const searchInfo: ISearchInfo = {};
+      if (searchTitle) {
+        searchInfo.searchTitle = searchTitle.trim();
+      }
+      if (searchType) {
+        searchInfo.searchType = searchType.trim();
+      }
+      if (searchYearExact) {
+        searchInfo.searchYearExact = searchYearExact;
+      }
+      if (searchYearFrom) {
+        searchInfo.searchYearFrom = searchYearFrom;
+      }
+      if (searchYearTo) {
+        searchInfo.searchYearTo = searchYearTo;
+      }
+      if (searchGenre) {
+        searchInfo.searchGenre = searchGenre;
+      }
+      if (searchPgRating) {
+        searchInfo.searchPgRating = searchPgRating;
+      }
+
+      setLastSearchInfo(searchInfo);
+    }
+  }, [isSearchTextValid, searchGenre, searchPgRating, searchTitle, searchType, searchYearExact, searchYearFrom, searchYearIsBetweenValuesIncomplete, searchYearTo]);
+
+  useEffect(() => {
+    if (lastSearchInfo) {
+      queryMovies();
+    }
+  }, [lastSearchInfo, queryMovies]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     switch (event.target.name) {
@@ -188,8 +183,39 @@ const MyLibrary: React.FC = () => {
     setSearchType(event.target.value as string);
   };
 
+  const clearFields = (): void => {
+    setSearchTitle('');
+    setSearchType('');
+    setSearchYearInput('');
+    setSearchGenre('');
+    setSearchPgRating('');
+  };
+
+  const onSearchClicked = (): void => {
+    newSearch();
+  };
+
+  const onResetClicked = (): void => {
+    clearFields();
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (event.key === 'Enter' || event.key === 'NumpadEnter') {
+      newSearch();
+    }
+  };
+
+  const renderError = (): ReactNode | null => {
+    return movError ? (
+      <p className={globStyles['error-text']}>
+        {movError}
+      </p>
+    ) : null;
+  };
+
   const renderTable = (): ReactNode | null => {
-    return movies.length ? (
+    const totalPageCount = Math.floor((lastSearchMovieCount ?? 0) / pageSize) + 1;
+    return lastSearchMovieCount ? (
       <div className={styles['table-style']}>
         <MaterialTable
           columns={
@@ -248,46 +274,19 @@ const MyLibrary: React.FC = () => {
               rowStyle: { fontSize: '0.95rem' }
             }
           }
-          icons={tableIcons}
+          icons={TableIcons}
         />
+        <div className={styles['pagination-style']}>
+          <Pagination
+            showFirstButton
+            showLastButton
+            count={totalPageCount}
+            onChange={onPageNoChanged}
+            page={currentPage}
+          />
+        </div>
       </div>
     ) : null;
-  };
-
-  const renderError = (): ReactNode | null => {
-    return movError ? (
-      <p className={globStyles['error-text']}>
-        {TEXT_CONSTANTS.MOVIELOADERROR}
-        {' '}
-        {movError}
-      </p>
-    ) : null;
-  };
-
-  const clearFields = (): void => {
-    setSearchTitle('');
-    setSearchType('');
-    setSearchYearInput('');
-    setSearchGenre('');
-    setSearchPgRating('');
-  };
-
-  const isSearchTextValid = (): boolean => {
-    return !!(searchTitle.trim() || searchType.trim() || searchYearExact || searchYearFrom || searchYearTo);
-  };
-
-  const onSearchClicked = (): void => {
-    searchMovies();
-  };
-
-  const onResetClicked = (): void => {
-    clearFields();
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
-    if (event.key === 'Enter') {
-      searchMovies();
-    }
   };
 
   const renderButtons = (): ReactNode => (
@@ -364,7 +363,7 @@ const MyLibrary: React.FC = () => {
                 classNameCustom='input-style-add-user'
                 value={searchYearInput}
                 handleReturnValue={handleChangeSearchYear}
-                enterPressed={searchMovies}
+                enterPressed={newSearch}
               />
             </div>
           </label>

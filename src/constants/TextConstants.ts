@@ -1,4 +1,4 @@
-export const TEXT_CONSTANTS = 
+export const TextConstants = 
 {
   'NOAPIKEYDEFINED': 'OMDB API Key needs to be provided in Settings page.',
   'CANNOTCONNECTSERVER': 'Cannot connect to Node Server.',
@@ -7,4 +7,6 @@ export const TEXT_CONSTANTS =
   'YEARINVALID3': 'Values for year(s) must have 4 digits.',
   'MOVIELOADERROR': 'Error loading movies',
   'NOMOVIESFOUND': 'No movies found for the search criteria.',
+  'MOVIELOADERROROMDB': 'Error while accessing OMDB database',
+  'CLICKTOSEEDETAILS': 'Click on movie to see details',
 };

@@ -1,6 +1,6 @@
 /* eslint-disable prefer-template */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useContext, ReactNode } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Pagination from '@material-ui/lab/Pagination';
@@ -13,64 +13,42 @@ import IMovie from '../../../interfaces/IMovie';
 import MovieDetails from '../MovieDetails/MovieDetails';
 import MovieLoadingSkeleton from '../MovieLoadingSkeleton';
 import KeyContext from '../../../context/KeyContext';
+import { TextConstants } from '../../../constants/TextConstants';
 
 const searchURL = process.env.REACT_APP_SEARCH_URL || '';
-const errorText = 'Error while accessing OMDB database';
-const ZERO = 0;
-const ONE = 1;
-
-interface IState {
-  movies: IMovie[];
-  movError: string;
-  movInfo: string;
-  wasLastSearchSuccess: boolean;
-  selectedMovie: IMovie | undefined;
-  movieQuery: string;
-  isLoading: boolean;
-  currentPage: number
-}
 
 const MovieSearch: React.FC = () => {
-  const [state, setState] = useState<IState>({
-    movies: [],
-    movError: '',
-    movInfo: '',
-    wasLastSearchSuccess: false,
-    selectedMovie: undefined,
-    movieQuery: '',
-    isLoading: false,
-    currentPage: ONE,
-  });
+  const [movies, setMovies] = useState<IMovie[]>([]);
+  const [movError, setMovError] = useState('');
+  const [movInfo, setMovInfo] = useState('');
+  const [wasLastSearchSuccess, setWasLastSearchSuccess] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState<IMovie | undefined>();
+  const [inputQuery, setInputQuery] = useState('');
+  const [inputQueryTrimmed, setInputQueryTrimmed] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const apiKey = useContext(KeyContext);
-
-  const mergeState = useCallback((name: string, value: any): void => {
-    setState(oldState => ({
-      ...oldState,
-      [name]: value
-    }));
-  }, []);
 
   const loadMovies = useCallback((pageNo?: number): void => {
     const filteredMovies: any[] = [];
     const enhancedMovies: IMovie[] = [];
 
-    const page = pageNo ? '&page=' + pageNo.toFixed(ZERO) : '';
-    mergeState('isLoading', true);
+    const page = pageNo ? '&page=' + pageNo.toFixed(0) : '';
+    setIsLoading(true);
 
-    axios.get(`${searchURL}?apikey=${apiKey}&s=${state.movieQuery}${page}`)
+    axios.get(`${searchURL}?apikey=${apiKey}&s=${inputQueryTrimmed}${page}`)
       .then((response: any) => {
-        console.log(response);
         if (!response.data || response.data.Response === 'False') {
-          mergeState('selectedMovie', undefined);
-          mergeState('movies', []);
-          mergeState('movError', '');
-          mergeState('movInfo', 'No response data received.');
-          mergeState('isLoading', false);
+          setSelectedMovie(undefined);
+          setMovies([]);
+          setMovError('');
+          setMovInfo(TextConstants.NOMOVIESFOUND);
+          setIsLoading(false);
 
           if (!pageNo) {
-            mergeState('wasLastSearchSuccess', false);
+            setWasLastSearchSuccess(false);
           } else {
-            mergeState('currentPage', pageNo);
+            setCurrentPage(pageNo);
           }
           return;
         }
@@ -106,45 +84,43 @@ const MovieSearch: React.FC = () => {
         };
 
         getData().then(() => {
-          mergeState('selectedMovie', undefined);
-          mergeState('movies', enhancedMovies);
-          mergeState('movError', '');
-          mergeState('movInfo', '');
-          mergeState('isLoading', false);
+          setSelectedMovie(undefined);
+          setMovies(enhancedMovies);
+          setMovError('');
+          setMovInfo('');
+          setIsLoading(false);
 
           if (!pageNo) {
-            mergeState('currentPage', ONE);
-            mergeState('wasLastSearchSuccess', true);
+            setCurrentPage(1);
+            setWasLastSearchSuccess(true);
           } else {
-            mergeState('currentPage', pageNo);
+            setCurrentPage(pageNo);
           }
         });
       })
       .catch((err: any) => {
-        console.log(err);
-        mergeState('selectedMovie', undefined);
-        mergeState('movies', []);
-
-        mergeState('movInfo', '');
-        mergeState('isLoading', false);
+        setSelectedMovie(undefined);
+        setMovies([]);
+        setMovInfo('');
+        setIsLoading(false);
 
         if (!pageNo) {
-          mergeState('wasLastSearchSuccess', false);
+          setWasLastSearchSuccess(false);
         }
         if (err && err.response && err.response.data && err.response.data.Error) {
-          mergeState('movError', `${errorText}: ${err.response.data.Error}`);
+          setMovError(`${TextConstants.MOVIELOADERROROMDB}: ${err.response.data.Error}`);
         } else {
-          mergeState('movError', errorText);
+          setMovError(TextConstants.MOVIELOADERROROMDB);
         }
       });
-  }, [mergeState, apiKey, state.movieQuery]);
+  }, [apiKey, inputQueryTrimmed]);
 
 
   // Enter key behaviour for Search - for the entire form. Binding to TextField control didn't work as it is a container
   useEffect(() => {
     const listener = (event: any): void => {
       if (event.code === 'Enter' || event.code === 'NumpadEnter') {
-        if (state.movieQuery) {
+        if (inputQueryTrimmed) {
           loadMovies();
         }
       }
@@ -153,14 +129,15 @@ const MovieSearch: React.FC = () => {
     return () => {
       document.removeEventListener('keydown', listener);
     };
-  }, [loadMovies, state.movieQuery]);
+  }, [inputQueryTrimmed, loadMovies]);
 
   const movieSelectedHandler = (movieSel: IMovie): void => {
-    mergeState('selectedMovie', movieSel);
+    setSelectedMovie(movieSel);
   };
 
   const queryOnChange = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
-    mergeState('movieQuery', event.target.value.trim());
+    setInputQuery(event.target.value);
+    setInputQueryTrimmed(event.target.value.trim());
   };
 
   const onSearchClicked = (): void => {
@@ -171,58 +148,65 @@ const MovieSearch: React.FC = () => {
     loadMovies(page);
   };
 
-  const moviesRender = state.movies.map(movie => {
+  const renderMovies = (): ReactNode => {
     return (
-      <Movie
-        key={movie.imdbID}
-        title={movie.title}
-        body={movie.actors}
-        year={movie.year}
-        clicked={() => movieSelectedHandler(movie)}
-      />
-    );
-  });
-
-  const error = state.movError ? (
-    <p className={globStyles['error-text']}>
-      Movies can&#39;t be loaded!
-      {' '}
-      {state.movError}
-    </p>
-  ) : null;
-
-  const content = (
-    <div>
-      <div className={styles['search-input']}>
-        <span className={globStyles['margin-r-30']}>
-          <TextField
-            label="Search OMDB"
-            value={state.movieQuery}
-            onChange={queryOnChange}
-            id='query'
-          />
-        </span>
-        <Button variant="outlined" color="primary" onClick={onSearchClicked} disabled={!state.movieQuery}>
-          Search
-        </Button>
-      </div>
-      {state.wasLastSearchSuccess ? <Pagination count={10} onChange={onPageNoChanged} page={state.currentPage} /> : null}
       <section className={globStyles.movies}>
-        {moviesRender}
+        {
+          movies.map(movie => {
+            return (
+              <Movie
+                key={movie.imdbID}
+                title={movie.title}
+                body={movie.actors}
+                year={movie.year}
+                clicked={() => movieSelectedHandler(movie)}
+              />
+            );
+          })
+        }
       </section>
-      <section>
-        {state.selectedMovie && !state.movError ? <MovieDetails selectedMovie={state.selectedMovie} /> : null}
-        {(!state.selectedMovie && !state.movError && state.movies.length) ? <p>Click on movie to see details</p> : null}
-      </section>
-      {error}
-      {state.movInfo ? <p>{state.movInfo}</p> : null}
-    </div>
-  );
+    );
+  };
+
+  const renderError = (): ReactNode | null => {
+    return movError ? (
+      <p className={globStyles['error-text']}>
+        {movError}
+      </p>
+    ) : null;
+  };
+
+  const renderContent = (): ReactNode | null => {
+    return !isLoading ? (
+      <div>
+        <div className={styles['search-input']}>
+          <span className={globStyles['margin-r-30']}>
+            <TextField
+              label="Search OMDB"
+              value={inputQuery}
+              onChange={queryOnChange}
+            />
+          </span>
+          <Button variant="outlined" color="primary" onClick={onSearchClicked} disabled={!inputQueryTrimmed}>
+            Search
+          </Button>
+        </div>
+        {wasLastSearchSuccess ? <Pagination count={10} onChange={onPageNoChanged} page={currentPage} /> : null}
+        {renderMovies()}
+        <section>
+          {selectedMovie && !movError ? <MovieDetails selectedMovie={selectedMovie} /> : null}
+          {(!selectedMovie && !movError && movies.length) ? <p>{TextConstants.CLICKTOSEEDETAILS}</p> : null}
+        </section>
+        {renderError()}
+        {movInfo ? <p>{movInfo}</p> : null}
+      </div>
+    ) : null;
+  };
 
   return (
     <>
-      {state.isLoading && <MovieLoadingSkeleton />}
-      {!state.isLoading ? content : null}
+      {isLoading && <MovieLoadingSkeleton />}
+      {renderContent()}
     </>
   );
 };

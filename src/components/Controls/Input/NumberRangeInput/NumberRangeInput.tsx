@@ -40,7 +40,7 @@ const NumberRangeInput: React.FC<IProps> = (props) => {
     const className = classNameCustom === 'input-style-add-user' ? styles['input-style-add-user'] : '';
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
-        if (enterPressed && event.key === 'Enter') {
+        if (enterPressed && (event.key === 'Enter' || event.key === 'NumpadEnter')) {
             enterPressed();
         }
     };

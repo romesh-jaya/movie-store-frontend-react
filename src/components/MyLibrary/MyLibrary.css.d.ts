@@ -5,6 +5,7 @@ declare namespace MyLibraryCssNamespace {
     'input-style-add-user': string;
     'input-style-add-user-half': string;
     'label-and-input-div': string;
+    'pagination-style': string;
     'table-style': string;
   }
 }

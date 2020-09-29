@@ -78,8 +78,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
           setMovieLoading(false);
         }
       })
-      .catch((err: any) => {
-        console.log(err);
+      .catch(() => {
         SetMovError(errorText);
         setMovieLoading(false);
       });
