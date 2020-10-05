@@ -133,6 +133,30 @@ Material UI related styles START
   justify-content: center;
 }
 
+:global(.MuiCheckbox-root) {
+  color: rgba(0, 0, 0, 0.3) !important;
+}
+
+:global(.MuiDialogActions-root) {
+  padding: 16px 24px !important;
+}
+
+:global(.MuiDialogTitle-root) {
+  text-align: left;
+  border-bottom: 1px solid #cacdd2;
+  padding: 16px 0px 16px 24px !important;
+}
+
+:global(.MuiDialogContent-root) {
+  padding: 24px !important;
+  border-bottom: 1px solid #cacdd2;
+}
+
+:global(.MuiDialogContentText-root) {
+  margin-bottom: 0px !important;
+  text-align: left !important;
+}
+
 /* 
 -----------------------------------------------------------------------------
 Material UI related styles END

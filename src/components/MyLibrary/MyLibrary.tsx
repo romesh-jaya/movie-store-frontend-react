@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useCallback, ReactNode, ChangeEvent, useEffect } from 'react';
+import React, { useState, useCallback, ReactNode, ChangeEvent, useEffect, ReactElement } from 'react';
 import MaterialTable from 'material-table';
 import { Button, Chip, FormControl, MenuItem, Select, Typography } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 
+import Delete from '@material-ui/icons/Delete';
 import { Pagination } from '@material-ui/lab';
 import styles from './MyLibrary.css';
 import * as globStyles from '../../index.css';
@@ -15,6 +16,7 @@ import MovieLoadingSkeleton from '../Movies/MovieLoadingSkeleton';
 import { MovieType } from '../../enums/MovieType';
 import NumberRangeInput from '../Controls/Input/NumberRangeInput/NumberRangeInput';
 import TableIcons from '../../constants/TableIcons';
+import AlertConfirmation from '../UI/AlertConfirmation/AlertConfirmation';
 
 const pageSize = 10;
 
@@ -34,9 +36,11 @@ const MyLibrary: React.FC = () => {
   const [movInfo, setMovInfo] = useState('');
   const [selectedMovie, setSelectedMovie] = useState<IMovie>();
   const [isLoading, setIsLoading] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [lastSearchInfo, setLastSearchInfo] = useState<ISearchInfo | undefined>();
   const [lastSearchMovieCount, setLastSearchMovieCount] = useState<number | undefined>();
+  const [movToDelete, setMovToDelete] = useState<IMovie[] | undefined>();
   // Search related:
   const [searchTitle, setSearchTitle] = useState('');
   const [searchType, setSearchType] = useState('');
@@ -53,7 +57,7 @@ const MyLibrary: React.FC = () => {
     return !!(searchTitle.trim() || searchType.trim() || searchYearExact || searchYearFrom || searchYearTo);
   }, [searchTitle, searchType, searchYearExact, searchYearFrom, searchYearTo]);
 
-  const queryMovies = useCallback((pageNo?: number): void => {
+  const queryMovies = useCallback(async (pageNo?: number): Promise<void> => {
     const page = pageNo ?? 1;
     const newSearchInfo =
     {
@@ -62,40 +66,67 @@ const MyLibrary: React.FC = () => {
       pageSize
     };
     setIsLoading(true);
-    axios.get(`${process.env.REACT_APP_NODE_SERVER}/movies`,
-      { params: newSearchInfo })
-      .then((response: any) => {
-        setCurrentPage(page);
-        if (!response.data[0].movies.length) {
-          setSelectedMovie(undefined);
-          setMovies([]);
-          setMovError('');
-          setMovInfo(TextConstants.NOMOVIESFOUND);
-          setIsLoading(false);
-          setLastSearchMovieCount(0);
-          return;
-        }
 
-        setSelectedMovie(undefined);
-        setMovies(response.data[0].movies);
-        setMovError('');
-        setMovInfo('');
-        setIsLoading(false);
-        setLastSearchMovieCount(response.data[0].movieCount[0].count);
-      })
-      .catch((err: any) => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_NODE_SERVER}/movies`,
+        { params: newSearchInfo });
+
+      setCurrentPage(page);
+      if ((page === 1) && !response.data.movies.movies.length) {
+        // Perform this for first query only
         setSelectedMovie(undefined);
         setMovies([]);
-        setMovInfo('');
+        setMovError('');
+        setMovInfo(TextConstants.NOMOVIESFOUND);
         setIsLoading(false);
-        if (err && err.response && err.response.data && err.response.data.Error) {
-          setMovError(`${TextConstants.MOVIELOADERROR}: ${err.response.data.Error}`);
-        } else {
-          setMovError(TextConstants.MOVIELOADERROR);
-        }
         setLastSearchMovieCount(0);
-      });
+        return;
+      }
+
+      setSelectedMovie(undefined);
+      setMovies(response.data.movies.movies);
+      setMovError('');
+      setMovInfo('');
+      setIsLoading(false);
+      setLastSearchMovieCount(response.data.movies.movieCount[0].count);
+
+    } catch (err) {
+      setSelectedMovie(undefined);
+      setMovies([]);
+      setMovInfo('');
+      setIsLoading(false);
+      if (err && err.response && err.response.data && err.response.data.Error) {
+        setMovError(`${TextConstants.MOVIELOADERROR}: ${err.response.data.Error}`);
+      } else {
+        setMovError(TextConstants.MOVIELOADERROR);
+      }
+      setLastSearchMovieCount(0);
+    }
+
   }, [lastSearchInfo]);
+
+  const deleteMovies = useCallback(async (): Promise<void> => {
+    const idArray = movToDelete?.map(movie => movie.id);
+
+    if (idArray) {
+      setMovError('');
+      setIsLoading(true);
+      try {
+        await axios.delete(`${process.env.REACT_APP_NODE_SERVER}/movies`,
+          { params: { idArray } });
+        setShowDeleteConfirm(false);
+        await queryMovies(currentPage);
+      } catch (err) {
+        if (err && err.response && err.response.data && err.response.data.Error) {
+          setMovError(`${TextConstants.MOVIEDELETEERROR}: ${err.response.data.Error}`);
+        } else {
+          setMovError(TextConstants.MOVIEDELETEERROR);
+        }
+        setShowDeleteConfirm(false);
+        setIsLoading(false);
+      }
+    }
+  }, [currentPage, movToDelete, queryMovies]);
 
   const onPageNoChanged = (_: object, page: number): void => {
     // Note: the page always starts at 1 in Material UI
@@ -199,10 +230,23 @@ const MyLibrary: React.FC = () => {
     clearFields();
   };
 
+  const onDeleteClicked = (data: IMovie | IMovie[]): void => {
+    setShowDeleteConfirm(true);
+    if (Array.isArray(data)) {
+      setMovToDelete(data);
+    } else {
+      setMovToDelete([data]);
+    }
+  };
+
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
     if (event.key === 'Enter' || event.key === 'NumpadEnter') {
       newSearch();
     }
+  };
+
+  const onCancelledDelete = (): void => {
+    setShowDeleteConfirm(false);
   };
 
   const renderError = (): ReactNode | null => {
@@ -213,8 +257,18 @@ const MyLibrary: React.FC = () => {
     ) : null;
   };
 
+  const renderConfirmModal = (): ReactElement | null => showDeleteConfirm ? (
+    <AlertConfirmation
+      message="Are you sure you wish to delete these movies?"
+      title="Delete"
+      oKButtonText="Delete"
+      onConfirmed={deleteMovies}
+      onCancelled={onCancelledDelete}
+    />
+  ) : null;
+
   const renderTable = (): ReactNode | null => {
-    const totalPageCount = Math.floor((lastSearchMovieCount ?? 0) / pageSize) + 1;
+    const totalPageCount = Math.ceil((lastSearchMovieCount ?? 0) / pageSize);
     return lastSearchMovieCount ? (
       <div className={styles['table-style']}>
         <MaterialTable
@@ -271,8 +325,22 @@ const MyLibrary: React.FC = () => {
               paging: false,
               sorting: true,
               headerStyle: { fontSize: '1rem' },
-              rowStyle: { fontSize: '0.95rem' }
+
+              rowStyle: rowData => ({
+                backgroundColor: rowData.tableData.checked
+                  ? 'rgba(232, 210, 192, 0.5)' : '#fff'
+              }),
+              selection: true
             }
+          }
+          actions={
+            [
+              {
+                tooltip: 'Delete selected movies',
+                icon: () => <Delete />,
+                onClick: (_, data) => onDeleteClicked(data)
+              }
+            ]
           }
           icons={TableIcons}
         />
@@ -384,6 +452,7 @@ const MyLibrary: React.FC = () => {
         <section>
           {selectedMovie && !movError ? <MovieDetails selectedMovie={selectedMovie} /> : null}
         </section>
+        {renderConfirmModal()}
         {renderError()}
         {movInfo ? <p>{movInfo}</p> : null}
       </>

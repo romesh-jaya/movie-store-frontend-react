@@ -1,0 +1,17 @@
+.header {
+  margin: auto !important;
+}
+
+.title {
+  float: left;
+  justify-content: left !important;
+  text-align: left !important;
+}
+
+.close-button {
+  float: right;
+}
+
+.first-button {
+  margin-right: 5px;
+}
