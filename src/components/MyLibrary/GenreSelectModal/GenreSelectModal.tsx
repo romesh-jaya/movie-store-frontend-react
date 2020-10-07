@@ -9,7 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import Checkbox from '@material-ui/core/Checkbox';
 import styles from './GenreSelectModal.css';
-import { Genres } from '../../../constants/Genres';
+import { Genres, IGenre } from '../../../constants/Genres';
 
 interface IProps {
   initialGenres: string[];
@@ -46,13 +46,17 @@ const GenreSelectModal: React.FC<IProps> = (props) => {
     initForm();
   }, [initForm]);
 
+  const setCheckboxGenre = (genre: IGenre, checked: boolean): void => {
+    setCheckboxValues(prevVal => {
+      const tempArray = prevVal.filter(prevCheckbox => (prevCheckbox.name !== `is${genre.id}`));
+      return tempArray.concat([{ name: `is${genre.id}`, checked }]);
+    });
+  };
+
   const onReset = (): void => {
     setSelectedGenres([]);
     Genres.forEach(genre => {
-      setCheckboxValues(prevVal => {
-        const tempArray = prevVal.filter(prevCheckbox => (prevCheckbox.name !== `is${genre.id}`));
-        return tempArray.concat([{ name: `is${genre.id}`, checked: false }]);
-      });
+      setCheckboxGenre(genre, false);
     });
   };
 
@@ -65,24 +69,16 @@ const GenreSelectModal: React.FC<IProps> = (props) => {
           setSelectedGenres(prevGenres => {
             return prevGenres.concat([genre.genre]);
           });
-          setCheckboxValues(prevVal => {
-            const tempArray = prevVal.filter(prevCheckbox => (prevCheckbox.name !== `is${genre.id}`));
-            return tempArray.concat([{ name: `is${genre.id}`, checked: true }]);
-          });
+          setCheckboxGenre(genre, true);
         } else {
           setSelectedGenres(prevGenres => {
             return prevGenres.filter(prevGenre => (prevGenre !== genre.genre));
           });
-          setCheckboxValues(prevVal => {
-            const tempArray = prevVal.filter(prevCheckbox => (prevCheckbox.name !== `is${genre.id}`));
-            return tempArray.concat([{ name: `is${genre.id}`, checked: false }]);
-          });
+          setCheckboxGenre(genre, false);
         }
       }
     });
   };
-
-
 
   const renderGenres = (): ReactNode => {
     return (
@@ -156,3 +152,5 @@ const GenreSelectModal: React.FC<IProps> = (props) => {
 };
 
 export default GenreSelectModal;
+
+
