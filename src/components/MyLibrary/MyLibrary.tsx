@@ -17,6 +17,7 @@ import { MovieType } from '../../enums/MovieType';
 import NumberRangeInput from '../Controls/Input/NumberRangeInput/NumberRangeInput';
 import TableIcons from '../../constants/TableIcons';
 import AlertConfirmation from '../UI/AlertConfirmation/AlertConfirmation';
+import GenreSelectModal from './GenreSelectModal/GenreSelectModal';
 
 const pageSize = 10;
 
@@ -26,7 +27,7 @@ interface ISearchInfo {
   searchYearExact?: number;
   searchYearFrom?: number;
   searchYearTo?: number;
-  searchGenre?: string;
+  searchGenres?: string[];
   searchPgRating?: string;
 };
 
@@ -37,6 +38,7 @@ const MyLibrary: React.FC = () => {
   const [selectedMovie, setSelectedMovie] = useState<IMovie>();
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showGenresModal, setShowGenresModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [lastSearchInfo, setLastSearchInfo] = useState<ISearchInfo | undefined>();
   const [lastSearchMovieCount, setLastSearchMovieCount] = useState<number | undefined>();
@@ -50,12 +52,11 @@ const MyLibrary: React.FC = () => {
   const [searchYearFrom, setSearchYearFrom] = useState<number | undefined>();
   const [searchYearTo, setSearchYearTo] = useState<number | undefined>();
   const [searchYearIsBetweenValuesIncomplete, setSearchYearIsBetweenValuesIncomplete] = useState(false);
-  const [searchGenre, setSearchGenre] = useState('');
-  const [searchPgRating, setSearchPgRating] = useState('');
+  const [searchGenres, setSearchGenres] = useState<string[]>([]);
 
   const isSearchTextValid = useCallback((): boolean => {
-    return !!(searchTitle.trim() || searchType.trim() || searchYearExact || searchYearFrom || searchYearTo);
-  }, [searchTitle, searchType, searchYearExact, searchYearFrom, searchYearTo]);
+    return !!(searchTitle.trim() || searchType.trim() || searchYearExact || searchYearFrom || searchYearTo || searchGenres.length);
+  }, [searchGenres.length, searchTitle, searchType, searchYearExact, searchYearFrom, searchYearTo]);
 
   const queryMovies = useCallback(async (pageNo?: number): Promise<void> => {
     const page = pageNo ?? 1;
@@ -167,16 +168,12 @@ const MyLibrary: React.FC = () => {
       if (searchYearTo) {
         searchInfo.searchYearTo = searchYearTo;
       }
-      if (searchGenre) {
-        searchInfo.searchGenre = searchGenre;
+      if (searchGenres) {
+        searchInfo.searchGenres = searchGenres;
       }
-      if (searchPgRating) {
-        searchInfo.searchPgRating = searchPgRating;
-      }
-
       setLastSearchInfo(searchInfo);
     }
-  }, [isSearchTextValid, searchGenre, searchPgRating, searchTitle, searchType, searchYearExact, searchYearFrom, searchYearIsBetweenValuesIncomplete, searchYearTo]);
+  }, [isSearchTextValid, searchGenres, searchTitle, searchType, searchYearExact, searchYearFrom, searchYearIsBetweenValuesIncomplete, searchYearTo]);
 
   useEffect(() => {
     if (lastSearchInfo) {
@@ -184,20 +181,8 @@ const MyLibrary: React.FC = () => {
     }
   }, [lastSearchInfo, queryMovies]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    switch (event.target.name) {
-      case 'searchTitle':
-        setSearchTitle(event.target.value);
-        break;
-      case 'searchGenre':
-        setSearchGenre(event.target.value);
-        break;
-      case 'searchPgRating':
-        setSearchPgRating(event.target.value);
-        break;
-      default:
-        break;
-    }
+  const handleChangeSearchTitle = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setSearchTitle(event.target.value);
   };
 
   const handleChangeSearchYear = (_: string, isBetweenValuesIncomplete: boolean, value: string, valueSingle?: number,
@@ -218,8 +203,7 @@ const MyLibrary: React.FC = () => {
     setSearchTitle('');
     setSearchType('');
     setSearchYearInput('');
-    setSearchGenre('');
-    setSearchPgRating('');
+    setSearchGenres([]);
   };
 
   const onSearchClicked = (): void => {
@@ -245,8 +229,21 @@ const MyLibrary: React.FC = () => {
     }
   };
 
+  const onGenresClicked = (): void => {
+    setShowGenresModal(true);
+  };
+
+  const onCancelledGenreSelect = (): void => {
+    setShowGenresModal(false);
+  };
+
   const onCancelledDelete = (): void => {
     setShowDeleteConfirm(false);
+  };
+
+  const newGenresSelected = (genres: string[]): void => {
+    setSearchGenres(genres);
+    setShowGenresModal(false);
   };
 
   const renderError = (): ReactNode | null => {
@@ -256,6 +253,14 @@ const MyLibrary: React.FC = () => {
       </p>
     ) : null;
   };
+
+  const renderGenresModal = (): ReactElement | null => showGenresModal ? (
+    <GenreSelectModal
+      initialGenres={searchGenres}
+      onConfirmed={newGenresSelected}
+      onCancelled={onCancelledGenreSelect}
+    />
+  ) : null;
 
   const renderConfirmModal = (): ReactElement | null => showDeleteConfirm ? (
     <AlertConfirmation
@@ -358,7 +363,7 @@ const MyLibrary: React.FC = () => {
   };
 
   const renderButtons = (): ReactNode => (
-    <div className='top-spacer'>
+    <div className={styles['button-div']}>
       <span className='right-spacer'>
         <Button
           disabled={!isSearchTextValid()}
@@ -370,15 +375,13 @@ const MyLibrary: React.FC = () => {
           Search
         </Button>
       </span>
-      <span className='right-spacer'>
-        <Button
-          onClick={onResetClicked}
-          color="secondary"
-          variant="contained"
-        >
-          Reset
-        </Button>
-      </span>
+      <Button
+        onClick={onResetClicked}
+        color="secondary"
+        variant="contained"
+      >
+        Reset
+      </Button>
     </div>
   );
 
@@ -396,8 +399,8 @@ const MyLibrary: React.FC = () => {
                 type="text"
                 name="searchTitle"
                 value={searchTitle}
-                className={styles['input-style-add-user']}
-                onChange={handleChange}
+                className={styles['input-style-search']}
+                onChange={handleChangeSearchTitle}
                 onKeyDown={handleKeyDown}
               />
             </div>
@@ -408,7 +411,7 @@ const MyLibrary: React.FC = () => {
             Type
             <FormControl variant="outlined" className="inter-control-spacing">
               <Select
-                className={styles['input-style-add-user']}
+                className={styles['input-style-search']}
                 value={searchType}
                 onChange={handleChangeSearchType}
                 name="searchType"
@@ -428,7 +431,7 @@ const MyLibrary: React.FC = () => {
             <div className="inter-control-spacing">
               <NumberRangeInput
                 name="searchYear"
-                classNameCustom='input-style-add-user'
+                classNameCustom='input-style-search'
                 value={searchYearInput}
                 handleReturnValue={handleChangeSearchYear}
                 enterPressed={newSearch}
@@ -438,6 +441,31 @@ const MyLibrary: React.FC = () => {
           <div className="error-text-small">
             <small>{errorTextSearchYear}</small>
           </div>
+        </div>
+        <div className={styles['label-and-input-div']}>
+          <label htmlFor="searchGenres">
+            Genres
+            <div className="inter-control-spacing">
+              <span className={styles['genre-output']}>
+                <input
+                  disabled
+                  type="text"
+                  name="searchGenres"
+                  value={searchGenres.join(', ')}
+                  className={styles['input-style-search-genre']}
+                />
+              </span>
+              <span className={styles['genre-button']}>
+                <Button
+                  onClick={onGenresClicked}
+                  color="secondary"
+                  variant="contained"
+                >
+                  Genres...
+                </Button>
+              </span>
+            </div>
+          </label>
         </div>
         {renderButtons()}
       </Card>
@@ -453,6 +481,7 @@ const MyLibrary: React.FC = () => {
           {selectedMovie && !movError ? <MovieDetails selectedMovie={selectedMovie} /> : null}
         </section>
         {renderConfirmModal()}
+        {renderGenresModal()}
         {renderError()}
         {movInfo ? <p>{movInfo}</p> : null}
       </>

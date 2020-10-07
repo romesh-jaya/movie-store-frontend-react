@@ -3,11 +3,13 @@ This app is used for managing movie library in a movie store. It uses OMDB API q
 Tech Stack used: 
 - Webpack
 - React Skeletons
-- REST API 
+- REST API with Axios
 - Lazy loading of code
 - Material UI
 - Pagination
 - React Context
+
+This project uses OMDB API to search for movie data. The latter has a 1,000 daily API call limit. Another free alternative might be TMDB: https://developers.themoviedb.org/3/getting-started
 
 ## Available Scripts
 

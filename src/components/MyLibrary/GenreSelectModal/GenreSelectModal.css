@@ -1,0 +1,24 @@
+.header {
+  margin: auto !important;
+}
+
+.title {
+  float: left;
+  justify-content: left !important;
+  text-align: left !important;
+}
+
+.close-button {
+  float: right;
+}
+
+.first-button {
+  margin-right: 5px;
+}
+
+.genre-container {
+  display: grid;
+  grid-template-columns: 150px 150px 150px;
+  grid-gap: 10px;
+  text-align: left;
+}

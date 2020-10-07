@@ -1,6 +1,6 @@
 declare namespace NumberRangeInputCssNamespace {
   export interface INumberRangeInputCss {
-    'input-style-add-user': string;
+    'input-style-search': string;
   }
 }
 

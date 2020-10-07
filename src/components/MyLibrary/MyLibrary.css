@@ -2,17 +2,21 @@
   margin-right: 20px;
   justify-content: left !important;
   text-align: left !important;
-  float: left;
   margin-bottom: 20px;
   font-size: 0.9rem;
 }
 
-.input-style-add-user {
+.input-style-search {
   width: 350px;
   height: 30px;
 }
 
-.input-style-add-user-half {
+.input-style-search-genre {
+  width: 230px;
+  height: 35px;
+}
+
+.input-style-search-half {
   width: 185px;
   height: 30px;
   margin-bottom: 5px;
@@ -37,4 +41,18 @@
 
 .pagination-style {
   margin-top: 10px;
+}
+
+.genre-output {
+  float: left;
+}
+
+.genre-button {
+  float: right;
+}
+
+.button-div {
+  margin-top: 30px;
+  width: 350px;
+  float: left;
 }

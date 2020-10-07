@@ -1,9 +1,13 @@
 declare namespace MyLibraryCssNamespace {
   export interface IMyLibraryCss {
+    'button-div': string;
     'card-style': string;
     'card-title': string;
-    'input-style-add-user': string;
-    'input-style-add-user-half': string;
+    'genre-button': string;
+    'genre-output': string;
+    'input-style-search': string;
+    'input-style-search-genre': string;
+    'input-style-search-half': string;
     'label-and-input-div': string;
     'pagination-style': string;
     'table-style': string;

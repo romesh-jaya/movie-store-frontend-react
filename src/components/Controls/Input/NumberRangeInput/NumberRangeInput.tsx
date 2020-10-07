@@ -37,7 +37,7 @@ const NumberRangeInput: React.FC<IProps> = (props) => {
     const regexpBetweenIncomplete = new RegExp('^[0-9]+[-][0-9]*$');
     const regexpBetweenComplete = new RegExp('^[0-9]+[-][0-9]+$');
     const { name, classNameCustom, value, handleReturnValue, enterPressed } = props;
-    const className = classNameCustom === 'input-style-add-user' ? styles['input-style-add-user'] : '';
+    const className = classNameCustom === 'input-style-search' ? styles['input-style-search'] : '';
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
         if (enterPressed && (event.key === 'Enter' || event.key === 'NumpadEnter')) {
