@@ -9,7 +9,7 @@ import axios from '../../../axios';
 import Movie from '../Movie/Movie';
 import styles from './MovieSearch.css';
 import * as globStyles from '../../../index.css';
-import IMovie from '../../../interfaces/IMovie';
+import IMovieSearch from '../../../interfaces/IMovieSearch';
 import MovieDetails from '../MovieDetails/MovieDetails';
 import MovieLoadingSkeleton from '../MovieLoadingSkeleton';
 import KeyContext from '../../../context/KeyContext';
@@ -18,101 +18,101 @@ import { TextConstants } from '../../../constants/TextConstants';
 const searchURL = process.env.REACT_APP_SEARCH_URL || '';
 
 const MovieSearch: React.FC = () => {
-  const [movies, setMovies] = useState<IMovie[]>([]);
+  const [movies, setMovies] = useState<IMovieSearch[]>([]);
   const [movError, setMovError] = useState('');
   const [movInfo, setMovInfo] = useState('');
   const [wasLastSearchSuccess, setWasLastSearchSuccess] = useState(false);
-  const [selectedMovie, setSelectedMovie] = useState<IMovie | undefined>();
+  const [selectedMovie, setSelectedMovie] = useState<IMovieSearch | undefined>();
   const [inputQuery, setInputQuery] = useState('');
   const [inputQueryTrimmed, setInputQueryTrimmed] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const apiKey = useContext(KeyContext);
 
-  const loadMovies = useCallback((pageNo?: number): void => {
-    const filteredMovies: any[] = [];
-    const enhancedMovies: IMovie[] = [];
+  const loadMovies = useCallback(async (pageNo?: number): Promise<void> => {
+    const filteredMoviesIMDBIds: string[] = [];
+    const enhancedMovies: IMovieSearch[] = [];
 
     const page = pageNo ? '&page=' + pageNo.toFixed(0) : '';
-    setIsLoading(true);
 
-    axios.get(`${searchURL}?apikey=${apiKey}&s=${inputQueryTrimmed}${page}`)
-      .then((response: any) => {
-        if (!response.data || response.data.Response === 'False') {
-          setSelectedMovie(undefined);
-          setMovies([]);
-          setMovError('');
-          setMovInfo(TextConstants.NOMOVIESFOUND);
-          setIsLoading(false);
-
-          if (!pageNo) {
-            setWasLastSearchSuccess(false);
-          } else {
-            setCurrentPage(pageNo);
-          }
-          return;
-        }
-
-        const fetchedMovies = response.data;
-
-        // get unique values as there are duplicates in the results returned from OMDB at times
-        fetchedMovies.Search.forEach((movie: any) => {
-          let matchFound = false;
-          filteredMovies.forEach(filteredMovie => {
-            if (filteredMovie.imdbID === movie.imdbID) {
-              matchFound = true;
-            }
-          });
-          if (!matchFound) {
-            filteredMovies.push(movie);
-          }
-        });
-
-        // loop through the filteredMovies to get additional actors info using the OMDB details URL
-        const getMovieDetails = async (movieOne: any): Promise<any> => {
-          const res = await axios.get(`${searchURL}?apikey=${apiKey}&i=${movieOne.imdbID}`);
-          const movie = res.data;
-          const genres = movie.Genre ? movie.Genre.split(', ') : 'None';
-          enhancedMovies.push({
-            title: movie.Title, year: movie.Year, imdbID: movie.imdbID, mediaURL: movie.Poster, actors: movie.Actors,
-            plot: movie.Plot, type: movie.Type, pGRating: movie.Rated, language: movie.Language, genre: genres
-          });
-        };
-
-        const getData = async () => {
-          return Promise.all(filteredMovies.map(movie => getMovieDetails(movie)));
-        };
-
-        getData().then(() => {
-          setSelectedMovie(undefined);
-          setMovies(enhancedMovies);
-          setMovError('');
-          setMovInfo('');
-          setIsLoading(false);
-
-          if (!pageNo) {
-            setCurrentPage(1);
-            setWasLastSearchSuccess(true);
-          } else {
-            setCurrentPage(pageNo);
-          }
-        });
-      })
-      .catch((err: any) => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get(`${searchURL}?apikey=${apiKey}&s=${inputQueryTrimmed}${page}`);
+      if (!response.data || response.data.Response === 'False') {
         setSelectedMovie(undefined);
         setMovies([]);
-        setMovInfo('');
+        setMovError('');
+        setMovInfo(TextConstants.NOMOVIESFOUND);
         setIsLoading(false);
 
         if (!pageNo) {
           setWasLastSearchSuccess(false);
-        }
-        if (err && err.response && err.response.data && err.response.data.Error) {
-          setMovError(`${TextConstants.MOVIELOADERROROMDB}: ${err.response.data.Error}`);
         } else {
-          setMovError(TextConstants.MOVIELOADERROROMDB);
+          setCurrentPage(pageNo);
+        }
+        return;
+      }
+
+      const fetchedMovies = response.data;
+
+      // get unique values as there are duplicates in the results returned from OMDB at times
+      fetchedMovies.Search.forEach((movie: any) => {
+        let matchFound = false;
+        filteredMoviesIMDBIds.forEach(filteredMovie => {
+          if (filteredMovie === movie.imdbID) {
+            matchFound = true;
+          }
+        });
+        if (!matchFound) {
+          filteredMoviesIMDBIds.push(movie.imdbID);
         }
       });
+
+      // loop through the filteredMovies to get additional actors info using the OMDB details URL
+      const getMovieDetails = async (movieOne: string): Promise<any> => {
+        const res = await axios.get(`${searchURL}?apikey=${apiKey}&i=${movieOne}`);
+        const movie = res.data;
+        const genres = movie.Genre ? movie.Genre.split(', ') : 'None';
+        enhancedMovies.push({
+          title: movie.Title, year: movie.Year, imdbID: movie.imdbID, mediaURL: movie.Poster, actors: movie.Actors,
+          plot: movie.Plot, type: movie.Type, pGRating: movie.Rated, language: movie.Language, genre: genres
+        });
+      };
+
+      const getData = async () => {
+        return Promise.all(filteredMoviesIMDBIds.map(movie => getMovieDetails(movie)));
+      };
+
+      getData().then(() => {
+        setSelectedMovie(undefined);
+        setMovies(enhancedMovies);
+        setMovError('');
+        setMovInfo('');
+        setIsLoading(false);
+
+        if (!pageNo) {
+          setCurrentPage(1);
+          setWasLastSearchSuccess(true);
+        } else {
+          setCurrentPage(pageNo);
+        }
+      });
+    } catch (err) {
+      setSelectedMovie(undefined);
+      setMovies([]);
+      setMovInfo('');
+      setIsLoading(false);
+
+      if (!pageNo) {
+        setWasLastSearchSuccess(false);
+      }
+      if (err && err.response && err.response.data && err.response.data.Error) {
+        setMovError(`${TextConstants.MOVIELOADERROROMDB}: ${err.response.data.Error}`);
+      } else {
+        setMovError(TextConstants.MOVIELOADERROROMDB);
+      }
+    }
+
   }, [apiKey, inputQueryTrimmed]);
 
 
@@ -131,7 +131,7 @@ const MovieSearch: React.FC = () => {
     };
   }, [inputQueryTrimmed, loadMovies]);
 
-  const movieSelectedHandler = (movieSel: IMovie): void => {
+  const movieSelectedHandler = (movieSel: IMovieSearch): void => {
     setSelectedMovie(movieSel);
   };
 

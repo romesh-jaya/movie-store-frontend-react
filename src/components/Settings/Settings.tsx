@@ -1,9 +1,11 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useContext, useState, useEffect, useRef, ReactNode } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
+import * as globStyles from '../../index.css';
 import KeyContext from '../../context/KeyContext';
 import axios from '../../axios';
+import { TextConstants } from '../../constants/TextConstants';
 
 interface IProps {
   setAPIKey: (apiKey: string) => void
@@ -11,6 +13,7 @@ interface IProps {
 
 const Settings: React.FC<IProps> = (props: IProps) => {
   const apiKey = useContext(KeyContext);
+  const [settingsError, setSettingsError] = useState('');
   const [omdbAPIKeyEntered, SetOmdbAPIKeyEntered] = useState('');
   const [settingsChanged, SetSettingsChanged] = useState(false);
   const { setAPIKey } = props;
@@ -21,19 +24,22 @@ const Settings: React.FC<IProps> = (props: IProps) => {
     SetSettingsChanged(true);
   };
 
-  const onSaveClicked = (): void => {
-    axios.patch(`${process.env.REACT_APP_NODE_SERVER}/settings`,
-      {
-        name: 'apiKey',
-        value: omdbAPIKeyEntered
-      })
-      .then(() => {
-        setAPIKey(omdbAPIKeyEntered);
-        // this var is to avoid the warning 'can't perform a react state update on an unmounted component.'
-        if (isMountedRef.current) {
-          SetSettingsChanged(false);
-        }
-      });
+  const onSaveClicked = async (): Promise<void> => {
+    try {
+      await axios.patch(`${process.env.REACT_APP_NODE_SERVER}/settings`,
+        {
+          name: 'apiKey',
+          value: omdbAPIKeyEntered
+        });
+      setAPIKey(omdbAPIKeyEntered);
+      // this var is to avoid the warning 'can't perform a react state update on an unmounted component.'
+      if (isMountedRef.current) {
+        SetSettingsChanged(false);
+        setSettingsError('');
+      }
+    } catch (error) {
+      setSettingsError(`${TextConstants.MOVIESAVESETTINGS}: ${error}`);
+    }
   };
 
   // load the settings
@@ -45,6 +51,14 @@ const Settings: React.FC<IProps> = (props: IProps) => {
       isMountedRef.current = false;
     };
   }, [apiKey]);
+
+  const renderError = (): ReactNode | null => {
+    return settingsError ? (
+      <p className={globStyles['error-text']}>
+        {settingsError}
+      </p>
+    ) : null;
+  };
 
   return (
     <>
@@ -68,6 +82,7 @@ const Settings: React.FC<IProps> = (props: IProps) => {
       <Button variant="outlined" color="primary" onClick={onSaveClicked} disabled={!settingsChanged}>
         Save
       </Button>
+      {renderError()}
     </>
   );
 };

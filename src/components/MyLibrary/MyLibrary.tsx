@@ -9,28 +9,27 @@ import styles from './MyLibrary.css';
 import * as globStyles from '../../index.css';
 import { TextConstants } from '../../constants/TextConstants';
 import axios from '../../axios';
-import IMovie from '../../interfaces/IMovie';
-import MovieDetails from '../Movies/MovieDetails/MovieDetails';
 import MovieLoadingSkeleton from '../Movies/MovieLoadingSkeleton';
 import { MovieType } from '../../enums/MovieType';
 import TableIcons from '../../constants/TableIcons';
 import AlertConfirmation from '../UI/AlertConfirmation/AlertConfirmation';
 import LibrarySearchBox from './LibrarySearchBox/LibrarySearchBox';
 import { ISearchInfo } from '../../interfaces/ISearchInfo';
+import IMovieLibrary from '../../interfaces/IMovieLibrary';
 
 const pageSize = 10;
 
 const MyLibrary: React.FC = () => {
-  const [movies, setMovies] = useState<IMovie[]>([]);
+  const [movies, setMovies] = useState<IMovieLibrary[]>([]);
   const [movError, setMovError] = useState('');
   const [movInfo, setMovInfo] = useState('');
-  const [selectedMovie, setSelectedMovie] = useState<IMovie>();
+  const [selectedMovie, setSelectedMovie] = useState<IMovieLibrary>();
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [lastSearchInfo, setLastSearchInfo] = useState<ISearchInfo | undefined>();
   const [lastSearchMovieCount, setLastSearchMovieCount] = useState<number | undefined>();
-  const [movToDelete, setMovToDelete] = useState<IMovie[] | undefined>();
+  const [movToDelete, setMovToDelete] = useState<IMovieLibrary[] | undefined>();
 
   const queryMovies = useCallback(async (pageNo?: number): Promise<void> => {
     const page = pageNo ?? 1;
@@ -114,7 +113,7 @@ const MyLibrary: React.FC = () => {
     }
   }, [lastSearchInfo, queryMovies]);
 
-  const onDeleteClicked = (data: IMovie | IMovie[]): void => {
+  const onDeleteClicked = (data: IMovieLibrary | IMovieLibrary[]): void => {
     setShowDeleteConfirm(true);
     if (Array.isArray(data)) {
       setMovToDelete(data);
@@ -239,9 +238,6 @@ const MyLibrary: React.FC = () => {
     return (
       <>
         {renderTable()}
-        <section>
-          {selectedMovie && !movError ? <MovieDetails selectedMovie={selectedMovie} /> : null}
-        </section>
         {renderConfirmModal()}
         {renderError()}
         {movInfo ? <p>{movInfo}</p> : null}

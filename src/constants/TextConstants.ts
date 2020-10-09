@@ -1,11 +1,14 @@
 export const TextConstants = 
 {
   // Info
-  'NOMOVIESFOUND': 'No movies found for the search criteria.',
+  'NOMOVIESFOUND': 'No titles found for the search criteria.',
   
   // Errors
   'NOAPIKEYDEFINED': 'OMDB API Key needs to be provided in Settings page.',
   'CANNOTCONNECTSERVER': 'Cannot connect to Node Server.',
+  'MOVIELOADERRORLIB': 'Error loading movies from Library',
+  'MOVIESAVEERRORLIB': 'Error saving movies to Library',
+  'MOVIESAVESETTINGS': 'Error saving settings',
   'MOVIELOADERROR': 'Error loading movies',
   'MOVIEDELETEERROR': 'Error deleting movies',
   'MOVIELOADERROROMDB': 'Error while accessing OMDB database',

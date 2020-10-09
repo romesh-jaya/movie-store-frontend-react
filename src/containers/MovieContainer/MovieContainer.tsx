@@ -48,22 +48,23 @@ const MovieContainer: React.FC = () => {
 
   // load the settings
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_NODE_SERVER}/settings/apiKey`)
-      .then(response => {
-        if (response) {
-          setIsLoading(false);
-          if (response.data.value) {
-            console.log('Retrieved API key.');
-            setApiKey(response.data.value);
-          } else {
-            console.log('API key was returned blank.');
-          }
+    async function loadKey() : Promise<void> {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_NODE_SERVER}/settings/apiKey`);
+        setIsLoading(false);
+        if (response.data.value) {
+          console.log('Retrieved API key.');
+          setApiKey(response.data.value);
+        } else {
+          console.log('API key was returned blank.');
         }
-      })
-      .catch(() => {
+      } catch {
         setIsLoading(false);
         setSettingsError(TextConstants.CANNOTCONNECTSERVER);
-      });
+      }
+    }
+    
+    loadKey();
   }, []);
 
   const renderNoApiKey = (): ReactNode => {

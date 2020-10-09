@@ -7,14 +7,14 @@ import axios from '../../../axios';
 
 import * as styles from './MovieDetails.css';
 import * as globStyles from '../../../index.css';
-import IMovie from '../../../interfaces/IMovie';
+import IMovieSearch from '../../../interfaces/IMovieSearch';
 import { MovieType } from '../../../enums/MovieType';
 import MovieDetailsSkeleton from './MovieDetailsSkeleton';
-
-const errorText = 'Error while accessing Node Server';
+import IMovieLibrary from '../../../interfaces/IMovieLibrary';
+import { TextConstants } from '../../../constants/TextConstants';
 
 interface IProps {
-  selectedMovie: IMovie
+  selectedMovie: IMovieSearch
 }
 
 const ZERO = 0;
@@ -40,27 +40,38 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
   };
 
   const onSaveClicked = async (): Promise<void> => {
-    if (!movID) {
-      const response = await axios.post(`${process.env.REACT_APP_NODE_SERVER}/movies`,
-        {
-          imdbID: selectedMovie.imdbID,
-          count: movieTotal,
-          title: selectedMovie.title,
-          year: selectedMovie.year,
-          type: selectedMovie.type,
-          pGRating: selectedMovie.pGRating,
-          language: selectedMovie.language,
-          genre: selectedMovie.genre
-        });
-      setMovID(response.data.id);
-    } else {
-      await axios.patch(`${process.env.REACT_APP_NODE_SERVER}/movies`,
-        {
-          id: movID,
-          count: movieTotal
-        });
+    const movieDetails : IMovieLibrary = 
+    {
+      imdbID: selectedMovie.imdbID,
+      count: movieTotal,
+      title: selectedMovie.title,
+      year: selectedMovie.year,
+      type: selectedMovie.type,
+      pGRating: selectedMovie.pGRating,
+      languages: [selectedMovie.language],
+      genre: selectedMovie.genre
+    };
+    
+    try {
+      setMovieLoading(true);
+      if (!movID) {
+        const response = await axios.post(`${process.env.REACT_APP_NODE_SERVER}/movies`,
+          movieDetails);
+        setMovID(response.data.id);
+      } else {
+        await axios.patch(`${process.env.REACT_APP_NODE_SERVER}/movies`,
+          {
+            id: movID,
+            count: movieTotal
+          });
+      }
+      SetMovError('');
+      setMovieTotalChanged(false);
+      setMovieLoading(false);
+    } catch (error) {
+      SetMovError(`${TextConstants.MOVIESAVEERRORLIB}: ${error}`);
+      setMovieLoading(false);
     }
-    setMovieTotalChanged(false);
   };
 
   // load the total existing in library
@@ -68,29 +79,29 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
     // this var is to avoid the warning 'can't perform a react state update on an unmounted component.'
     let isMounted = true;
 
-    setMovieLoading(true);
-    axios.get(`${process.env.REACT_APP_NODE_SERVER}/movies/${selectedMovie.imdbID}`)
-      .then(response => {
+    async function fetchData() : Promise<void> {
+      setMovieLoading(true);
+
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_NODE_SERVER}/movies/${selectedMovie.imdbID}`);
         if (response && isMounted) {
           setMovieTotal(response.data.count);
           setMovID(response.data.id);
           SetMovError('');
           setMovieLoading(false);
         }
-      })
-      .catch(() => {
-        SetMovError(errorText);
+      } catch (error) {
+        SetMovError(`${TextConstants.MOVIELOADERRORLIB}: ${error}`);
         setMovieLoading(false);
-      });
+      }
+    }
 
+    fetchData();
 
     return () => {
       isMounted = false;
     };
-
   }, [selectedMovie]);
-
-
 
   const isValidUrl = (toValidate: string | undefined): boolean => {
     try {
