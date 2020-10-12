@@ -1,25 +1,49 @@
-.MovieDetails {
-    padding: 20px;
-    width: 80%;
-    margin: 20px auto;
-    border: 1px solid #eee;
-    box-shadow: 0 2px 3px #ccc;
-    text-align: center;
+.movie-details {
+  padding: 20px;
+  width: 90%;
+  margin: 20px auto;
+  text-align: center;
+  box-shadow: 0 2px 3px #ccc;
+}
+
+.movie-absent {
+  border: 1px solid #eee;
+}
+
+.movie-present {
+  border: 2px solid darkblue;
 }
 
 .header-custom {
-    height: 40px;
-    font-weight: 500;
-    background-color: darkblue;
-    color: white;
-    display: flex; 
+  height: 35px;
+  font-weight: bold;
+  background-color: darkblue;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  padding: 5px;
 }
 
 .header-custom-span {
-    margin: auto; /* Important */ 
+  margin: auto;
 }
 
 .Button:disabled {
-    color: #ccc;
-    cursor: not-allowed;
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.drawer {
+  max-width: 550px !important;
+}
+
+.first-button {
+  margin-right: 5px;
+}
+
+.spinner-div {
+  height: 2.6em;
+  padding: 20px;
 }

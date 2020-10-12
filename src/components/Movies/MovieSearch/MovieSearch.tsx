@@ -14,6 +14,7 @@ import MovieDetails from '../MovieDetails/MovieDetails';
 import MovieLoadingSkeleton from '../MovieLoadingSkeleton';
 import KeyContext from '../../../context/KeyContext';
 import { TextConstants } from '../../../constants/TextConstants';
+import { getMovieDetails } from '../../../utils/MovieUtil';
 
 const searchURL = process.env.REACT_APP_SEARCH_URL || '';
 
@@ -22,24 +23,32 @@ const MovieSearch: React.FC = () => {
   const [movError, setMovError] = useState('');
   const [movInfo, setMovInfo] = useState('');
   const [wasLastSearchSuccess, setWasLastSearchSuccess] = useState(false);
-  const [selectedMovie, setSelectedMovie] = useState<IMovieSearch | undefined>();
+  const [selectedMovieIMDBId, setSelectedMovieIMDBId] = useState('');
   const [inputQuery, setInputQuery] = useState('');
   const [inputQueryTrimmed, setInputQueryTrimmed] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [openDrawerValue, setOpenDrawerValue] = useState(false);
   const apiKey = useContext(KeyContext);
+
+  const handleDrawerCloseFromDrawer = (): void => {
+    setOpenDrawerValue(false);
+  };
+
+  const setSelectedMovieIMDBInternal = (value: string): void => {
+    setSelectedMovieIMDBId(value);
+    setOpenDrawerValue(!!value);
+  };
 
   const loadMovies = useCallback(async (pageNo?: number): Promise<void> => {
     const filteredMoviesIMDBIds: string[] = [];
-    const enhancedMovies: IMovieSearch[] = [];
-
     const page = pageNo ? '&page=' + pageNo.toFixed(0) : '';
 
     try {
       setIsLoading(true);
       const response = await axios.get(`${searchURL}?apikey=${apiKey}&s=${inputQueryTrimmed}${page}`);
       if (!response.data || response.data.Response === 'False') {
-        setSelectedMovie(undefined);
+        setSelectedMovieIMDBId('');
         setMovies([]);
         setMovError('');
         setMovInfo(TextConstants.NOMOVIESFOUND);
@@ -69,36 +78,25 @@ const MovieSearch: React.FC = () => {
       });
 
       // loop through the filteredMovies to get additional actors info using the OMDB details URL
-      const getMovieDetails = async (movieOne: string): Promise<any> => {
-        const res = await axios.get(`${searchURL}?apikey=${apiKey}&i=${movieOne}`);
-        const movie = res.data;
-        const genres = movie.Genre ? movie.Genre.split(', ') : 'None';
-        enhancedMovies.push({
-          title: movie.Title, year: movie.Year, imdbID: movie.imdbID, mediaURL: movie.Poster, actors: movie.Actors,
-          plot: movie.Plot, type: movie.Type, pGRating: movie.Rated, language: movie.Language, genre: genres
-        });
-      };
-
       const getData = async () => {
-        return Promise.all(filteredMoviesIMDBIds.map(movie => getMovieDetails(movie)));
+        return Promise.all(filteredMoviesIMDBIds.map(movie => getMovieDetails(movie, searchURL, apiKey)));
       };
 
-      getData().then(() => {
-        setSelectedMovie(undefined);
-        setMovies(enhancedMovies);
-        setMovError('');
-        setMovInfo('');
-        setIsLoading(false);
+      const fullMovies = await getData();
+      setSelectedMovieIMDBId('');
+      setMovies(fullMovies);
+      setMovError('');
+      setMovInfo('');
+      setIsLoading(false);
 
-        if (!pageNo) {
-          setCurrentPage(1);
-          setWasLastSearchSuccess(true);
-        } else {
-          setCurrentPage(pageNo);
-        }
-      });
+      if (!pageNo) {
+        setCurrentPage(1);
+        setWasLastSearchSuccess(true);
+      } else {
+        setCurrentPage(pageNo);
+      }
     } catch (err) {
-      setSelectedMovie(undefined);
+      setSelectedMovieIMDBId('');
       setMovies([]);
       setMovInfo('');
       setIsLoading(false);
@@ -132,7 +130,7 @@ const MovieSearch: React.FC = () => {
   }, [inputQueryTrimmed, loadMovies]);
 
   const movieSelectedHandler = (movieSel: IMovieSearch): void => {
-    setSelectedMovie(movieSel);
+    setSelectedMovieIMDBInternal(movieSel.imdbID);
   };
 
   const queryOnChange = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
@@ -185,6 +183,7 @@ const MovieSearch: React.FC = () => {
               label="Search OMDB"
               value={inputQuery}
               onChange={queryOnChange}
+              autoFocus
             />
           </span>
           <Button variant="outlined" color="primary" onClick={onSearchClicked} disabled={!inputQueryTrimmed}>
@@ -193,9 +192,13 @@ const MovieSearch: React.FC = () => {
         </div>
         {wasLastSearchSuccess ? <Pagination count={10} onChange={onPageNoChanged} page={currentPage} /> : null}
         {renderMovies()}
+        <MovieDetails 
+          selectedMovieIMDBId={selectedMovieIMDBId}
+          openDrawerValue={openDrawerValue}
+          openDrawer={handleDrawerCloseFromDrawer}
+        /> 
         <section>
-          {selectedMovie && !movError ? <MovieDetails selectedMovie={selectedMovie} /> : null}
-          {(!selectedMovie && !movError && movies.length) ? <p>{TextConstants.CLICKTOSEEDETAILS}</p> : null}
+          {(!selectedMovieIMDBId && !movError && movies.length) ? <p>{TextConstants.CLICKTOSEEDETAILS}</p> : null}
         </section>
         {renderError()}
         {movInfo ? <p>{movInfo}</p> : null}
