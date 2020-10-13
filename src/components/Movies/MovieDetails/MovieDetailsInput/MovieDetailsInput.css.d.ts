@@ -1,5 +1,5 @@
-declare namespace MovieDetailsCssNamespace {
-  export interface IMovieDetailsCss {
+declare namespace MovieDetailsInputCssNamespace {
+  export interface IMovieDetailsInputCss {
     Button: string;
     drawer: string;
     'first-button': string;
@@ -13,9 +13,9 @@ declare namespace MovieDetailsCssNamespace {
   }
 }
 
-declare const MovieDetailsCssModule: MovieDetailsCssNamespace.IMovieDetailsCss & {
+declare const MovieDetailsInputCssModule: MovieDetailsInputCssNamespace.IMovieDetailsInputCss & {
   /** WARNING: Only available when `css-loader` is used without `style-loader` or `mini-css-extract-plugin` */
-  locals: MovieDetailsCssNamespace.IMovieDetailsCss;
+  locals: MovieDetailsInputCssNamespace.IMovieDetailsInputCss;
 };
 
-export = MovieDetailsCssModule;
+export = MovieDetailsInputCssModule;

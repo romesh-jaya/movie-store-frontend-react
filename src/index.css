@@ -21,6 +21,10 @@ textarea {
   font-size: 1rem !important;
 }
 
+.margin-b-10 {
+  margin-bottom: 20px;
+}
+
 .margin-b-20 {
   margin-bottom: 20px;
 }

@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 import { TextConstants } from '../../constants/TextConstants';
-import KeyContext from '../../context/KeyContext';
+import SettingsContext from '../../context/SettingsContext';
 import logo from '../../assets/img/movie.png';
 import * as styles from './MovieContainer.css';
 import * as globStyles from '../../index.css';
@@ -14,17 +14,19 @@ import MovieSearch from '../../components/Movies/MovieSearch/MovieSearch';
 import MovieContainerSkeleton from './MovieContainerSkeleton';
 import axios from '../../axios';
 import MyLibrary from '../../components/MyLibrary/MyLibrary';
+import INameValue from '../../interfaces/INameValue';
 
 const Settings = React.lazy(() => import('../../components/Settings/Settings'));
 
 const MovieContainer: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [settings, setSettings] = useState<INameValue[]>([]);
   const [settingsError, setSettingsError] = useState('');
-  const [apiKey, setApiKey] = useState('');
   const [tabIndex, setTabIndex] = useState(0);
+  const apiKeySetting = settings.find(setting => setting.name === 'apiKey');
 
-  const setAPIKey = (apiKeyVal: string): void => {
-    setApiKey(apiKeyVal);
+  const updateContext = (context: INameValue[]): void => {
+    setSettings(context);
   };
 
   const handleChange = (_: React.ChangeEvent<{}>, newValue: number): void => {
@@ -50,14 +52,27 @@ const MovieContainer: React.FC = () => {
   useEffect(() => {
     async function loadKey() : Promise<void> {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_NODE_SERVER}/settings/apiKey`);
-        setIsLoading(false);
-        if (response.data.value) {
+        const responseApiKey = await axios.get(`${process.env.REACT_APP_NODE_SERVER}/settings/apiKey`);
+        if (responseApiKey.data.value) {
           console.log('Retrieved API key.');
-          setApiKey(response.data.value);
         } else {
           console.log('API key was returned blank.');
         }
+        
+        const responseLang = await axios.get(`${process.env.REACT_APP_NODE_SERVER}/settings/languages`);
+        setIsLoading(false);
+
+        const settingsStore : INameValue[] = [
+          {
+            name: 'apiKey',
+            value: responseApiKey.data.value
+          },
+          {
+            name: 'languages',
+            value: responseLang.data.value
+          }
+        ];    
+        setSettings(settingsStore);
       } catch {
         setIsLoading(false);
         setSettingsError(TextConstants.CANNOTCONNECTSERVER);
@@ -90,14 +105,14 @@ const MovieContainer: React.FC = () => {
           </Tabs>
         </AppBar>
         <TabPanel value={tabIndex} index={0}>
-          {apiKey ? <MyLibrary /> : renderNoApiKey()}
+          {apiKeySetting && apiKeySetting.value? <MyLibrary /> : renderNoApiKey()}
         </TabPanel>
         <TabPanel value={tabIndex} index={1}>
-          {apiKey ? <MovieSearch /> : renderNoApiKey()}
+          {apiKeySetting && apiKeySetting.value? <MovieSearch /> : renderNoApiKey()}
         </TabPanel>
         <TabPanel value={tabIndex} index={2}>
           <Suspense fallback={<div>Loading...</div>}>
-            <Settings setAPIKey={setAPIKey} />
+            <Settings updateContext={updateContext} />
           </Suspense>
         </TabPanel>
       </>
@@ -106,11 +121,11 @@ const MovieContainer: React.FC = () => {
 
 
   return (
-    <KeyContext.Provider value={apiKey}>
+    <SettingsContext.Provider value={settings}>
       {isLoading && <MovieContainerSkeleton />}
       {renderContent()}
       {!isLoading && settingsError ? <p className={globStyles['error-text']}>{settingsError}</p> : null}
-    </KeyContext.Provider>
+    </SettingsContext.Provider>
   );
 };
 

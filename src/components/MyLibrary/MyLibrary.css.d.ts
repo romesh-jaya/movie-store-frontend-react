@@ -1,5 +1,6 @@
 declare namespace MyLibraryCssNamespace {
   export interface IMyLibraryCss {
+    'link-button': string;
     'pagination-style': string;
     'table-style': string;
   }

@@ -16,6 +16,7 @@ import AlertConfirmation from '../UI/AlertConfirmation/AlertConfirmation';
 import LibrarySearchBox from './LibrarySearchBox/LibrarySearchBox';
 import { ISearchInfo } from '../../interfaces/ISearchInfo';
 import IMovieLibrary from '../../interfaces/IMovieLibrary';
+import MovieDetails from '../Movies/MovieDetails/MovieDetails';
 
 const pageSize = 10;
 
@@ -23,13 +24,14 @@ const MyLibrary: React.FC = () => {
   const [movies, setMovies] = useState<IMovieLibrary[]>([]);
   const [movError, setMovError] = useState('');
   const [movInfo, setMovInfo] = useState('');
-  const [selectedMovie, setSelectedMovie] = useState<IMovieLibrary>();
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [lastSearchInfo, setLastSearchInfo] = useState<ISearchInfo | undefined>();
   const [lastSearchMovieCount, setLastSearchMovieCount] = useState<number | undefined>();
   const [movToDelete, setMovToDelete] = useState<IMovieLibrary[] | undefined>();
+  const [selectedMovieIMDBId, setSelectedMovieIMDBId] = useState('');
+  const [openDrawerValue, setOpenDrawerValue] = useState(false);
 
   const queryMovies = useCallback(async (pageNo?: number): Promise<void> => {
     const page = pageNo ?? 1;
@@ -48,7 +50,6 @@ const MyLibrary: React.FC = () => {
       setCurrentPage(page);
       if ((page === 1) && !response.data.movies.movies.length) {
         // Perform this for first query only
-        setSelectedMovie(undefined);
         setMovies([]);
         setMovError('');
         setMovInfo(TextConstants.NOMOVIESFOUND);
@@ -57,7 +58,6 @@ const MyLibrary: React.FC = () => {
         return;
       }
 
-      setSelectedMovie(undefined);
       setMovies(response.data.movies.movies);
       setMovError('');
       setMovInfo('');
@@ -65,7 +65,6 @@ const MyLibrary: React.FC = () => {
       setLastSearchMovieCount(response.data.movies.movieCount[0].count);
 
     } catch (err) {
-      setSelectedMovie(undefined);
       setMovies([]);
       setMovInfo('');
       setIsLoading(false);
@@ -101,6 +100,15 @@ const MyLibrary: React.FC = () => {
       }
     }
   }, [currentPage, movToDelete, queryMovies]);
+
+  const handleDrawerCloseFromDrawer = (): void => {
+    setOpenDrawerValue(false);
+  };
+
+  const handleClickTitle = (imdbID: string): void => {
+    setSelectedMovieIMDBId(imdbID);
+    setOpenDrawerValue(true);
+  };
 
   const onPageNoChanged = (_: object, page: number): void => {
     // Note: the page always starts at 1 in Material UI
@@ -154,7 +162,18 @@ const MyLibrary: React.FC = () => {
               {
                 title: 'Title',
                 field: 'title',
-                width: '45%'
+                width: '45%',
+                render: rowData => {
+                  return (
+                    <button 
+                      type="button"
+                      className={styles['link-button']}
+                      onClick={() => handleClickTitle(rowData.imdbID)}
+                    >
+                      {rowData.title}
+                    </button>                    
+                  );
+                }
               },
               {
                 title: 'Type',
@@ -230,6 +249,11 @@ const MyLibrary: React.FC = () => {
             page={currentPage}
           />
         </div>
+        <MovieDetails 
+          selectedMovieIMDBId={selectedMovieIMDBId}
+          openDrawerValue={openDrawerValue}
+          openDrawer={handleDrawerCloseFromDrawer}
+        /> 
       </div>
     ) : null;
   };

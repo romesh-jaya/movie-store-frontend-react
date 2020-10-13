@@ -6,20 +6,16 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import ClearIcon from '@material-ui/icons/Clear';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-
 import Checkbox from '@material-ui/core/Checkbox';
+
 import styles from './GenreSelectModal.css';
 import { Genres, IGenre } from '../../../constants/Genres';
+import { ICheckboxValue } from '../../../interfaces/ICheckboxValue';
 
 interface IProps {
   initialGenres: string[];
   onConfirmed: (genres: string[]) => void;
   onCancelled: () => void;
-}
-
-interface ICheckboxValue {
-  name: string;
-  checked: boolean;
 }
 
 const GenreSelectModal: React.FC<IProps> = (props) => {
@@ -96,7 +92,7 @@ const GenreSelectModal: React.FC<IProps> = (props) => {
                       name={`is${genre.id}`}
                       color="primary"
                     />
-                  )
+                )
                 }
                 label={genre.genre}
               />

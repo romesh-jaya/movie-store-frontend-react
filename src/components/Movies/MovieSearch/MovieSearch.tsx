@@ -1,5 +1,3 @@
-/* eslint-disable prefer-template */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { useState, useEffect, useCallback, useContext, ReactNode } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -12,11 +10,10 @@ import * as globStyles from '../../../index.css';
 import IMovieSearch from '../../../interfaces/IMovieSearch';
 import MovieDetails from '../MovieDetails/MovieDetails';
 import MovieLoadingSkeleton from '../MovieLoadingSkeleton';
-import KeyContext from '../../../context/KeyContext';
+import SettingsContext from '../../../context/SettingsContext';
 import { TextConstants } from '../../../constants/TextConstants';
 import { getMovieDetails } from '../../../utils/MovieUtil';
-
-const searchURL = process.env.REACT_APP_SEARCH_URL || '';
+import { SEARCH_URL } from '../../../constants/Constants';
 
 const MovieSearch: React.FC = () => {
   const [movies, setMovies] = useState<IMovieSearch[]>([]);
@@ -29,7 +26,9 @@ const MovieSearch: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [openDrawerValue, setOpenDrawerValue] = useState(false);
-  const apiKey = useContext(KeyContext);
+  const settings = useContext(SettingsContext);
+  const apiKeySetting = settings.find(setting => setting.name === 'apiKey');
+  const apiKey = apiKeySetting && apiKeySetting.value || '';
 
   const handleDrawerCloseFromDrawer = (): void => {
     setOpenDrawerValue(false);
@@ -42,11 +41,11 @@ const MovieSearch: React.FC = () => {
 
   const loadMovies = useCallback(async (pageNo?: number): Promise<void> => {
     const filteredMoviesIMDBIds: string[] = [];
-    const page = pageNo ? '&page=' + pageNo.toFixed(0) : '';
+    const page = pageNo ? `&page=${  pageNo.toFixed(0)}` : '';    
 
     try {
       setIsLoading(true);
-      const response = await axios.get(`${searchURL}?apikey=${apiKey}&s=${inputQueryTrimmed}${page}`);
+      const response = await axios.get(`${SEARCH_URL}?apikey=${apiKey}&s=${inputQueryTrimmed}${page}`);
       if (!response.data || response.data.Response === 'False') {
         setSelectedMovieIMDBId('');
         setMovies([]);
@@ -78,8 +77,8 @@ const MovieSearch: React.FC = () => {
       });
 
       // loop through the filteredMovies to get additional actors info using the OMDB details URL
-      const getData = async () => {
-        return Promise.all(filteredMoviesIMDBIds.map(movie => getMovieDetails(movie, searchURL, apiKey)));
+      const getData = async () : Promise<IMovieSearch[]> => {
+        return Promise.all(filteredMoviesIMDBIds.map(movie => getMovieDetails(movie, SEARCH_URL, apiKey)));
       };
 
       const fullMovies = await getData();
