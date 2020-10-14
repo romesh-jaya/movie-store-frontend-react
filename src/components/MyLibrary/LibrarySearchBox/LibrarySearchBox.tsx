@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useCallback, ReactNode, ChangeEvent, ReactElement } from 'react';
+import React, { useState, useCallback, ReactNode, ChangeEvent, ReactElement, useEffect } from 'react';
 import { Button, FormControl, MenuItem, Select, Typography } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 
@@ -139,6 +139,11 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     setSearchGenres(genres);
     setShowGenresModal(false);
   };
+
+  useEffect(() => {
+    // Set default type
+    setSearchType(MovieType.Movie);
+  }, []);
 
   const renderGenresModal = (): ReactElement | null => showGenresModal ? (
     <GenreSelectModal

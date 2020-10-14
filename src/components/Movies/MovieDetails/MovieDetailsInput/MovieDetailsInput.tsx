@@ -51,21 +51,14 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
   };
 
   const initLanguageCheckboxes = useCallback((): void => {
-    console.log('languagesInitial ', languagesInitial);
-
-    if (languagesInitial.length) {
-      setSelectedLanguages(languagesInitial);
-      languages.forEach(language => {
-        if (languagesInitial.includes(language)) {
-          console.log('setCheckboxValues ', language);
-          setCheckboxLanguage(language, true);
-        } else {
-          console.log('setCheckboxValues false', language);
-          setCheckboxLanguage(language, false);
-        }
-      });
-    }
-
+    setSelectedLanguages(languagesInitial);
+    languages.forEach(language => {
+      if (languagesInitial.includes(language)) {
+        setCheckboxLanguage(language, true);
+      } else {
+        setCheckboxLanguage(language, false);
+      }
+    });
   }, [languages, languagesInitial]);
 
   useEffect(() => {

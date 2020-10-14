@@ -1,15 +1,7 @@
 declare namespace MovieDetailsInputCssNamespace {
   export interface IMovieDetailsInputCss {
-    Button: string;
-    drawer: string;
     'first-button': string;
-    'header-custom': string;
-    'header-custom-span': string;
     'language-container': string;
-    'movie-absent': string;
-    'movie-details': string;
-    'movie-present': string;
-    'spinner-div': string;
   }
 }
 

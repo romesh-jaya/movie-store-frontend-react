@@ -39,17 +39,7 @@
   max-width: 550px !important;
 }
 
-.first-button {
-  margin-right: 5px;
-}
-
 .spinner-div {
   height: 2.6em;
   padding: 20px;
-}
-
-.language-container {
-  display: inline-flex;
-  grid-template-columns: 100px 100px 100px;
-  text-align: left;
 }

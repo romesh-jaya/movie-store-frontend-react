@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, ReactNode, useRef } from 'react';
+import React, { useState, useEffect, useContext, ReactNode, useRef, useCallback } from 'react';
 import { Drawer } from '@material-ui/core';
 
 import axios from '../../../axios';
@@ -31,6 +31,8 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
   const settings = useContext(SettingsContext);
   const apiKeySetting = settings.find(setting => setting.name === 'apiKey');
   const apiKey = apiKeySetting && apiKeySetting.value || '';
+  const languagesSetting = settings.find(setting => setting.name === 'languages');
+  const languages = languagesSetting && languagesSetting.value.split(',') || [];
   const prevSelIMDBId = useRef('');
 
   const handleDrawerToggle = (): void => {
@@ -46,6 +48,18 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
     openDrawer();
   };
 
+  const retrieveLanguagesFromOMDB = useCallback((): string[] => {
+    const retVal : string[] = [];
+    if (selectedMovie) {
+      languages.forEach(language => {
+        if (language === selectedMovie.language) {
+          retVal.push(language);
+        }
+      });
+    }
+    return retVal;
+  }, [languages, selectedMovie]);
+
   const onSaveClicked = async (selectedLanguages: string[], movieTotal: number): Promise<boolean> => {
     if (selectedMovie) {
       try {
@@ -59,7 +73,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
             year: selectedMovie.year,
             type: selectedMovie.type,
             pGRating: selectedMovie.pGRating,
-            languages: [selectedMovie.language],
+            languages: selectedLanguages,
             genre: selectedMovie.genre
           };
 
@@ -98,7 +112,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
         const response = await axios.get(`${process.env.REACT_APP_NODE_SERVER}/movies/imdbid/${selectedMovieIMDBId}`);
         if (response) {
           setMovieTotalInitial(response.data.count);
-          setLanguagesInitial(response.data.languages);
+          setLanguagesInitial(response.data.languages.length? response.data.languages : retrieveLanguagesFromOMDB());
           setMovID(response.data.id);
           SetMovError('');
           setMovieLoading(false);
@@ -113,7 +127,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
       prevSelIMDBId.current = selectedMovieIMDBId;
       fetchData();
     }
-  }, [apiKey, selectedMovieIMDBId]);
+  }, [apiKey, retrieveLanguagesFromOMDB, selectedMovieIMDBId]);
 
   const isValidUrl = (toValidate: string | undefined): boolean => {
     try {

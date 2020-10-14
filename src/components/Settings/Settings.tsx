@@ -32,14 +32,34 @@ const Settings: React.FC<IProps> = (props: IProps) => {
   };
 
   const languagesEnteredOnChange = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
-    setLanguagesEntered(event.target.value.trim());
+    setLanguagesEntered(event.target.value);
     setLanguagesEnteredError('');
     setSettingsChanged(true);
   };
 
+  // This formats user entered input into the Title case, which is the format used by OMDB
+  const formatLanguages = () : string[] => {
+    const langArray = languagesEntered.split(',');
+    const formattedArray : string[] = [];
+    langArray.forEach(lang => {
+      const trimmed = lang.trim();
+      if (trimmed) {
+        const correctedCase = trimmed.charAt(0).toUpperCase() + trimmed.substr(1).toLowerCase();
+        formattedArray.push(correctedCase);
+      }
+    });
+    return formattedArray;
+  };
+
   const onSaveClicked = async (): Promise<void> => {
     if (!languagesEntered) {
-      setLanguagesEnteredError('At least one or more languages must be defined.');
+      setLanguagesEnteredError(TextConstants.NOLANGENTERED);
+      return;
+    }
+
+    const formattedArray = formatLanguages();
+    if (!formattedArray.length) {
+      setLanguagesEnteredError(TextConstants.NOLANGENTERED);
       return;
     }
 
@@ -50,7 +70,7 @@ const Settings: React.FC<IProps> = (props: IProps) => {
       },
       {
         name: 'languages',
-        value: languagesEntered
+        value: formattedArray.join(',')
       }
     ];
 
