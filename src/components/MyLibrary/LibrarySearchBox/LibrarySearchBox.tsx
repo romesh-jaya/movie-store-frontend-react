@@ -1,7 +1,9 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useCallback, ReactNode, ChangeEvent, ReactElement, useEffect } from 'react';
+import React, { useState, useCallback, ReactNode, ChangeEvent, ReactElement, useEffect, useContext } from 'react';
 import { Button, FormControl, MenuItem, Select, Typography } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
+import _ from 'lodash';
+import { ExportToCsv } from 'export-to-csv';
 
 import styles from './LibrarySearchBox.css';
 import { TextConstants } from '../../../constants/TextConstants';
@@ -9,9 +11,14 @@ import { MovieType } from '../../../enums/MovieType';
 import NumberRangeInput from '../../Controls/Input/NumberRangeInput/NumberRangeInput';
 import GenreSelectModal from '../GenreSelectModal/GenreSelectModal';
 import { ISearchInfo } from '../../../interfaces/ISearchInfo';
+import IMovieLibrary from '../../../interfaces/IMovieLibrary';
+import INameValue from '../../../interfaces/INameValue';
+import SettingsContext from '../../../context/SettingsContext';
 
 interface IProps {
+  enableExportButton : boolean;
   setLastSearchInfo: (searchInfo: ISearchInfo) => void;
+  exportMovies : () => Promise<IMovieLibrary[]>;
 }
 
 const LibrarySearchBox: React.FC<IProps> = (props) => {
@@ -19,6 +26,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   // Search related:
   const [searchTitle, setSearchTitle] = useState('');
   const [searchType, setSearchType] = useState('');
+  const [searchLanguage, setSearchLanguage] = useState('');
   const [errorTextSearchYear, setErrorTextSearchYear] = useState('');
   const [searchYearInput, setSearchYearInput] = useState<string>('');
   const [searchYearExact, setSearchYearExact] = useState<number | undefined>();
@@ -26,13 +34,16 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   const [searchYearTo, setSearchYearTo] = useState<number | undefined>();
   const [searchYearIsBetweenValuesIncomplete, setSearchYearIsBetweenValuesIncomplete] = useState(false);
   const [searchGenres, setSearchGenres] = useState<string[]>([]);
-  const [searchYearDisabled, setSearchYearDisabled] = useState(true); // Disable search year unless type=Movie is chosen
+  const settings = useContext(SettingsContext);
+  const languagesSetting = settings.find(setting => setting.name === 'languages');
+  const languages = languagesSetting && languagesSetting.value.split(',') || [];
 
-  const { setLastSearchInfo } = props;
+  const { enableExportButton, setLastSearchInfo, exportMovies } = props;
 
   const isSearchTextValid = useCallback((): boolean => {
-    return !!(searchTitle.trim() || searchType.trim() || searchYearExact || searchYearFrom || searchYearTo || searchGenres.length);
-  }, [searchGenres.length, searchTitle, searchType, searchYearExact, searchYearFrom, searchYearTo]);
+    return !!(searchTitle.trim() || searchType.trim() || searchYearExact || searchYearFrom || searchYearTo || 
+    searchGenres.length || searchLanguage);
+  }, [searchGenres.length, searchLanguage, searchTitle, searchType, searchYearExact, searchYearFrom, searchYearTo]);
 
 
   const newSearch = useCallback((): void => {
@@ -72,15 +83,18 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
       if (searchGenres) {
         searchInfo.searchGenres = searchGenres;
       }
+      if (searchLanguage) {
+        searchInfo.searchLanguage = searchLanguage;
+      }
       setLastSearchInfo(searchInfo);
     }
-  }, [isSearchTextValid, searchGenres, searchTitle, searchType, searchYearExact, searchYearFrom, searchYearIsBetweenValuesIncomplete, searchYearTo, setLastSearchInfo]);
+  }, [isSearchTextValid, searchGenres, searchLanguage, searchTitle, searchType, searchYearExact, searchYearFrom, searchYearIsBetweenValuesIncomplete, searchYearTo, setLastSearchInfo]);
 
   const handleChangeSearchTitle = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchTitle(event.target.value);
   };
 
-  const handleChangeSearchYear = (_: string, isBetweenValuesIncomplete: boolean, value: string, valueSingle?: number,
+  const handleChangeSearchYear = (__: string, isBetweenValuesIncomplete: boolean, value: string, valueSingle?: number,
     valueFrom?: number, valueTo?: number): void => {
     setSearchYearInput(value);
     setSearchYearExact(valueSingle);
@@ -93,17 +107,17 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   const handleChangeSearchType = (event: ChangeEvent<{ name?: string | undefined; value: unknown; }>): void => {
     const type = event.target.value as string;
     setSearchType(type);
-    if (type === MovieType.Movie) {
-      setSearchYearDisabled(false);
-    } else {
-      setSearchYearDisabled(true);
-      setSearchYearInput('');
-      setSearchYearExact(undefined);
-      setSearchYearFrom(undefined);
-      setSearchYearTo(undefined);
-      setSearchYearIsBetweenValuesIncomplete(false);
-      setErrorTextSearchYear('');
-    }
+    setSearchYearInput('');
+    setSearchYearExact(undefined);
+    setSearchYearFrom(undefined);
+    setSearchYearTo(undefined);
+    setSearchYearIsBetweenValuesIncomplete(false);
+    setErrorTextSearchYear('');
+  };
+
+  const handleChangeSearchLanguage = (event: ChangeEvent<{ name?: string | undefined; value: unknown; }>): void => {
+    const language = event.target.value as string;
+    setSearchLanguage(language);
   };
 
   const clearFields = (): void => {
@@ -111,6 +125,12 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     setSearchType('');
     setSearchYearInput('');
     setSearchGenres([]);
+    setSearchYearExact(undefined);
+    setSearchYearFrom(undefined);
+    setSearchYearTo(undefined);
+    setSearchYearIsBetweenValuesIncomplete(false);
+    setErrorTextSearchYear('');
+    setSearchLanguage('');
   };
 
   const onSearchClicked = (): void => {
@@ -140,6 +160,46 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     setShowGenresModal(false);
   };
 
+  const onExportClicked = async (): Promise<void> => {
+    const exportDataVal = await exportMovies();
+    if (exportDataVal.length){
+      // Note: setting headers property in ExportToCsv's options didn't work as of 2020-Oct
+      // Thus we need a manual workaround to convert the keys to Title case
+      const keys = Object.keys(exportDataVal[0]);
+      const keysMinusId = keys.filter(key => key !== 'id');
+      // convert keys to Title case
+      const formattedKeys : INameValue[] = keysMinusId.map(key => ({name: key, value: _.startCase(key)})); 
+
+      // create new data with capitalized keys
+      const capitalizedKeyData = exportDataVal.map(row=> {
+        const retVal : any = {};
+        formattedKeys.forEach(key => {
+          retVal[key.value] = row[key.name as keyof IMovieLibrary];
+        }
+        );
+        return retVal;
+      });
+
+      const formattedData = capitalizedKeyData.map(row => {
+        // convert array types to semicolon seperated
+        const newData = {
+          ...row,
+          Genre: row.Genre.join(';'),
+          Languages: row.Languages.join(';'),
+        };
+        return newData;
+      });
+
+      const options = { 
+        filename: 'Export.csv',
+        useKeysAsHeaders: true
+      };
+
+      const csvExporter = new ExportToCsv(options);
+      csvExporter.generateCsv(formattedData);
+    }
+  };
+
   useEffect(() => {
     // Set default type
     setSearchType(MovieType.Movie);
@@ -166,12 +226,22 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
           Search
         </Button>
       </span>
+      <span className='right-spacer'>
+        <Button
+          onClick={onResetClicked}
+          color="secondary"
+          variant="contained"
+        >
+          Reset
+        </Button>
+      </span>
       <Button
-        onClick={onResetClicked}
+        disabled={!enableExportButton}
+        onClick={onExportClicked}
         color="secondary"
         variant="contained"
       >
-        Reset
+        Export to CSV
       </Button>
     </div>
   );
@@ -217,12 +287,30 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
           </label>
         </div>
         <div className={styles['label-and-input-div']}>
+          <label htmlFor="searchLanguage">
+            Language
+            <FormControl variant="outlined" className="inter-control-spacing">
+              <Select
+                className={styles['input-style-search']}
+                value={searchLanguage}
+                onChange={handleChangeSearchLanguage}
+                name="searchLanguage"
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {languages.map(language => <MenuItem value={language}>{language}</MenuItem>)}
+              </Select>
+            </FormControl>
+          </label>
+        </div>
+        <div className={styles['label-and-input-div']}>
           <label htmlFor="searchYear">
             Year
             <div className="inter-control-spacing">
               <NumberRangeInput
                 name="searchYear"
-                disabled={searchYearDisabled}
+                disabled={searchType !== MovieType.Movie}
                 classNameCustom='input-style-search'
                 value={searchYearInput}
                 handleReturnValue={handleChangeSearchYear}
@@ -260,7 +348,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
           </label>
         </div>
         {renderButtons()}
-      </Card>
+      </Card>      
     </>
   );
 

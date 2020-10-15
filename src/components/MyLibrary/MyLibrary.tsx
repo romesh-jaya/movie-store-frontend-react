@@ -1,9 +1,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useCallback, ReactNode, useEffect, ReactElement } from 'react';
 import MaterialTable from 'material-table';
-import {  Chip} from '@material-ui/core';
+import {  Chip, TablePagination} from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
-import { Pagination } from '@material-ui/lab';
 
 import styles from './MyLibrary.css';
 import * as globStyles from '../../index.css';
@@ -18,20 +17,19 @@ import { ISearchInfo } from '../../interfaces/ISearchInfo';
 import IMovieLibrary from '../../interfaces/IMovieLibrary';
 import MovieDetails from '../Movies/MovieDetails/MovieDetails';
 
-const pageSize = 10;
-
 const MyLibrary: React.FC = () => {
   const [movies, setMovies] = useState<IMovieLibrary[]>([]);
   const [movError, setMovError] = useState('');
   const [movInfo, setMovInfo] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [lastSearchInfo, setLastSearchInfo] = useState<ISearchInfo | undefined>();
   const [lastSearchMovieCount, setLastSearchMovieCount] = useState<number | undefined>();
   const [movToDelete, setMovToDelete] = useState<IMovieLibrary[] | undefined>();
   const [selectedMovieIMDBId, setSelectedMovieIMDBId] = useState('');
   const [openDrawerValue, setOpenDrawerValue] = useState(false);
+  const [pageSize, setPageSize] = React.useState(10);
 
   const queryMovies = useCallback(async (pageNo?: number): Promise<void> => {
     const page = pageNo ?? 1;
@@ -48,12 +46,12 @@ const MyLibrary: React.FC = () => {
         { params: newSearchInfo });
 
       setCurrentPage(page);
+      setIsLoading(false);
       if ((page === 1) && !response.data.movies.movies.length) {
         // Perform this for first query only
         setMovies([]);
         setMovError('');
         setMovInfo(TextConstants.NOMOVIESFOUND);
-        setIsLoading(false);
         setLastSearchMovieCount(0);
         return;
       }
@@ -61,7 +59,6 @@ const MyLibrary: React.FC = () => {
       setMovies(response.data.movies.movies);
       setMovError('');
       setMovInfo('');
-      setIsLoading(false);
       setLastSearchMovieCount(response.data.movies.movieCount[0].count);
 
     } catch (err) {
@@ -76,7 +73,7 @@ const MyLibrary: React.FC = () => {
       setLastSearchMovieCount(0);
     }
 
-  }, [lastSearchInfo]);
+  }, [lastSearchInfo, pageSize]);
 
   const deleteMovies = useCallback(async (): Promise<void> => {
     const idArray = movToDelete?.map(movie => movie.id);
@@ -101,6 +98,35 @@ const MyLibrary: React.FC = () => {
     }
   }, [currentPage, movToDelete, queryMovies]);
 
+  const exportMovies = async (): Promise<IMovieLibrary[]> => {
+    const newSearchInfo =
+    {
+      ...lastSearchInfo,
+      queryAll : true
+    };
+    setIsLoading(true);
+
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_NODE_SERVER}/movies`,
+        { params: newSearchInfo });
+      setIsLoading(false);
+      if (!response.data.movies.movies.length) {
+        setMovError('No movies returned from server.');
+        return [];
+      }
+      setMovError('');
+      return response.data.movies.movies;
+    } catch (err) {
+      setIsLoading(false);
+      if (err && err.response && err.response.data && err.response.data.Error) {
+        setMovError(`${TextConstants.MOVIELOADERROR}: ${err.response.data.Error}`);
+      } else {
+        setMovError(TextConstants.MOVIELOADERROR);
+      }
+    }
+    return [];
+  };
+
   const handleDrawerCloseFromDrawer = (): void => {
     setOpenDrawerValue(false);
   };
@@ -110,9 +136,14 @@ const MyLibrary: React.FC = () => {
     setOpenDrawerValue(true);
   };
 
-  const onPageNoChanged = (_: object, page: number): void => {
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) : void => {
+    setPageSize(parseInt(event.target.value, 10));
+    setCurrentPage(1);
+  };
+
+  const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, page: number) : void  => {
     // Note: the page always starts at 1 in Material UI
-    queryMovies(page);
+    queryMovies(page + 1);
   };
 
   useEffect(() => {
@@ -153,100 +184,100 @@ const MyLibrary: React.FC = () => {
   ) : null;
 
   const renderTable = (): ReactNode | null => {
-    const totalPageCount = Math.ceil((lastSearchMovieCount ?? 0) / pageSize);
     return lastSearchMovieCount ? (
       <div className={styles['table-style']}>
         <MaterialTable
           columns={
-            [
-              {
-                title: 'Title',
-                field: 'title',
-                width: '45%',
-                render: rowData => {
-                  return (
-                    <button 
-                      type="button"
-                      className={styles['link-button']}
-                      onClick={() => handleClickTitle(rowData.imdbID)}
-                    >
-                      {rowData.title}
-                    </button>                    
-                  );
-                }
-              },
-              {
-                title: 'Type',
-                field: 'type',
-                width: '3%',
-                render: rowData => <p>{(rowData.type === MovieType.TvSeries) ? 'TV' : 'MOV'}</p>
-              },
-              {
-                title: 'Year',
-                field: 'year',
-                type: 'numeric',
-                width: '3%'
-              },
-              {
-                title: 'Genre',
-                field: 'genre',
-                width: '39%',
-                sorting: false,
-                render: rowData => {
-                  return (
-                    <>
-                      {
-                        rowData.genre ? rowData.genre?.map((genre: string) => (
-                          <span className={globStyles['chip-spacer']}>
-                            <Chip label={genre} />
-                          </span>
-                        )) : null
-                      }
-                    </>
-                  );
-                }
-              },
-              {
-                title: 'PG Rating',
-                field: 'pGRating',
-                width: '10%'
+          [
+            {
+              title: 'Title',
+              field: 'title',
+              width: '45%',
+              render: rowData => {
+                return (
+                  <button 
+                    type="button"
+                    className={styles['link-button']}
+                    onClick={() => handleClickTitle(rowData.imdbID)}
+                  >
+                    {rowData.title}
+                  </button>                    
+                );
               }
-            ]
+            },
+            {
+              title: 'Type',
+              field: 'type',
+              width: '3%',
+              render: rowData => <p>{(rowData.type === MovieType.TvSeries) ? 'TV' : 'MOV'}</p>
+            },
+            {
+              title: 'Year',
+              field: 'year',
+              type: 'numeric',
+              width: '3%'
+            },
+            {
+              title: 'Genre',
+              field: 'genre',
+              width: '39%',
+              sorting: false,
+              render: rowData => {
+                return (
+                  <>
+                    {
+                      rowData.genre ? rowData.genre?.map((genre: string) => (
+                        <span className={globStyles['chip-spacer']}>
+                          <Chip label={genre} />
+                        </span>
+                      )) : null
+                    }
+                  </>
+                );
+              }
+            },
+            {
+              title: 'PG Rating',
+              field: 'pGRating',
+              width: '10%'
+            }
+          ]
           }
           data={movies}
           options={
-            {
-              showTitle: false,
-              search: false,
-              paging: false,
-              sorting: true,
-              headerStyle: { fontSize: '1rem' },
+          {
+            showTitle: false,
+            search: false,
+            paging: false,
+            sorting: true,
+            headerStyle: { fontSize: '1rem' },
 
-              rowStyle: rowData => ({
-                backgroundColor: rowData.tableData.checked
-                  ? 'rgba(232, 210, 192, 0.5)' : '#fff'
-              }),
-              selection: true
-            }
+            rowStyle: rowData => ({
+              backgroundColor: rowData.tableData.checked
+                ? 'rgba(232, 210, 192, 0.5)' : '#fff'
+            }),
+            selection: true
+          }
           }
           actions={
-            [
-              {
-                tooltip: 'Delete selected movies',
-                icon: () => <Delete />,
-                onClick: (_, data) => onDeleteClicked(data)
-              }
-            ]
+          [
+            {
+              tooltip: 'Delete selected movies',
+              icon: () => <Delete />,
+              onClick: (_, data) => onDeleteClicked(data)
+            }
+          ]
           }
           icons={TableIcons}
         />
         <div className={styles['pagination-style']}>
-          <Pagination
-            showFirstButton
-            showLastButton
-            count={totalPageCount}
-            onChange={onPageNoChanged}
-            page={currentPage}
+          <TablePagination
+            component="div"
+            count={lastSearchMovieCount ?? 0}
+            page={currentPage - 1}
+            onChangePage={handleChangePage}
+            rowsPerPage={pageSize}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
           />
         </div>
         <MovieDetails 
@@ -271,7 +302,11 @@ const MyLibrary: React.FC = () => {
 
   return (
     <>
-      <LibrarySearchBox setLastSearchInfo={setLastSearchInfo} />
+      <LibrarySearchBox 
+        enableExportButton={!!lastSearchMovieCount}
+        setLastSearchInfo={setLastSearchInfo} 
+        exportMovies={exportMovies} 
+      />
       {isLoading ? <MovieLoadingSkeleton /> : renderContent()}
     </>
   );

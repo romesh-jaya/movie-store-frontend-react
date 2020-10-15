@@ -48,17 +48,16 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
     openDrawer();
   };
 
-  const retrieveLanguagesFromOMDB = useCallback((): string[] => {
+  const retrieveLanguagesFromOMDB = useCallback((movie: IMovieSearch): string[] => {
     const retVal : string[] = [];
-    if (selectedMovie) {
-      languages.forEach(language => {
-        if (language === selectedMovie.language) {
-          retVal.push(language);
-        }
-      });
-    }
+
+    languages.forEach(language => {
+      if (movie.languages.includes(language)) {
+        retVal.push(language);
+      }
+    });
     return retVal;
-  }, [languages, selectedMovie]);
+  }, [languages]);
 
   const onSaveClicked = async (selectedLanguages: string[], movieTotal: number): Promise<boolean> => {
     if (selectedMovie) {
@@ -112,7 +111,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
         const response = await axios.get(`${process.env.REACT_APP_NODE_SERVER}/movies/imdbid/${selectedMovieIMDBId}`);
         if (response) {
           setMovieTotalInitial(response.data.count);
-          setLanguagesInitial(response.data.languages.length? response.data.languages : retrieveLanguagesFromOMDB());
+          setLanguagesInitial(response.data.languages.length? response.data.languages : retrieveLanguagesFromOMDB(movie));
           setMovID(response.data.id);
           SetMovError('');
           setMovieLoading(false);

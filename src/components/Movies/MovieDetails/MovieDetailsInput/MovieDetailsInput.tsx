@@ -9,6 +9,7 @@ import * as styles from './MovieDetailsInput.css';
 import * as globStyles from '../../../../index.css';
 import SettingsContext from '../../../../context/SettingsContext';
 import { ICheckboxValue } from '../../../../interfaces/ICheckboxValue';
+import { TextConstants } from '../../../../constants/TextConstants';
 
 interface IProps {
   languagesInitial: string[];
@@ -22,6 +23,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
   const [movieValuesChanged, setMovieValuesChanged] = useState(false);
   const [checkboxValues, setCheckboxValues] = useState<ICheckboxValue[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
+  const [errorTextLanguages, setErrorTextLanguages] = useState('');
   const settings = useContext(SettingsContext);
   const languagesSetting = settings.find(setting => setting.name === 'languages');
   const languages = languagesSetting && languagesSetting.value.split(',') || [];
@@ -82,6 +84,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
   const onLanguageChecked = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean): void => {
     const checkboxName = event.target.name;
 
+    setErrorTextLanguages('');
     setMovieValuesChanged(true);
     languages.forEach(language => {
       if (checkboxName === (`is${language}`)) {
@@ -106,6 +109,11 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
   };
 
   const onSaveClickedInternal = async (): Promise<void> => {
+    if (!selectedLanguages.length) {
+      setErrorTextLanguages(TextConstants.NOLANGSELECT);
+      return;
+    }
+
     const retVal = await onSaveClicked(selectedLanguages, movieTotal);
     if (retVal) {
       setMovieValuesChanged(false);
@@ -139,6 +147,9 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
               );
             })
           }
+        </div>
+        <div className="error-text-small">
+          <small>{errorTextLanguages}</small>
         </div>
       </div>
     );
@@ -181,7 +192,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
             Reset
           </Button>
         </span>
-        <Button variant="contained" color="secondary" onClick={onSaveClickedInternal} disabled={!movieValuesChanged}>
+        <Button variant="contained" color="secondary" onClick={onSaveClickedInternal} disabled={!(movieValuesChanged && movieTotal)}>
           Save
         </Button>
       </div>

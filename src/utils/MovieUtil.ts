@@ -7,6 +7,6 @@ export const getMovieDetails = async (movieIMDBId: string, searchURL: string, ap
   const genres = movie.Genre ? movie.Genre.split(', ') : 'None';
   return {
     title: movie.Title, year: movie.Year, imdbID: movie.imdbID, mediaURL: movie.Poster, actors: movie.Actors,
-    plot: movie.Plot, type: movie.Type, pGRating: movie.Rated, language: movie.Language, genre: genres
+    plot: movie.Plot, type: movie.Type, pGRating: movie.Rated, languages: movie.Language, genre: genres
   };
 };

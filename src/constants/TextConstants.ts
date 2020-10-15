@@ -14,6 +14,7 @@ export const TextConstants =
   'MOVIEDELETEERROR': 'Error deleting movies',
   'MOVIELOADERROROMDB': 'Error while accessing OMDB database',
   'NOLANGENTERED': 'At least one or more languages must be defined.',
+  'NOLANGSELECT': 'At least one language needs to be selected.',
 
   // Validation related
   'YEARINVALID1': 'Year must have completed to and from values if entering a hyphen.',

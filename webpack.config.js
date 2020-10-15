@@ -19,7 +19,7 @@ module.exports = {
   // Enable sourcemaps for debugging webpack's output.
   devtool: 'source-map',
   entry: {
-    app: path.join(__dirname, 'src', 'index.tsx')
+    app: path.join(__dirname, 'src', 'index.tsx'),
   },
   output: {
     // `filename` provides a template for naming your bundles (remember to use `[name]`)
@@ -27,14 +27,14 @@ module.exports = {
     // `chunkFilename` provides a template for naming code-split bundles (optional)
     chunkFilename: '[name].bundle.js',
     // `path` is the folder where Webpack will place your bundles
-    path: `${__dirname}/dist`
+    path: `${__dirname}/dist`,
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js']
+    extensions: ['.ts', '.tsx', '.js'],
   },
   watch: true, // watch for changes
   devServer: {
-    historyApiFallback: true
+    historyApiFallback: true,
   },
   module: {
     rules: [
@@ -43,23 +43,23 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: 'static/media/[name].[hash:8].[ext]'
-        }
+          name: 'static/media/[name].[hash:8].[ext]',
+        },
       },
       {
         test: /\.ts(x?)$/,
         exclude: /node_modules/,
         use: [
           {
-            loader: 'ts-loader'
-          }
-        ]
+            loader: 'ts-loader',
+          },
+        ],
       },
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
       {
         enforce: 'pre',
         test: /\.js$/,
-        loader: 'source-map-loader'
+        loader: 'source-map-loader',
       },
       {
         test: /\.css$/i,
@@ -68,21 +68,18 @@ module.exports = {
           '@teamsupercell/typings-for-css-modules-loader',
           {
             loader: 'css-loader',
-            options: { modules: true }
-          }
-        ]
-      }
-    ]
+            options: { modules: true },
+          },
+        ],
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       inject: true,
-      template: resolveApp('public/index.html')
+      template: resolveApp('public/index.html'),
     }),
 
-    new webpack.DefinePlugin(envKeys)
+    new webpack.DefinePlugin(envKeys),
   ],
-  // vendor: ['xlsx', 'file-saver'],
-  node: { fs: 'empty' },
-  externals: [{ './cptable': 'var cptable' }, { './jszip': 'jszip' }]
 };
