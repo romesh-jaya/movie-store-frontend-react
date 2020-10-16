@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { ExportToCsv } from 'export-to-csv';
 
 import styles from './LibrarySearchBox.css';
+import * as globStyles from '../../../index.css';
 import { TextConstants } from '../../../constants/TextConstants';
 import { MovieType } from '../../../enums/MovieType';
 import NumberRangeInput from '../../Controls/Input/NumberRangeInput/NumberRangeInput';
@@ -215,7 +216,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
 
   const renderButtons = (): ReactNode => (
     <div className={styles['button-div']}>
-      <span className='right-spacer'>
+      <span className={globStyles['right-spacer']}>
         <Button
           disabled={!isSearchTextValid()}
           onClick={onSearchClicked}
@@ -226,7 +227,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
           Search
         </Button>
       </span>
-      <span className='right-spacer'>
+      <span className={globStyles['right-spacer']}>
         <Button
           onClick={onResetClicked}
           color="secondary"
@@ -297,9 +298,9 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
                 name="searchLanguage"
               >
                 <MenuItem value="">
-                  <em>None</em>
+                  <em key="None">None</em>
                 </MenuItem>
-                {languages.map(language => <MenuItem value={language}>{language}</MenuItem>)}
+                {languages.map(language => <MenuItem value={language} key={language}>{language}</MenuItem>)}
               </Select>
             </FormControl>
           </label>
@@ -318,7 +319,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
               />
             </div>
           </label>
-          <div className="error-text-small">
+          <div className={globStyles['error-text-small']}>
             <small>{errorTextSearchYear}</small>
           </div>
         </div>

@@ -37,16 +37,25 @@ textarea {
   margin-right: 30px;
 }
 
+.padding-30 {
+  padding: 30px;
+}
+
 .error-text {
   color: red;
 }
 
-.movies {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  width: 80%;
-  margin: auto;
+.right-spacer {
+  margin-right: 15px !important;
+}
+
+.error-text-small {
+  color: red;
+  font-size: 0.8rem;
+}
+
+.chip-spacer {
+  margin-right: 3px;
 }
 
 /* 
@@ -74,23 +83,6 @@ textarea {
   min-height: auto !important;
 }
 
-:global(.right-spacer) {
-  margin-right: 15px !important;
-}
-
-:global(.bottom-spacer) {
-  margin-bottom: 20px;
-}
-
-:global(.top-spacer) {
-  margin-top: 20px;
-}
-
-:global(.error-text-small) {
-  color: red;
-  font-size: 0.8rem;
-}
-
 /* 
 -----------------------------------------------------------------------------
  UI related styles END
@@ -105,10 +97,6 @@ Material UI related styles START
 --       This is tedious. Therefore, setting them globally. 
 -----------------------------------------------------------------------------
 */
-
-.chip-spacer {
-  margin-right: 3px;
-}
 
 :global(.MuiChip-root) {
   height: 26px !important;

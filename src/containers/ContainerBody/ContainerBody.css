@@ -1,0 +1,9 @@
+.tabs-div {
+  float: left;
+  justify-content: left !important;
+  text-align: left !important;
+}
+
+.logout-button {
+  float: right;
+}

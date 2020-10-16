@@ -4,26 +4,28 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import { Button } from '@material-ui/core';
+import { useAuth0 } from '@auth0/auth0-react';
 
+import * as styles from './ContainerBody.css';
+import * as globStyles from '../../index.css';
 import { TextConstants } from '../../constants/TextConstants';
 import SettingsContext from '../../context/SettingsContext';
-import logo from '../../assets/img/movie.png';
-import * as styles from './MovieContainer.css';
-import * as globStyles from '../../index.css';
 import MovieSearch from '../../components/Movies/MovieSearch/MovieSearch';
-import MovieContainerSkeleton from './MovieContainerSkeleton';
+import MovieContainerSkeleton from '../MovieContainerSkeleton';
 import axios from '../../axios';
 import MyLibrary from '../../components/MyLibrary/MyLibrary';
 import INameValue from '../../interfaces/INameValue';
 
 const Settings = React.lazy(() => import('../../components/Settings/Settings'));
 
-const MovieContainer: React.FC = () => {
+const ContainerBody: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [settings, setSettings] = useState<INameValue[]>([]);
   const [settingsError, setSettingsError] = useState('');
   const [tabIndex, setTabIndex] = useState(0);
   const apiKeySetting = settings.find(setting => setting.name === 'apiKey');
+  const { logout } = useAuth0();
 
   const updateContext = (context: INameValue[]): void => {
     setSettings(context);
@@ -82,6 +84,10 @@ const MovieContainer: React.FC = () => {
     loadKey();
   }, []);
 
+  const onLogoutClicked = () : void => {
+    logout({ returnTo: `${window.location.origin  }/login` });
+  };
+
   const renderNoApiKey = (): ReactNode => {
     return <p>{TextConstants.NOAPIKEYDEFINED}</p>;
   };
@@ -89,20 +95,21 @@ const MovieContainer: React.FC = () => {
   const renderContent = (): ReactNode | null => {
     return !isLoading && !settingsError ? (
       <>
-        <div className={styles.header}>
-          <span className={`${styles.nowrapDiv} ${styles.div1}`}>
-            <img src={logo} height="50px" alt="movies" />
-          </span>
-          <h1 className={`${styles.nowrapDiv} ${styles.headerText}`}>
-            Ultra Movie Shop
-          </h1>
-        </div>
         <AppBar position="static">
-          <Tabs value={tabIndex} onChange={handleChange}>
-            <Tab label="My Library" id="tab0" />
-            <Tab label="Movie Search - OMDB" id="tab1" />
-            <Tab label="Settings" id="tab2" />
-          </Tabs>
+          <div>
+            <div className={styles['tabs-div']}>
+              <Tabs value={tabIndex} onChange={handleChange}>
+                <Tab label="My Library" id="tab0" />
+                <Tab label="Movie Search - OMDB" id="tab1" />
+                <Tab label="Settings" id="tab2" />
+              </Tabs>
+            </div>
+            <div className={styles['logout-button']}>
+              <Button variant="outlined" color="secondary" onClick={onLogoutClicked}>
+                Logout
+              </Button>
+            </div>
+          </div>
         </AppBar>
         <TabPanel value={tabIndex} index={0}>
           {apiKeySetting && apiKeySetting.value? <MyLibrary /> : renderNoApiKey()}
@@ -129,4 +136,4 @@ const MovieContainer: React.FC = () => {
   );
 };
 
-export default MovieContainer;
+export default ContainerBody;

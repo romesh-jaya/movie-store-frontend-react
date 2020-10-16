@@ -2,11 +2,13 @@ declare namespace IndexCssNamespace {
   export interface IIndexCss {
     'chip-spacer': string;
     'error-text': string;
+    'error-text-small': string;
     'margin-b-10': string;
     'margin-b-20': string;
     'margin-r-10': string;
     'margin-r-30': string;
-    movies: string;
+    'padding-30': string;
+    'right-spacer': string;
   }
 }
 

@@ -1,5 +1,6 @@
 declare namespace MovieSearchCssNamespace {
   export interface IMovieSearchCss {
+    movies: string;
     'search-input': string;
   }
 }

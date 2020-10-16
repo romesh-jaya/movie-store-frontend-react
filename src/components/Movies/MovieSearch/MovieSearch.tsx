@@ -147,7 +147,7 @@ const MovieSearch: React.FC = () => {
 
   const renderMovies = (): ReactNode => {
     return (
-      <section className={globStyles.movies}>
+      <section className={styles.movies}>
         {
           movies.map(movie => {
             return (

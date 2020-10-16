@@ -148,7 +148,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
             })
           }
         </div>
-        <div className="error-text-small">
+        <div className={globStyles['error-text-small']}>
           <small>{errorTextLanguages}</small>
         </div>
       </div>
