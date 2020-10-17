@@ -25,7 +25,7 @@ const ContainerBody: React.FC = () => {
   const [settingsError, setSettingsError] = useState('');
   const [tabIndex, setTabIndex] = useState(0);
   const apiKeySetting = settings.find(setting => setting.name === 'apiKey');
-  const { logout } = useAuth0();
+  const { logout, getAccessTokenSilently } = useAuth0();
 
   const updateContext = (context: INameValue[]): void => {
     setSettings(context);
@@ -82,7 +82,7 @@ const ContainerBody: React.FC = () => {
     }
     
     loadKey();
-  }, []);
+  }, [getAccessTokenSilently]);
 
   const onLogoutClicked = () : void => {
     logout({ returnTo: `${window.location.origin  }/login` });

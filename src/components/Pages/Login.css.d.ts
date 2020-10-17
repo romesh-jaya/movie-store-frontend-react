@@ -1,7 +1,6 @@
 declare namespace LoginCssNamespace {
   export interface ILoginCss {
     'login-div': string;
-    'spinner-full-page': string;
   }
 }
 

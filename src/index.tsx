@@ -7,13 +7,16 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-const domain = process.env.REACT_APP_AUTH0_DOMAIN || '';
-const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID || '';
+const DOMAIN = process.env.REACT_APP_AUTH0_DOMAIN || '';
+const CLIENT_ID = process.env.REACT_APP_AUTH0_CLIENT_ID || '';
+const AUDIENCE = process.env.REACT_APP_AUTH0_AUDIENCE;
+
 
 ReactDOM.render(
   <Auth0Provider
-    domain={domain}
-    clientId={clientId}
+    domain={DOMAIN}
+    clientId={CLIENT_ID}
+    audience={AUDIENCE}
     redirectUri={window.location.origin}
   >
     <Router>
