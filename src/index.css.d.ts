@@ -7,6 +7,7 @@ declare namespace IndexCssNamespace {
     'margin-b-20': string;
     'margin-r-10': string;
     'margin-r-30': string;
+    'margin-t-20': string;
     'padding-30': string;
     'right-spacer': string;
   }

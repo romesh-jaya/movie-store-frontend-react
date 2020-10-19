@@ -6,8 +6,11 @@ Tech Stack used:
 - REST API with Axios
 - Lazy loading of code
 - Material UI
+- React material-table
 - Pagination
 - React Context
+- Auth0 Authentication
+- Export to CSV
 
 This project uses OMDB API to search for movie data. The latter has a 1,000 daily API call limit. Another free alternative might be TMDB: https://developers.themoviedb.org/3/getting-started
 

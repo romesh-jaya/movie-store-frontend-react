@@ -1,10 +1,10 @@
 import React, { useState, useEffect, Suspense, ReactNode } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import Tab, { TabTypeMap } from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import { Button } from '@material-ui/core';
+import { Button, ExtendButtonBase } from '@material-ui/core';
 import { useAuth0 } from '@auth0/auth0-react';
 
 import * as styles from './ContainerBody.css';
@@ -25,7 +25,7 @@ const ContainerBody: React.FC = () => {
   const [settingsError, setSettingsError] = useState('');
   const [tabIndex, setTabIndex] = useState(0);
   const apiKeySetting = settings.find(setting => setting.name === 'apiKey');
-  const { logout, getAccessTokenSilently } = useAuth0();
+  const { logout, getAccessTokenSilently, user } = useAuth0();
 
   const updateContext = (context: INameValue[]): void => {
     setSettings(context);
@@ -88,6 +88,10 @@ const ContainerBody: React.FC = () => {
     logout({ returnTo: `${window.location.origin  }/login` });
   };
 
+  const isAdmin = () : boolean => {
+    return user.email === process.env.REACT_APP_AUTH0_ADMIN_USER;
+  };
+
   const renderNoApiKey = (): ReactNode => {
     return <p>{TextConstants.NOAPIKEYDEFINED}</p>;
   };
@@ -100,8 +104,8 @@ const ContainerBody: React.FC = () => {
             <div className={styles['tabs-div']}>
               <Tabs value={tabIndex} onChange={handleChange}>
                 <Tab label="My Library" id="tab0" />
-                <Tab label="Movie Search - OMDB" id="tab1" />
-                <Tab label="Settings" id="tab2" />
+                {isAdmin()? <Tab label="Movie Search - OMDB" id="tab1" />: null}                                
+                {isAdmin()? <Tab label="Settings" id="tab2" />: null}                
               </Tabs>
             </div>
             <div className={styles['logout-button']}>
@@ -114,14 +118,20 @@ const ContainerBody: React.FC = () => {
         <TabPanel value={tabIndex} index={0}>
           {apiKeySetting && apiKeySetting.value? <MyLibrary /> : renderNoApiKey()}
         </TabPanel>
-        <TabPanel value={tabIndex} index={1}>
-          {apiKeySetting && apiKeySetting.value? <MovieSearch /> : renderNoApiKey()}
-        </TabPanel>
-        <TabPanel value={tabIndex} index={2}>
-          <Suspense fallback={<div>Loading...</div>}>
-            <Settings updateContext={updateContext} />
-          </Suspense>
-        </TabPanel>
+        {
+        isAdmin()? (
+          <>
+            <TabPanel value={tabIndex} index={1}>
+              {apiKeySetting && apiKeySetting.value? <MovieSearch /> : renderNoApiKey()}
+            </TabPanel>
+            <TabPanel value={tabIndex} index={2}>
+              <Suspense fallback={<div>Loading...</div>}>
+                <Settings updateContext={updateContext} />
+              </Suspense>
+            </TabPanel>
+          </>
+        ) : null 
+        }
       </>
     ) : null;
   };

@@ -45,6 +45,7 @@ const App: React.FC = () => {
       <ContainerHeader />
       <Switch>
         <Route exact path="/login" component={Login} />
+        <Route exact path="/login-admin" component={Login} />
         <ProtectedRoute>
           <Route exact path="/" component={ContainerBody} />
         </ProtectedRoute>

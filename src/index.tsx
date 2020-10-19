@@ -17,7 +17,7 @@ ReactDOM.render(
     domain={DOMAIN}
     clientId={CLIENT_ID}
     audience={AUDIENCE}
-    redirectUri={window.location.origin}
+    redirectUri={window.location.origin}    
   >
     <Router>
       <App />
