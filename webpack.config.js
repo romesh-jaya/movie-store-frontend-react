@@ -62,7 +62,7 @@ module.exports = {
         loader: 'source-map-loader',
       },
       {
-        test: /\.css$/i,
+        test: [/\.css$/i, /\.scss$/i],
         use: [
           'style-loader',
           '@teamsupercell/typings-for-css-modules-loader',

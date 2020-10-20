@@ -178,6 +178,15 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
           movieTotalInitial={movieTotalInitial}
           onSaveClicked={onSaveClicked}
         />
+        <div>
+          <a
+            href={`https://www.imdb.com/title/${selectedMovie.imdbID}`} 
+            target="_blank" 
+            rel="noopener noreferrer"
+          >
+            View in IMDB
+          </a>
+        </div>        
       </div>
     );
   };

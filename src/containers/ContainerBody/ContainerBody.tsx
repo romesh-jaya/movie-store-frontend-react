@@ -1,10 +1,10 @@
 import React, { useState, useEffect, Suspense, ReactNode } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
-import Tab, { TabTypeMap } from '@material-ui/core/Tab';
+import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import { Button, ExtendButtonBase } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { useAuth0 } from '@auth0/auth0-react';
 
 import * as styles from './ContainerBody.css';
@@ -16,6 +16,7 @@ import MovieContainerSkeleton from '../MovieContainerSkeleton';
 import axios from '../../axios';
 import MyLibrary from '../../components/MyLibrary/MyLibrary';
 import INameValue from '../../interfaces/INameValue';
+import {isAdmin} from '../../utils/AuthUtil';
 
 const Settings = React.lazy(() => import('../../components/Settings/Settings'));
 
@@ -88,10 +89,6 @@ const ContainerBody: React.FC = () => {
     logout({ returnTo: `${window.location.origin  }/login` });
   };
 
-  const isAdmin = () : boolean => {
-    return user.email === process.env.REACT_APP_AUTH0_ADMIN_USER;
-  };
-
   const renderNoApiKey = (): ReactNode => {
     return <p>{TextConstants.NOAPIKEYDEFINED}</p>;
   };
@@ -104,11 +101,16 @@ const ContainerBody: React.FC = () => {
             <div className={styles['tabs-div']}>
               <Tabs value={tabIndex} onChange={handleChange}>
                 <Tab label="My Library" id="tab0" />
-                {isAdmin()? <Tab label="Movie Search - OMDB" id="tab1" />: null}                                
-                {isAdmin()? <Tab label="Settings" id="tab2" />: null}                
+                {isAdmin(user.email)? <Tab label="Movie Search - OMDB" id="tab1" />: null}                                
+                {isAdmin(user.email)? <Tab label="Settings" id="tab2" />: null}                
               </Tabs>
             </div>
             <div className={styles['logout-button']}>
+              <small className={globStyles['margin-r-10']}>
+                Welcome,
+                {' '}
+                {user.name}
+              </small>
               <Button variant="outlined" color="secondary" onClick={onLogoutClicked}>
                 Logout
               </Button>
@@ -119,7 +121,7 @@ const ContainerBody: React.FC = () => {
           {apiKeySetting && apiKeySetting.value? <MyLibrary /> : renderNoApiKey()}
         </TabPanel>
         {
-        isAdmin()? (
+        isAdmin(user.email)? (
           <>
             <TabPanel value={tabIndex} index={1}>
               {apiKeySetting && apiKeySetting.value? <MovieSearch /> : renderNoApiKey()}

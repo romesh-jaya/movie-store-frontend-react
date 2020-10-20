@@ -5,11 +5,13 @@ import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
+import { useAuth0 } from '@auth0/auth0-react';
 import * as styles from './MovieDetailsInput.css';
 import * as globStyles from '../../../../index.css';
 import SettingsContext from '../../../../context/SettingsContext';
 import { ICheckboxValue } from '../../../../interfaces/ICheckboxValue';
 import { TextConstants } from '../../../../constants/TextConstants';
+import {isAdmin} from '../../../../utils/AuthUtil';
 
 interface IProps {
   languagesInitial: string[];
@@ -29,6 +31,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
   const languages = languagesSetting && languagesSetting.value.split(',') || [];
   const prevLanguagesInitial = useRef('');
   const prevMovieValuesChanged = useRef(false);
+  const { user } = useAuth0();
 
   const onReset = (): void => {
     setMovieValuesChanged(false);
@@ -124,7 +127,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
     return (
       <div className={globStyles['margin-b-20']}>
         <div className={globStyles['margin-b-10']}>
-          Set Movie Languages:
+          Movie Languages:
         </div>
         <div className={styles['language-container']}>
           {
@@ -135,6 +138,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
                   control={
                     (
                       <Checkbox
+                        disabled={!isAdmin(user.email)}
                         checked={getCheckboxValue(language)}
                         onChange={onLanguageChecked}
                         name={`is${language}`}
@@ -155,47 +159,55 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
     );
   };
 
+  const renderNonLanguages = (): ReactNode | null => {
+    return isAdmin(user.email)? (
+      <>
+        <div className={globStyles['margin-b-20']}>
+          <span className={globStyles['margin-r-10']}>
+            <Button variant="contained" color="primary" onClick={onAddClicked}>
+              +1 to library
+            </Button>
+          </span>
+          <Button variant="contained" color="secondary" onClick={onRemoveClicked} disabled={movieTotal < 2}>
+            -1 from library
+          </Button>
+        </div>
+        <div className={globStyles['margin-b-20']}>
+          <span className={globStyles['margin-r-30']}>
+            <TextField
+              id="outlined-basic"
+              label="Total Count"
+              InputProps={
+              {
+                readOnly: true
+              }
+              }
+              inputProps={
+              {
+                style: { textAlign: 'right', width: '90px' }
+              }
+              }
+              value={movieTotal}
+              type="number"
+            />
+          </span>          
+          <span className={styles['first-button']}>
+            <Button onClick={onReset} color="primary" variant="contained">
+              Reset
+            </Button>
+          </span>
+          <Button variant="contained" color="secondary" onClick={onSaveClickedInternal} disabled={!(movieValuesChanged && movieTotal)}>
+            Save
+          </Button>
+        </div>      
+      </>
+    ) : null;
+  };
+
   return (
     <>
       {renderLanguages()}
-      <div className={globStyles['margin-b-20']}>
-        <span className={globStyles['margin-r-10']}>
-          <Button variant="contained" color="primary" onClick={onAddClicked}>
-            +1 to library
-          </Button>
-        </span>
-        <Button variant="contained" color="secondary" onClick={onRemoveClicked} disabled={movieTotal < 2}>
-          -1 from library
-        </Button>
-      </div>
-      <div className={globStyles['margin-b-20']}>
-        <span className={globStyles['margin-r-30']}>
-          <TextField
-            id="outlined-basic"
-            label="Total Count"
-            InputProps={
-            {
-              readOnly: true
-            }
-            }
-            inputProps={
-            {
-              style: { textAlign: 'right', width: '90px' }
-            }
-            }
-            value={movieTotal}
-            type="number"
-          />
-        </span>          
-        <span className={styles['first-button']}>
-          <Button onClick={onReset} color="primary" variant="contained">
-            Reset
-          </Button>
-        </span>
-        <Button variant="contained" color="secondary" onClick={onSaveClickedInternal} disabled={!(movieValuesChanged && movieTotal)}>
-          Save
-        </Button>
-      </div>
+      {renderNonLanguages()}
     </>
   );
 

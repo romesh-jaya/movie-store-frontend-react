@@ -1,10 +1,11 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useCallback, ReactNode, useEffect, ReactElement } from 'react';
-import MaterialTable from 'material-table';
+import MaterialTable, { Action, Options } from 'material-table';
 import {  Chip, TablePagination} from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
 
-import styles from './MyLibrary.css';
+import { useAuth0 } from '@auth0/auth0-react';
+import styles from './MyLibrary.scss';
 import * as globStyles from '../../index.css';
 import { TextConstants } from '../../constants/TextConstants';
 import axios from '../../axios';
@@ -16,6 +17,7 @@ import LibrarySearchBox from './LibrarySearchBox/LibrarySearchBox';
 import { ISearchInfo } from '../../interfaces/ISearchInfo';
 import IMovieLibrary from '../../interfaces/IMovieLibrary';
 import MovieDetails from '../Movies/MovieDetails/MovieDetails';
+import {isAdmin} from '../../utils/AuthUtil';
 
 const MyLibrary: React.FC = () => {
   const [movies, setMovies] = useState<IMovieLibrary[]>([]);
@@ -30,6 +32,7 @@ const MyLibrary: React.FC = () => {
   const [selectedMovieIMDBId, setSelectedMovieIMDBId] = useState('');
   const [openDrawerValue, setOpenDrawerValue] = useState(false);
   const [pageSize, setPageSize] = React.useState(10);
+  const { user } = useAuth0();
 
   const queryMovies = useCallback(async (pageNo?: number): Promise<void> => {
     const page = pageNo ?? 1;
@@ -165,6 +168,39 @@ const MyLibrary: React.FC = () => {
     setShowDeleteConfirm(false);
   };
 
+  const getActions = (): (Action<IMovieLibrary> | ((rowData: IMovieLibrary) => Action<IMovieLibrary>))[] | undefined => {
+    return isAdmin(user.email) ? (
+      [
+        {
+          tooltip: 'Delete selected movies',
+          icon: () => <Delete />,
+          onClick: (_ : any, data: IMovieLibrary | IMovieLibrary[]) => onDeleteClicked(data)
+        }
+      ]
+    ) : undefined;
+  };
+
+  const getOptions = (): Options<IMovieLibrary> => {
+    const retVal = {
+      showTitle: false,
+      search: false,
+      paging: false,
+      sorting: true,
+      headerStyle: { fontSize: '1rem' },
+      rowStyle: (rowData : any) => ({
+        backgroundColor: rowData.tableData.checked
+          ? 'rgba(232, 210, 192, 0.5)' : '#fff'
+      }),
+      selection: false
+    };
+
+    if (isAdmin(user.email)) {
+      retVal.selection = true;
+    }
+
+    return  retVal;
+  };
+
   const renderError = (): ReactNode | null => {
     return movError ? (
       <p className={globStyles['error-text']}>
@@ -226,11 +262,17 @@ const MyLibrary: React.FC = () => {
                 return (
                   <>
                     {
-                      rowData.genre ? rowData.genre?.map((genre: string) => (
-                        <span className={globStyles['chip-spacer']}>
-                          <Chip label={genre} />
-                        </span>
-                      )) : null
+                      rowData.genre ? (
+                        <div className={styles['responsive-content']}>
+                          {
+                          rowData.genre?.map((genre: string) => (
+                            <span className={globStyles['chip-spacer']}>
+                              <Chip label={genre} />
+                            </span>
+                          ))
+                          }
+                        </div>
+                      ) : null
                     }
                   </>
                 );
@@ -244,30 +286,8 @@ const MyLibrary: React.FC = () => {
           ]
           }
           data={movies}
-          options={
-          {
-            showTitle: false,
-            search: false,
-            paging: false,
-            sorting: true,
-            headerStyle: { fontSize: '1rem' },
-
-            rowStyle: rowData => ({
-              backgroundColor: rowData.tableData.checked
-                ? 'rgba(232, 210, 192, 0.5)' : '#fff'
-            }),
-            selection: true
-          }
-          }
-          actions={
-          [
-            {
-              tooltip: 'Delete selected movies',
-              icon: () => <Delete />,
-              onClick: (_, data) => onDeleteClicked(data)
-            }
-          ]
-          }
+          options={getOptions()}
+          actions={getActions()}
           icons={TableIcons}
         />
         <div className={styles['pagination-style']}>
