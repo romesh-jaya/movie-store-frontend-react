@@ -5,8 +5,8 @@ import {  Chip, TablePagination, useMediaQuery} from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
 
 import { useAuth0 } from '@auth0/auth0-react';
-import styles from './MyLibrary.scss';
-import * as globStyles from '../../index.css';
+import styles from './myLibrary.module.css';
+import * as globStyles from '../../index.module.css';
 import { TextConstants } from '../../constants/TextConstants';
 import axios from '../../axios';
 import MovieLoadingSkeleton from '../Movies/MovieLoadingSkeleton';

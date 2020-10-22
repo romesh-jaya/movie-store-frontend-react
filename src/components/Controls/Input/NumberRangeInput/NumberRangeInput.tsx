@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styles from './NumberRangeInput.css';
+import styles from './numberRangeInput.module.css';
 
 interface IProps {
   name: string;

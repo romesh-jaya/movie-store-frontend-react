@@ -5,8 +5,8 @@ import Pagination from '@material-ui/lab/Pagination';
 
 import axios from '../../../axios';
 import Movie from '../Movie/Movie';
-import styles from './MovieSearch.css';
-import * as globStyles from '../../../index.css';
+import styles from './movieSearch.module.css';
+import * as globStyles from '../../../index.module.css';
 import IMovieSearch from '../../../interfaces/IMovieSearch';
 import MovieDetails from '../MovieDetails/MovieDetails';
 import MovieLoadingSkeleton from '../MovieLoadingSkeleton';

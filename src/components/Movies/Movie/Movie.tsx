@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import * as styles from './Movie.css';
+import * as styles from './movie.module.css';
 
 interface IProps {
   title: string;
@@ -14,12 +14,12 @@ const Movie: React.FC<IProps> = (props) => {
   const { title, year, body, clicked} = props;
 
   return (
-    <div className={styles.Movie} onClick={clicked} onKeyDown={clicked} role="button" tabIndex={0}>
+    <div className={styles.movie} onClick={clicked} onKeyDown={clicked} role="button" tabIndex={0}>
       <h1>{title}</h1>
       <div>
         {year}
         <div>
-          <small className={styles.Author}>{body}</small>
+          <small className={styles.author}>{body}</small>
         </div>
       </div>
     </div>

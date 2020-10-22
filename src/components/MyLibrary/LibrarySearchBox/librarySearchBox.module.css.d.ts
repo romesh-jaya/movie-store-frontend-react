@@ -1,5 +1,5 @@
-declare namespace LibrarySearchBoxCssNamespace {
-  export interface ILibrarySearchBoxCss {
+declare namespace LibrarySearchBoxModuleCssNamespace {
+  export interface ILibrarySearchBoxModuleCss {
     'button-div': string;
     'card-style': string;
     'card-title': string;
@@ -12,9 +12,9 @@ declare namespace LibrarySearchBoxCssNamespace {
   }
 }
 
-declare const LibrarySearchBoxCssModule: LibrarySearchBoxCssNamespace.ILibrarySearchBoxCss & {
+declare const LibrarySearchBoxModuleCssModule: LibrarySearchBoxModuleCssNamespace.ILibrarySearchBoxModuleCss & {
   /** WARNING: Only available when `css-loader` is used without `style-loader` or `mini-css-extract-plugin` */
-  locals: LibrarySearchBoxCssNamespace.ILibrarySearchBoxCss;
+  locals: LibrarySearchBoxModuleCssNamespace.ILibrarySearchBoxModuleCss;
 };
 
-export = LibrarySearchBoxCssModule;
+export = LibrarySearchBoxModuleCssModule;

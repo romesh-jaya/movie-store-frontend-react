@@ -1,5 +1,5 @@
-declare namespace IndexCssNamespace {
-  export interface IIndexCss {
+declare namespace IndexModuleCssNamespace {
+  export interface IIndexModuleCss {
     'chip-spacer': string;
     'error-text': string;
     'error-text-small': string;
@@ -13,9 +13,9 @@ declare namespace IndexCssNamespace {
   }
 }
 
-declare const IndexCssModule: IndexCssNamespace.IIndexCss & {
+declare const IndexModuleCssModule: IndexModuleCssNamespace.IIndexModuleCss & {
   /** WARNING: Only available when `css-loader` is used without `style-loader` or `mini-css-extract-plugin` */
-  locals: IndexCssNamespace.IIndexCss;
+  locals: IndexModuleCssNamespace.IIndexModuleCss;
 };
 
-export = IndexCssModule;
+export = IndexModuleCssModule;

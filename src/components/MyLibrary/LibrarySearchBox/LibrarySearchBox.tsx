@@ -6,8 +6,8 @@ import _ from 'lodash';
 import { ExportToCsv } from 'export-to-csv';
 
 import { useAuth0 } from '@auth0/auth0-react';
-import styles from './LibrarySearchBox.css';
-import * as globStyles from '../../../index.css';
+import styles from './librarySearchBox.module.css';
+import * as globStyles from '../../../index.module.css';
 import { TextConstants } from '../../../constants/TextConstants';
 import { MovieType } from '../../../enums/MovieType';
 import NumberRangeInput from '../../Controls/Input/NumberRangeInput/NumberRangeInput';

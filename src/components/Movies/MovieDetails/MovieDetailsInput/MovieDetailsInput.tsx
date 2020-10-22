@@ -6,8 +6,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
 import { useAuth0 } from '@auth0/auth0-react';
-import * as styles from './MovieDetailsInput.css';
-import * as globStyles from '../../../../index.css';
+import * as styles from './movieDetailsInput.module.css';
+import * as globStyles from '../../../../index.module.css';
 import SettingsContext from '../../../../context/SettingsContext';
 import { ICheckboxValue } from '../../../../interfaces/ICheckboxValue';
 import { TextConstants } from '../../../../constants/TextConstants';

@@ -2,8 +2,8 @@ import React, { useContext, useState, useEffect, useRef, ReactNode } from 'react
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import * as styles from './Settings.css';
-import * as globStyles from '../../index.css';
+import * as styles from './settings.module.css';
+import * as globStyles from '../../index.module.css';
 import SettingsContext from '../../context/SettingsContext';
 import axios from '../../axios';
 import { TextConstants } from '../../constants/TextConstants';

@@ -3,8 +3,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 import Button from '@material-ui/core/Button';
 import { useLocation } from 'react-router';
 
-import * as globStyles from '../../index.css';
-import * as styles from './Login.css';
+import * as globStyles from '../../index.module.css';
+import * as styles from './login.module.css';
 
 // Note: the Auth0 hosted Universal classic login screen has been customized in order to pass a custom
 //       param - passwordLoginOnly. The customized login screen can be accessed via: 

@@ -7,7 +7,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import ClearIcon from '@material-ui/icons/Clear';
 
-import styles from './AlertConfirmation.css';
+import styles from './alertConfirmation.module.css';
 
 interface IProps {
   message: string;

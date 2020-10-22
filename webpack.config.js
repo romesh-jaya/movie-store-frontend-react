@@ -35,7 +35,7 @@ module.exports = {
   watch: true, // watch for changes
   devServer: {
     historyApiFallback: true,
-    https: true,
+    // https: true,
   },
   module: {
     rules: [

@@ -7,8 +7,8 @@ import Box from '@material-ui/core/Box';
 import { Button } from '@material-ui/core';
 import { useAuth0 } from '@auth0/auth0-react';
 
-import * as styles from './ContainerBody.css';
-import * as globStyles from '../../index.css';
+import * as styles from './containerBody.module.css';
+import * as globStyles from '../../index.module.css';
 import { TextConstants } from '../../constants/TextConstants';
 import SettingsContext from '../../context/SettingsContext';
 import MovieSearch from '../../components/Movies/MovieSearch/MovieSearch';
