@@ -8,10 +8,10 @@ const ContainerHeader: React.FC = () => {
   return (
     <>
       <div className={styles.header}>
-        <span className={`${styles.nowrapDiv} ${styles.div1}`}>
+        <span className={`${styles['nowrap-div']} ${styles['div-logo']}`}>
           <img src={logo} height="50px" alt="movies" />
         </span>
-        <h1 className={`${styles.nowrapDiv} ${styles.headerText}`}>
+        <h1 className={`${styles['nowrap-div']} ${styles['header-text']}`}>
           Ultra Movie Shop
         </h1>
       </div>

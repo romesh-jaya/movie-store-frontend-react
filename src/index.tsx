@@ -6,6 +6,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import ErrorBoundary from './hoc/ErrorBoundary/ErrorBoundary';
 
 const DOMAIN = process.env.REACT_APP_AUTH0_DOMAIN || '';
 const CLIENT_ID = process.env.REACT_APP_AUTH0_CLIENT_ID || '';
@@ -13,16 +14,18 @@ const AUDIENCE = process.env.REACT_APP_AUTH0_AUDIENCE;
 
 
 ReactDOM.render(
-  <Auth0Provider
-    domain={DOMAIN}
-    clientId={CLIENT_ID}
-    audience={AUDIENCE}
-    redirectUri={window.location.origin}    
-  >
-    <Router>
-      <App />
-    </Router>
-  </Auth0Provider>,
+  <ErrorBoundary>
+    <Auth0Provider
+      domain={DOMAIN}
+      clientId={CLIENT_ID}
+      audience={AUDIENCE}
+      redirectUri={window.location.origin}
+    >
+      <Router>
+        <App />
+      </Router>
+    </Auth0Provider>
+  </ErrorBoundary>,
   document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

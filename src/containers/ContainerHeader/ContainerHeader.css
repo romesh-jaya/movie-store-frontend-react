@@ -4,9 +4,10 @@
   background-color: #e8d2c0;
   font-size: 2em;
   width: 100%;
+  white-space: nowrap;
 }
 
-.nowrapDiv {
+.nowrap-div {
   display: inline-block;
   *display: inline;
   /*for IE 7 */
@@ -15,10 +16,10 @@
   vertical-align: top;
 }
 
-.div1 {
+.div-logo {
   padding: 15px;
 }
 
-.headerText {
+.header-text {
   font-size: 1.3em;
 }

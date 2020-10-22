@@ -94,13 +94,23 @@ const ContainerBody: React.FC = () => {
   };
 
   const renderContent = (): ReactNode | null => {
+    const myLibClass = !isAdmin(user.email)? styles['my-library'] : undefined;
+
     return !isLoading && !settingsError ? (
       <>
         <AppBar position="static">
           <div>
             <div className={styles['tabs-div']}>
               <Tabs value={tabIndex} onChange={handleChange}>
-                <Tab label="My Library" id="tab0" />
+                <Tab
+                  label="My Library"
+                  id="tab0" 
+                  classes={
+                  {
+                    root: myLibClass,
+                  }
+                  }
+                />
                 {isAdmin(user.email)? <Tab label="Movie Search - OMDB" id="tab1" />: null}                                
                 {isAdmin(user.email)? <Tab label="Settings" id="tab2" />: null}                
               </Tabs>
@@ -109,7 +119,7 @@ const ContainerBody: React.FC = () => {
               <small className={globStyles['margin-r-10']}>
                 Welcome,
                 {' '}
-                {user.name}
+                {user.name.split(' ')[0]}
               </small>
               <Button variant="outlined" color="secondary" onClick={onLogoutClicked}>
                 Logout

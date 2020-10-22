@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, ReactNode, useRef, useCallback } from 'react';
-import { Drawer } from '@material-ui/core';
+import { Button, Drawer } from '@material-ui/core';
+import ClearIcon from '@material-ui/icons/Clear';
 
 import axios from '../../../axios';
 import * as styles from './MovieDetails.css';
@@ -17,11 +18,11 @@ import MovieDetailsInput from './MovieDetailsInput/MovieDetailsInput';
 interface IProps {
   selectedMovieIMDBId: string;
   openDrawerValue: boolean;
-  openDrawer: () => void;
+  closeDrawer: () => void;
 }
 
 const MovieDetails: React.FC<IProps> = (props: IProps) => {
-  const { selectedMovieIMDBId, openDrawer, openDrawerValue } = props;
+  const { selectedMovieIMDBId, closeDrawer, openDrawerValue } = props;
   const [movieTotalInitial, setMovieTotalInitial] = useState(0);
   const [movieLoading, setMovieLoading] = useState(false);
   const [movError, SetMovError] = useState('');
@@ -36,7 +37,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
   const prevSelIMDBId = useRef('');
 
   const handleDrawerToggle = (): void => {
-    openDrawer();
+    closeDrawer();
   };
 
   const handleDrawerToggleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>): void => {
@@ -45,7 +46,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
     ) {
       return;
     }
-    openDrawer();
+    closeDrawer();
   };
 
   const retrieveLanguagesFromOMDB = useCallback((movie: IMovieSearch): string[] => {
@@ -153,12 +154,17 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
         <div className={globStyles['margin-b-20']}>
           <div className={globStyles['margin-b-20']}>
             <h3 className={styles['header-custom']}>
-              <span className={styles['header-custom-span']}>
+              <div className={styles['header-custom-span']}>
                 {selectedMovie.title}
                 {' '}
                 {heading}
                 {' '}
-              </span>
+              </div>
+              <div className={styles['close-button']}>
+                <Button onClick={closeDrawer}>
+                  <ClearIcon />
+                </Button>
+              </div>
             </h3>
             <p>{selectedMovie.year}</p>
             <p>{selectedMovie.actors}</p>

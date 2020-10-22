@@ -1,6 +1,7 @@
 declare namespace MovieDetailsCssNamespace {
   export interface IMovieDetailsCss {
     Button: string;
+    'close-button': string;
     drawer: string;
     'header-custom': string;
     'header-custom-span': string;

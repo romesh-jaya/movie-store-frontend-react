@@ -16,18 +16,20 @@
 
 .header-custom {
   height: 35px;
+  margin: 0;
+}
+
+.header-custom-span {
   font-weight: bold;
   background-color: darkblue;
   color: white;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin: 0;
-  padding: 5px;
-}
-
-.header-custom-span {
-  margin: auto;
+  float: left;
+  justify-content: left !important;
+  text-align: left !important;
+  padding: 5px 15px;
 }
 
 .Button:disabled {
@@ -42,4 +44,8 @@
 .spinner-div {
   height: 2.6em;
   padding: 20px;
+}
+
+.close-button {
+  float: right;
 }

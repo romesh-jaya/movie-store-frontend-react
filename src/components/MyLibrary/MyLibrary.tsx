@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useCallback, ReactNode, useEffect, ReactElement } from 'react';
-import MaterialTable, { Action, Options } from 'material-table';
-import {  Chip, TablePagination} from '@material-ui/core';
+import MaterialTable, { Action, Column, Options } from 'material-table';
+import {  Chip, TablePagination, useMediaQuery} from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
 
 import { useAuth0 } from '@auth0/auth0-react';
@@ -33,6 +33,7 @@ const MyLibrary: React.FC = () => {
   const [openDrawerValue, setOpenDrawerValue] = useState(false);
   const [pageSize, setPageSize] = React.useState(10);
   const { user } = useAuth0();
+  const isDesktopWidth = useMediaQuery('(min-width:600px)');
 
   const queryMovies = useCallback(async (pageNo?: number): Promise<void> => {
     const page = pageNo ?? 1;
@@ -201,6 +202,75 @@ const MyLibrary: React.FC = () => {
     return  retVal;
   };
 
+  const getColumns = (): Column<IMovieLibrary>[] => {
+    const retVal : Column<IMovieLibrary>[] =   [
+      {
+        title: 'Title',
+        field: 'title',
+        width: '45%',
+        render: (rowData : IMovieLibrary) => {
+          return (
+            <button 
+              type="button"
+              className={styles['link-button']}
+              onClick={() => handleClickTitle(rowData.imdbID)}
+            >
+              {rowData.title}
+            </button>                    
+          );
+        }
+      },
+      {
+        title: 'Year',
+        field: 'year',
+        type: 'numeric',
+        width: '3%'
+      }
+    ];
+
+    if (isDesktopWidth) {
+      retVal.push(
+        {
+          title: 'Type',
+          field: 'type',
+          width: '3%',
+          render: (rowData : IMovieLibrary) => ( 
+            <p>{(rowData.type === MovieType.TvSeries) ? 'TV' : 'MOV'}</p>
+          )
+        });
+
+      retVal.push(
+        {
+          title: 'Genre',
+          field: 'genre',
+          width: '39%',
+          sorting: false,
+          render: (rowData : IMovieLibrary) => {
+            return (
+              <>
+                {
+                  rowData.genre?.map((genre: string) => (
+                    <span className={globStyles['chip-spacer']}>
+                      <Chip label={genre} />
+                    </span>
+                  ))
+                }
+              </>
+            );
+          }
+        });
+
+      retVal.push(
+        {
+          title: 'PG Rating',
+          field: 'pGRating',
+          width: '10%'
+        }
+      );
+    }
+    return retVal;
+  };
+
   const renderError = (): ReactNode | null => {
     return movError ? (
       <p className={globStyles['error-text']}>
@@ -223,68 +293,7 @@ const MyLibrary: React.FC = () => {
     return lastSearchMovieCount ? (
       <div className={styles['table-style']}>
         <MaterialTable
-          columns={
-          [
-            {
-              title: 'Title',
-              field: 'title',
-              width: '45%',
-              render: rowData => {
-                return (
-                  <button 
-                    type="button"
-                    className={styles['link-button']}
-                    onClick={() => handleClickTitle(rowData.imdbID)}
-                  >
-                    {rowData.title}
-                  </button>                    
-                );
-              }
-            },
-            {
-              title: 'Type',
-              field: 'type',
-              width: '3%',
-              render: rowData => <p>{(rowData.type === MovieType.TvSeries) ? 'TV' : 'MOV'}</p>
-            },
-            {
-              title: 'Year',
-              field: 'year',
-              type: 'numeric',
-              width: '3%'
-            },
-            {
-              title: 'Genre',
-              field: 'genre',
-              width: '39%',
-              sorting: false,
-              render: rowData => {
-                return (
-                  <>
-                    {
-                      rowData.genre ? (
-                        <div className={styles['responsive-content']}>
-                          {
-                          rowData.genre?.map((genre: string) => (
-                            <span className={globStyles['chip-spacer']}>
-                              <Chip label={genre} />
-                            </span>
-                          ))
-                          }
-                        </div>
-                      ) : null
-                    }
-                  </>
-                );
-              }
-            },
-            {
-              title: 'PG Rating',
-              field: 'pGRating',
-              width: '10%'
-            }
-          ]
-          }
+          columns={getColumns()}
           data={movies}
           options={getOptions()}
           actions={getActions()}
@@ -303,7 +312,7 @@ const MyLibrary: React.FC = () => {
         <MovieDetails 
           selectedMovieIMDBId={selectedMovieIMDBId}
           openDrawerValue={openDrawerValue}
-          openDrawer={handleDrawerCloseFromDrawer}
+          closeDrawer={handleDrawerCloseFromDrawer}
         /> 
       </div>
     ) : null;

@@ -1,6 +1,7 @@
 declare namespace ContainerBodyCssNamespace {
   export interface IContainerBodyCss {
     'logout-button': string;
+    'my-library': string;
     'tabs-div': string;
   }
 }

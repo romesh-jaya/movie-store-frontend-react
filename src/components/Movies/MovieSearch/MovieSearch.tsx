@@ -194,7 +194,7 @@ const MovieSearch: React.FC = () => {
         <MovieDetails 
           selectedMovieIMDBId={selectedMovieIMDBId}
           openDrawerValue={openDrawerValue}
-          openDrawer={handleDrawerCloseFromDrawer}
+          closeDrawer={handleDrawerCloseFromDrawer}
         /> 
         <section>
           {(!selectedMovieIMDBId && !movError && movies.length) ? <p>{TextConstants.CLICKTOSEEDETAILS}</p> : null}

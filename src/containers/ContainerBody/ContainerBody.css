@@ -7,3 +7,7 @@
 .logout-button {
   float: right;
 }
+
+.my-library {
+  display: none !important;
+}

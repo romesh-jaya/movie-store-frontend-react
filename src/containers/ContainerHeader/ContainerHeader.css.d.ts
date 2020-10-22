@@ -1,9 +1,9 @@
 declare namespace ContainerHeaderCssNamespace {
   export interface IContainerHeaderCss {
-    div1: string;
+    'div-logo': string;
     header: string;
-    headerText: string;
-    nowrapDiv: string;
+    'header-text': string;
+    'nowrap-div': string;
   }
 }
 

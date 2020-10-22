@@ -5,6 +5,7 @@ import Card from '@material-ui/core/Card';
 import _ from 'lodash';
 import { ExportToCsv } from 'export-to-csv';
 
+import { useAuth0 } from '@auth0/auth0-react';
 import styles from './LibrarySearchBox.css';
 import * as globStyles from '../../../index.css';
 import { TextConstants } from '../../../constants/TextConstants';
@@ -15,6 +16,7 @@ import { ISearchInfo } from '../../../interfaces/ISearchInfo';
 import IMovieLibrary from '../../../interfaces/IMovieLibrary';
 import INameValue from '../../../interfaces/INameValue';
 import SettingsContext from '../../../context/SettingsContext';
+import {isAdmin} from '../../../utils/AuthUtil';
 
 interface IProps {
   enableExportButton : boolean;
@@ -38,6 +40,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   const settings = useContext(SettingsContext);
   const languagesSetting = settings.find(setting => setting.name === 'languages');
   const languages = languagesSetting && languagesSetting.value.split(',') || [];
+  const { user } = useAuth0();
 
   const { enableExportButton, setLastSearchInfo, exportMovies } = props;
 
@@ -236,14 +239,18 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
           Reset
         </Button>
       </span>
-      <Button
-        disabled={!enableExportButton}
-        onClick={onExportClicked}
-        color="secondary"
-        variant="contained"
-      >
-        Export to CSV
-      </Button>
+      {
+        isAdmin(user.email) ? (
+          <Button
+            disabled={!enableExportButton}
+            onClick={onExportClicked}
+            color="secondary"
+            variant="contained"
+          >
+            Export to CSV
+          </Button>
+        ) : null
+      }
     </div>
   );
 
