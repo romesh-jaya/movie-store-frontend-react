@@ -16,9 +16,16 @@
   margin-right: 5px;
 }
 
-.genre-container {
+.genre-container-3 {
   display: grid;
   grid-template-columns: 150px 150px 150px;
+  grid-gap: 10px;
+  text-align: left;
+}
+
+.genre-container-2 {
+  display: grid;
+  grid-template-columns: 150px 150px;
   grid-gap: 10px;
   text-align: left;
 }

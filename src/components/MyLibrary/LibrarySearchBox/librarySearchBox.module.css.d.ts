@@ -3,11 +3,14 @@ declare namespace LibrarySearchBoxModuleCssNamespace {
     'button-div': string;
     'card-style': string;
     'card-title': string;
+    genre: string;
     'genre-button': string;
-    'genre-output': string;
+    helpicon: string;
+    helptext: string;
+    'input-style-form-control': string;
     'input-style-search': string;
     'input-style-search-genre': string;
-    'input-style-search-half': string;
+    'input-style-select': string;
     'label-and-input-div': string;
   }
 }

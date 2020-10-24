@@ -1,4 +1,6 @@
 .input-style-search {
-  width: 350px;
+  width: 73%;
+  max-width: 350px;
   height: 30px;
+  margin-top: 5px;
 }

@@ -8,7 +8,11 @@
 /build
 
 
+
+
 # misc
+/.firebase
+/.idea
 .DS_Store
 .env
 .env.local

@@ -1,29 +1,38 @@
 .label-and-input-div {
-  margin-right: 20px;
-  justify-content: left !important;
-  text-align: left !important;
   margin-bottom: 20px;
   font-size: 0.9rem;
 }
 
 .input-style-search {
-  width: 350px;
+  max-width: 350px;
+  width: 80%;
   height: 30px;
+  margin-top: 5px;
+}
+
+.input-style-select {
+  height: 30px;
+}
+
+.input-style-form-control {
+  max-width: 350px;
+  width: 80%;
+  margin-top: 5px !important;
 }
 
 .input-style-search-genre {
-  width: 230px;
   height: 35px;
+  width: 55%;
+  margin-top: 5px;
 }
 
-.input-style-search-half {
-  width: 185px;
-  height: 30px;
-  margin-bottom: 5px;
+.genre {
+  margin-right: 10px;
 }
 
 .card-style {
-  width: 400px;
+  max-width: 450px;
+  min-width: 300px;
   margin: auto;
   padding: 20px;
 }
@@ -34,16 +43,18 @@
   font-weight: bold;
 }
 
-.genre-output {
-  float: left;
-}
-
 .genre-button {
-  float: right;
+  width: 23%;
 }
 
 .button-div {
   margin-top: 30px;
-  width: 350px;
-  float: left;
+}
+
+.helpicon {
+  margin-left: 5px;
+}
+
+.helptext {
+  padding: 10px;
 }

@@ -2,6 +2,7 @@
  
 node_modules
 **/*.svg
+**/*.png
 **/*.css
 **/*.scss
 **/*.json

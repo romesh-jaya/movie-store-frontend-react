@@ -2,7 +2,8 @@ declare namespace GenreSelectModalModuleCssNamespace {
   export interface IGenreSelectModalModuleCss {
     'close-button': string;
     'first-button': string;
-    'genre-container': string;
+    'genre-container-2': string;
+    'genre-container-3': string;
     header: string;
     title: string;
   }

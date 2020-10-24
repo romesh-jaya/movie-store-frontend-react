@@ -8,6 +8,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
+import { useMediaQuery } from '@material-ui/core';
 import styles from './genreSelectModal.module.css';
 import { Genres, IGenre } from '../../../constants/Genres';
 import { ICheckboxValue } from '../../../interfaces/ICheckboxValue';
@@ -22,6 +23,7 @@ const GenreSelectModal: React.FC<IProps> = (props) => {
   const { initialGenres, onConfirmed, onCancelled } = props;
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [checkboxValues, setCheckboxValues] = useState<ICheckboxValue[]>([]);
+  const isDesktopWidth = useMediaQuery('(min-width:600px)');
 
   const initForm = useCallback((): void => {
     setSelectedGenres(initialGenres);
@@ -77,8 +79,9 @@ const GenreSelectModal: React.FC<IProps> = (props) => {
   };
 
   const renderGenres = (): ReactNode => {
+    const contClass = isDesktopWidth? styles['genre-container-3'] : styles['genre-container-2'];
     return (
-      <div className={styles['genre-container']}>
+      <div className={contClass}>
         {
           Genres.map(genre => {
             return (

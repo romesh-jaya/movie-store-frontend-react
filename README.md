@@ -15,6 +15,12 @@ Tech Stack used:
 
 This project uses OMDB API to search for movie data. The latter has a 1,000 daily API call limit. Another free alternative might be TMDB: https://developers.themoviedb.org/3/getting-started
 
+The Dev app is hosted below:
+https://movie-shop-dev.web.app/
+
+To deploy to Firebase, first perform a build, then run the following command from the terminal:
+firebase deploy --only hosting
+
 ## Available Scripts
 
 In the project directory, you can run:

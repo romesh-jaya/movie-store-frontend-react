@@ -307,6 +307,7 @@ const MyLibrary: React.FC = () => {
             onChangePage={handleChangePage}
             rowsPerPage={pageSize}
             onChangeRowsPerPage={handleChangeRowsPerPage}
+            rowsPerPageOptions={isDesktopWidth? [10, 25, 50] : []}
           />
         </div>
         <MovieDetails 

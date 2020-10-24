@@ -1,7 +1,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useCallback, ReactNode, ChangeEvent, ReactElement, useEffect, useContext } from 'react';
-import { Button, FormControl, MenuItem, Select, Typography } from '@material-ui/core';
+import { Button, FormControl, MenuItem, Popover, Select, Typography } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
+import HelpIcon from '@material-ui/icons/Help';
 import _ from 'lodash';
 import { ExportToCsv } from 'export-to-csv';
 
@@ -37,6 +38,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   const [searchYearTo, setSearchYearTo] = useState<number | undefined>();
   const [searchYearIsBetweenValuesIncomplete, setSearchYearIsBetweenValuesIncomplete] = useState(false);
   const [searchGenres, setSearchGenres] = useState<string[]>([]);
+  const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
   const settings = useContext(SettingsContext);
   const languagesSetting = settings.find(setting => setting.name === 'languages');
   const languages = languagesSetting && languagesSetting.value.split(',') || [];
@@ -204,10 +206,55 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     }
   };
 
+  const handleClickHelpIcon = (event : React.MouseEvent<SVGSVGElement, MouseEvent>) : void => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClosePopover = () : void => {
+    setAnchorEl(null);
+  };
+
   useEffect(() => {
     // Set default type
     setSearchType(MovieType.Movie);
   }, []);
+
+  const renderHelpYear = (): ReactElement => {
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
+  
+    return (
+      <span className={styles.helpicon}>
+        <HelpIcon onClick={handleClickHelpIcon} color="primary" />
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClosePopover}
+          anchorOrigin={
+          {
+            vertical: 'bottom',
+            horizontal: 'center',
+          }
+          }
+          transformOrigin={
+          {
+            vertical: 'top',
+            horizontal: 'center',
+          }
+          }
+        >
+          <div className={styles.helptext}>
+            <div>Value can be entered in the following formats:</div>
+            <div>Enter a single year: 2020</div>
+            <div>Enter a year to search from: &gt; 2020</div>
+            <div>Enter a year to search upto: &lt; 2020</div>
+            <div>Enter a range of years: 2010-2020</div>
+          </div>
+        </Popover>
+      </span>
+    );
+  };
 
   const renderGenresModal = (): ReactElement | null => showGenresModal ? (
     <GenreSelectModal
@@ -278,43 +325,47 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
         <div className={styles['label-and-input-div']}>
           <label htmlFor="searchType">
             Type
-            <FormControl variant="outlined" className="inter-control-spacing">
-              <Select
-                className={styles['input-style-search']}
-                value={searchType}
-                onChange={handleChangeSearchType}
-                name="searchType"
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={MovieType.Movie}>Movie</MenuItem>
-                <MenuItem value={MovieType.TvSeries}>TV Series</MenuItem>
-              </Select>
-            </FormControl>
+            <div className="inter-control-spacing">
+              <FormControl variant="outlined" className={styles['input-style-form-control']}>
+                <Select
+                  className={styles['input-style-select']}
+                  value={searchType}
+                  onChange={handleChangeSearchType}
+                  name="searchType"
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={MovieType.Movie}>Movie</MenuItem>
+                  <MenuItem value={MovieType.TvSeries}>TV Series</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
           </label>
         </div>
         <div className={styles['label-and-input-div']}>
           <label htmlFor="searchLanguage">
             Language
-            <FormControl variant="outlined" className="inter-control-spacing">
-              <Select
-                className={styles['input-style-search']}
-                value={searchLanguage}
-                onChange={handleChangeSearchLanguage}
-                name="searchLanguage"
-              >
-                <MenuItem value="">
-                  <em key="None">None</em>
-                </MenuItem>
-                {languages.map(language => <MenuItem value={language} key={language}>{language}</MenuItem>)}
-              </Select>
-            </FormControl>
+            <div className="inter-control-spacing">
+              <FormControl variant="outlined" className={styles['input-style-form-control']}>
+                <Select
+                  className={styles['input-style-select']}
+                  value={searchLanguage}
+                  onChange={handleChangeSearchLanguage}
+                  name="searchLanguage"
+                >
+                  <MenuItem value="">
+                    <em key="None">None</em>
+                  </MenuItem>
+                  {languages.map(language => <MenuItem value={language} key={language}>{language}</MenuItem>)}
+                </Select>
+              </FormControl>
+            </div>
           </label>
         </div>
         <div className={styles['label-and-input-div']}>
           <label htmlFor="searchYear">
-            Year
+            Year            
             <div className="inter-control-spacing">
               <NumberRangeInput
                 name="searchYear"
@@ -324,6 +375,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
                 handleReturnValue={handleChangeSearchYear}
                 enterPressed={newSearch}
               />
+              {renderHelpYear()}
             </div>
           </label>
           <div className={globStyles['error-text-small']}>
@@ -334,7 +386,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
           <label htmlFor="searchGenres">
             Genres
             <div className="inter-control-spacing">
-              <span className={styles['genre-output']}>
+              <span className={styles.genre}>
                 <input
                   disabled
                   type="text"
@@ -343,11 +395,16 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
                   className={styles['input-style-search-genre']}
                 />
               </span>
-              <span className={styles['genre-button']}>
+              <span>
                 <Button
                   onClick={onGenresClicked}
                   color="secondary"
                   variant="contained"
+                  classes={
+                  {
+                    root: styles['genre-button']
+                  }
+                  }
                 >
                   Genres...
                 </Button>
