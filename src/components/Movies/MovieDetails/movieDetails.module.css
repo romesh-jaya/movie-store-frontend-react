@@ -30,6 +30,7 @@
   justify-content: left !important;
   text-align: left !important;
   padding: 5px 15px;
+  max-width: 340px;
 }
 
 .Button:disabled {

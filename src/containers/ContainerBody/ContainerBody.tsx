@@ -17,6 +17,7 @@ import axios from '../../axios';
 import MyLibrary from '../../components/MyLibrary/MyLibrary';
 import INameValue from '../../interfaces/INameValue';
 import {isAdmin} from '../../utils/AuthUtil';
+import MovieAnalysis from '../../components/MovieAnalysis/MovieAnalysis';
 
 const Settings = React.lazy(() => import('../../components/Settings/Settings'));
 
@@ -112,7 +113,8 @@ const ContainerBody: React.FC = () => {
                   }
                 />
                 {isAdmin(user.email)? <Tab label="Movie Search - OMDB" id="tab1" />: null}                                
-                {isAdmin(user.email)? <Tab label="Settings" id="tab2" />: null}                
+                {isAdmin(user.email)? <Tab label="Movie Search Analysis" id="tab2" />: null}                                
+                {isAdmin(user.email)? <Tab label="Settings" id="tab3" />: null}                
               </Tabs>
             </div>
             <div className={styles['logout-button']}>
@@ -137,6 +139,9 @@ const ContainerBody: React.FC = () => {
               {apiKeySetting && apiKeySetting.value? <MovieSearch /> : renderNoApiKey()}
             </TabPanel>
             <TabPanel value={tabIndex} index={2}>
+              <MovieAnalysis />
+            </TabPanel>
+            <TabPanel value={tabIndex} index={3}>
               <Suspense fallback={<div>Loading...</div>}>
                 <Settings updateContext={updateContext} />
               </Suspense>

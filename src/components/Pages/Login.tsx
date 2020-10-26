@@ -1,10 +1,11 @@
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import Button from '@material-ui/core/Button';
-import { useLocation } from 'react-router';
+import { Redirect, useLocation } from 'react-router';
 
 import * as globStyles from '../../index.module.css';
 import * as styles from './login.module.css';
+import Spinner from '../UI/Spinner/Spinner';
 
 // Note: the Auth0 hosted Universal classic login screen has been customized in order to pass a custom
 //       param - passwordLoginOnly. The customized login screen can be accessed via: 
@@ -20,7 +21,7 @@ const connection = connConfig;
 */
 
 const Login: React.FC = () => {
-  const { loginWithRedirect } = useAuth0();
+  const { loginWithRedirect,  isLoading, isAuthenticated, error } = useAuth0();
   const location = useLocation();
   const isAdminLogin = location.pathname.includes('login-admin');
 
@@ -32,7 +33,19 @@ const Login: React.FC = () => {
     loginWithRedirect();
   };
 
-  return (
+  if (isLoading) {
+    return (
+      <div className={styles['spinner-full-page']}>
+        <Spinner />
+      </div>  
+    );
+  }
+
+  if (error) {
+    return <p className={globStyles['error-text']}>{error}</p>;
+  }
+
+  return !isAuthenticated?  (
     <>
       <div className={globStyles['margin-t-20']}>
         {!isAdminLogin? 'Welcome! Sign in to browse movies and TV series' : null}
@@ -41,9 +54,9 @@ const Login: React.FC = () => {
         <Button onClick={onLogin} color="secondary" variant="contained">
           {isAdminLogin? 'Sign in - Admin' : 'Sign in'}
         </Button>
-      </div>
+      </div> 
     </>
-  );
+  ) : <Redirect to="/" />;
 };
 
 export default Login;
