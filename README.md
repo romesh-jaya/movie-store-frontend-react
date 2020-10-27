@@ -12,6 +12,8 @@ Tech Stack used:
 - Auth0 Authentication
 - Export to CSV
 - useMediaQuery hook
+- chart-js
+- Side-drawer
 
 This project uses OMDB API to search for movie data. The latter has a 1,000 daily API call limit. Another free alternative might be TMDB: https://developers.themoviedb.org/3/getting-started
 

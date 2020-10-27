@@ -13,6 +13,7 @@ export const TextConstants =
   'MOVIELOADERROR': 'Error loading movies',
   'MOVIEDELETEERROR': 'Error deleting movies',
   'MOVIELOADERROROMDB': 'Error while accessing OMDB database',
+  'CHARTLOADERROR': 'Error loading chart data',
   'NOLANGENTERED': 'At least one or more languages must be defined.',
   'NOLANGSELECT': 'At least one language needs to be selected.',
 

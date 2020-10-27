@@ -21,6 +21,13 @@ textarea {
   font-size: 1rem !important;
 }
 
+/*
+Note: this is for the chart-js styling
+*/
+canvas {
+  margin: 0 auto;
+}
+
 .margin-b-10 {
   margin-bottom: 20px;
 }

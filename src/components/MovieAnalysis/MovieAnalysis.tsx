@@ -1,12 +1,12 @@
-import React, { useContext, useState, useEffect, useRef, ReactNode } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
 import { Bar } from 'react-chartjs-2';
 
-import * as styles from './settings.module.css';
 import * as globStyles from '../../index.module.css';
 import axios from '../../axios';
 import { TextConstants } from '../../constants/TextConstants';
+import MovieLoadingSkeleton from '../Movies/MovieLoadingSkeleton';
 
-const options = { 
+const CHART_OPTIONS = { 
   responsive: false,
   scales: {
     yAxes: [
@@ -21,6 +21,7 @@ const options = {
     padding: {
       left: 50,
       top: 20,
+      bottom: 50,
     }
   }   
 };
@@ -28,18 +29,17 @@ const options = {
 const MovieAnalysis: React.FC = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [chartData, setChartData] = useState<any>();
+  const [chartDataLib, setChartDataLib] = useState<any>();
+  const [chartDataSearch, setChartDataSearch] = useState<any>();
 
-  const setChartDataInternal =  (analData: any[]) : void => {
+  const setChartDataInternalLib =  (analData: any[]) : void => {
     const genres: string[] = [];
     const genreCounts: number[] = [];
 
     analData.forEach(dataOne => {
-      genres.push(dataOne._id);
+      genres.push(dataOne.genre);
       genreCounts.push(dataOne.count);
     });
-
-    console.log(genres, genreCounts);
 
     const data = {
       labels: genres,
@@ -53,7 +53,31 @@ const MovieAnalysis: React.FC = () => {
         },
       ],
     };    
-    setChartData(data);
+    setChartDataLib(data);
+  };
+
+  const setChartDataInternalSearch =  (analData: any[]) : void => {
+    const genres: string[] = [];
+    const genreCounts: number[] = [];
+
+    analData.forEach(dataOne => {
+      genres.push(dataOne.genre);
+      genreCounts.push(dataOne.count);
+    });
+
+    const data = {
+      labels: genres,
+      datasets: [
+        {
+          label: '# of Movies',
+          data: genreCounts,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1,
+        },
+      ],
+    };    
+    setChartDataSearch(data);
   };
 
   // load the analysis data
@@ -62,14 +86,17 @@ const MovieAnalysis: React.FC = () => {
       try {
         setIsLoading(true);
         const response = await axios.get(`${process.env.REACT_APP_NODE_SERVER}/movies/analysis/lib`);
+        const resSearch = await axios.get(`${process.env.REACT_APP_NODE_SERVER}/movies/analysis/search`);
         setIsLoading(false);
         if (response.data) {
-          console.log(response.data);
-          setChartDataInternal(response.data);
+          setChartDataInternalLib(response.data);
         } 
-      } catch {
+        if (resSearch.data) {
+          setChartDataInternalSearch(resSearch.data);
+        } 
+      } catch (err) {
         setIsLoading(false);
-        setError(TextConstants.CANNOTCONNECTSERVER);
+        setError(`${TextConstants.CHARTLOADERROR}: ${err}`);
       }
     }
         
@@ -84,13 +111,27 @@ const MovieAnalysis: React.FC = () => {
     ) : null;
   };
 
+  const renderContent = (): ReactNode | null => {
+    return !error ? (
+      <>
+        <h2 className={globStyles['margin-b-20']}>
+          Library Movie Analysis
+        </h2>
+        <p>Below chart displays top 5 genres of all titles in the library.</p>
+        {chartDataLib? <Bar data={chartDataLib} height={500} width={500} options={CHART_OPTIONS} /> : null }
+        <h2 className={globStyles['margin-b-20']}>
+          Search Movie Analysis
+        </h2>
+        <p>Below chart displays top 5 genres of all titles that users viewed details of, the past month.</p>
+        {chartDataSearch? <Bar data={chartDataSearch} height={500} width={500} options={CHART_OPTIONS} /> : null }
+      </>
+    ) : null;
+  };
+
   return (
     <>
-      <h2 className={globStyles['margin-b-20']}>
-        Library Movie Analysis
-      </h2>
-      <p>Below chart displays top 5 genres of all titles in the library.</p>
-      {chartData? <Bar data={chartData} height={500} width={500} options={options} /> : null }
+      {isLoading ? <MovieLoadingSkeleton /> : renderContent()}
+      {renderError()}
     </>
   );
 };
