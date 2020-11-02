@@ -63,6 +63,7 @@
     "@teamsupercell/typings-for-css-modules-loader": "^2.3.0",
     "css-loader": "^4.3.0",
     "css-modules-typescript-loader": "^4.0.1",
+    "cypress": "^5.5.0",
     "eslint-config-favoritemedium-typescript": "^0.17.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",

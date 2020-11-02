@@ -268,6 +268,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     <div className={styles['button-div']}>
       <span className={globStyles['right-spacer']}>
         <Button
+          id="search-button"
           disabled={!isSearchTextValid()}
           onClick={onSearchClicked}
           color="primary"

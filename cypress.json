@@ -1,0 +1,8 @@
+{
+  "baseUrl": "http://localhost:8080",
+  "chromeWebSecurity": false,
+  "env": {
+    "TESTUSERNAME": "test@movie-shop.com",
+    "TESTPASSWORD": "Testuser1"
+  }
+}

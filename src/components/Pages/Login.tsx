@@ -27,7 +27,7 @@ const Login: React.FC = () => {
 
   const onLogin = async (): Promise<void> => {
     if (isAdminLogin) {
-      loginWithRedirect({ passwordLoginOnly: true});
+      loginWithRedirect({ passwordLoginOnly: true, display: 'page'});
       return;
     }
     loginWithRedirect();
@@ -51,7 +51,7 @@ const Login: React.FC = () => {
         {!isAdminLogin? 'Welcome! Sign in to browse movies and TV series' : null}
       </div>
       <div className={styles['login-div']}>
-        <Button onClick={onLogin} color="secondary" variant="contained">
+        <Button id="login-button" onClick={onLogin} color="secondary" variant="contained">
           {isAdminLogin? 'Sign in - Admin' : 'Sign in'}
         </Button>
       </div> 

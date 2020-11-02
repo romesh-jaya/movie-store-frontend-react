@@ -123,7 +123,7 @@ const ContainerBody: React.FC = () => {
                 {' '}
                 {user.name.split(' ')[0]}
               </small>
-              <Button variant="outlined" color="secondary" onClick={onLogoutClicked}>
+              <Button id="logout-button" variant="outlined" color="secondary" onClick={onLogoutClicked}>
                 Logout
               </Button>
             </div>
