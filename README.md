@@ -32,6 +32,8 @@ This app communicates with the backend - which is available in a separate git pr
 To deploy to Firebase, first perform a build, then run the following command from the terminal:
 firebase deploy --only hosting
 
+.env file is required for deployment. The webpack.env is required for local testing.
+
 ## Available Scripts
 
 In the project directory, you can run:
