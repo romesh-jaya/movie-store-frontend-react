@@ -6,3 +6,7 @@ v Specify multiple languages for a movie
 v Export library query to CSV
 v Login for movie shop
 v View for customers to login and query movies
+
+
+It uses OMDB API queries to search for the required movie. Then stores a reference (IMDB ID) in the library. It then displays the movies stored in the library.
+

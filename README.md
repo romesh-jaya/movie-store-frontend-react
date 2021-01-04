@@ -1,4 +1,10 @@
-This app is used for managing movie library in a movie store. It uses OMDB API queries to search for the required movie. Then stores a reference (IMDB ID) in the library. It then displays the movies stored in the library.
+Movie Shop is an app that can be used for managing a movie library in a DVD rental store. Functionality is divided into 3 main categories:
+1.	Adding movies to the library
+2.	Browsing the titles available in the library
+3.	Configuring settings 
+
+The app also allows potential customers to login and browse the available titles.
+
 
 Tech Stack used: 
 - Webpack
@@ -14,11 +20,14 @@ Tech Stack used:
 - useMediaQuery hook
 - chart-js
 - Side-drawer
+- Cypress e2e testing
 
 This project uses OMDB API to search for movie data. The latter has a 1,000 daily API call limit. Another free alternative might be TMDB: https://developers.themoviedb.org/3/getting-started
 
-The Dev app is hosted below:
+The Dev app is hosted here:
 https://movie-shop-dev.web.app/
+
+This app communicates with the backend - which is available in a separate git project: movie-shop-backend. 
 
 To deploy to Firebase, first perform a build, then run the following command from the terminal:
 firebase deploy --only hosting
