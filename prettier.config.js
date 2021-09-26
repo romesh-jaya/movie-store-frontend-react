@@ -9,16 +9,16 @@ module.exports = {
   quoteProps: 'as-needed',
   jsxSingleQuote: false,
   bracketSpacing: true,
-  jsxBracketSameLine: false,
+  bracketSameLine: false,
   arrowParens: 'always',
   overrides: [
     {
       files: '.editorconfig',
-      options: { parser: 'yaml' }
+      options: { parser: 'yaml' },
     },
     {
       files: 'LICENSE',
-      options: { parser: 'markdown' }
-    }
-  ]
+      options: { parser: 'markdown' },
+    },
+  ],
 };

@@ -3,7 +3,7 @@ import React, { useState, useCallback, ReactNode, ChangeEvent, ReactElement, use
 import { Button, FormControl, MenuItem, Popover, Select, Typography } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import HelpIcon from '@material-ui/icons/Help';
-import _ from 'lodash';
+import startCase from 'lodash/startCase';
 import { ExportToCsv } from 'export-to-csv';
 
 import { useAuth0 } from '@auth0/auth0-react';
@@ -174,7 +174,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
       const keys = Object.keys(exportDataVal[0]);
       const keysMinusId = keys.filter(key => key !== 'id');
       // convert keys to Title case
-      const formattedKeys : INameValue[] = keysMinusId.map(key => ({name: key, value: _.startCase(key)})); 
+      const formattedKeys : INameValue[] = keysMinusId.map(key => ({name: key, value: startCase(key)})); 
 
       // create new data with capitalized keys
       const capitalizedKeyData = exportDataVal.map(row=> {

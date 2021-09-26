@@ -1,6 +1,5 @@
 module.exports = {
   extends: [
-    'favoritemedium-typescript/config/react',
     'eslint:recommended',
     'prettier'
   ],

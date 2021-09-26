@@ -33,7 +33,6 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
   },
-  watch: true, // watch for changes
   devServer: {
     historyApiFallback: true,
     // https: true,
