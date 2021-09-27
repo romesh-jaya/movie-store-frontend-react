@@ -42,7 +42,7 @@ module.exports = {
   },
   settings: {
     react: {
-      pragma: 'React', // used for React plugin
+      version: 'detect', // used for React plugin
     },
   },
   plugins: ['@typescript-eslint', 'react'],
