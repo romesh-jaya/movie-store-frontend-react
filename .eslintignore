@@ -1,6 +1,11 @@
 // .eslintignore
  
+build 
 node_modules
+cypress
+.firebase
+.idea
+.vscode
 **/*.svg
 **/*.png
 **/*.css

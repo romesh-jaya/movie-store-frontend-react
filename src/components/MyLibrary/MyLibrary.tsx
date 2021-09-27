@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, {
   useState,
   useCallback,
@@ -289,7 +288,7 @@ const MyLibrary: React.FC = () => {
           return (
             <>
               {rowData.genre?.map((genre: string) => (
-                <span className={globStyles['chip-spacer']}>
+                <span key={genre} className={globStyles['chip-spacer']}>
                   <Chip label={genre} />
                 </span>
               ))}

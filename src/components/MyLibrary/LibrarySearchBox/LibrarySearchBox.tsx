@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, {
   useState,
   useCallback,
@@ -346,7 +345,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
           Reset
         </Button>
       </span>
-      {isAdmin(user.email) ? (
+      {user && user?.email && isAdmin(user.email) ? (
         <Button
           disabled={!enableExportButton}
           onClick={onExportClicked}
