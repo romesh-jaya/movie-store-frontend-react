@@ -138,7 +138,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
                   control={
                     (
                       <Checkbox
-                        disabled={!isAdmin(user.email)}
+                        disabled={user && user.email? !isAdmin(user.email) : true}
                         checked={getCheckboxValue(language)}
                         onChange={onLanguageChecked}
                         name={`is${language}`}
@@ -160,7 +160,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
   };
 
   const renderNonLanguages = (): ReactNode | null => {
-    return isAdmin(user.email)? (
+    return user && user?.email && isAdmin(user.email)? (
       <>
         <div className={globStyles['margin-b-20']}>
           <span className={globStyles['margin-r-10']}>
