@@ -20,6 +20,7 @@ import SettingsContext from '../../../context/SettingsContext';
 import { TextConstants } from '../../../constants/TextConstants';
 import { getMovieDetails } from '../../../utils/MovieUtil';
 import { SEARCH_URL } from '../../../constants/Constants';
+import { isErrorResponse } from '../../../types/ErrorResponse';
 
 const MovieSearch: React.FC = () => {
   const [movies, setMovies] = useState<IMovieSearch[]>([]);
@@ -116,12 +117,8 @@ const MovieSearch: React.FC = () => {
         if (!pageNo) {
           setWasLastSearchSuccess(false);
         }
-        if (
-          err &&
-          err.response &&
-          err.response.data &&
-          err.response.data.Error
-        ) {
+
+        if (isErrorResponse(err)) {
           setMovError(
             `${TextConstants.MOVIELOADERROROMDB}: ${err.response.data.Error}`
           );

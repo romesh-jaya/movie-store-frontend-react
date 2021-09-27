@@ -23,6 +23,7 @@ import { ISearchInfo } from '../../interfaces/ISearchInfo';
 import IMovieLibrary from '../../interfaces/IMovieLibrary';
 import MovieDetails from '../Movies/MovieDetails/MovieDetails';
 import { isAdmin } from '../../utils/AuthUtil';
+import { isErrorResponse } from '../../types/ErrorResponse';
 
 const MyLibrary: React.FC = () => {
   const [movies, setMovies] = useState<IMovieLibrary[]>([]);
@@ -79,12 +80,7 @@ const MyLibrary: React.FC = () => {
         setMovies([]);
         setMovInfo('');
         setIsLoading(false);
-        if (
-          err &&
-          err.response &&
-          err.response.data &&
-          err.response.data.Error
-        ) {
+        if (isErrorResponse(err)) {
           setMovError(
             `${TextConstants.MOVIELOADERROR}: ${err.response.data.Error}`
           );
@@ -110,12 +106,7 @@ const MyLibrary: React.FC = () => {
         setShowDeleteConfirm(false);
         await queryMovies(currentPage);
       } catch (err) {
-        if (
-          err &&
-          err.response &&
-          err.response.data &&
-          err.response.data.Error
-        ) {
+        if (isErrorResponse(err)) {
           setMovError(
             `${TextConstants.MOVIEDELETEERROR}: ${err.response.data.Error}`
           );
@@ -149,7 +140,7 @@ const MyLibrary: React.FC = () => {
       return response.data.movies.movies;
     } catch (err) {
       setIsLoading(false);
-      if (err && err.response && err.response.data && err.response.data.Error) {
+      if (isErrorResponse(err)) {
         setMovError(
           `${TextConstants.MOVIELOADERROR}: ${err.response.data.Error}`
         );
@@ -209,7 +200,7 @@ const MyLibrary: React.FC = () => {
         | ((rowData: IMovieLibrary) => Action<IMovieLibrary>)
       )[]
     | undefined => {
-    return isAdmin(user.email)
+    return user && user?.email && isAdmin(user.email)
       ? [
           {
             tooltip: 'Delete selected movies',
@@ -236,7 +227,7 @@ const MyLibrary: React.FC = () => {
       selection: false,
     };
 
-    if (isAdmin(user.email)) {
+    if (user && user?.email && isAdmin(user.email)) {
       retVal.selection = true;
     }
 
@@ -338,7 +329,7 @@ const MyLibrary: React.FC = () => {
             component="div"
             count={lastSearchMovieCount ?? 0}
             page={currentPage - 1}
-            onChangePage={handleChangePage}
+            onPageChange={handleChangePage}
             rowsPerPage={pageSize}
             onChangeRowsPerPage={handleChangeRowsPerPage}
             rowsPerPageOptions={isDesktopWidth ? [10, 25, 50] : []}

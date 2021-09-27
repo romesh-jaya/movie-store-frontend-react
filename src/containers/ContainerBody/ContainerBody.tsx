@@ -99,7 +99,10 @@ const ContainerBody: React.FC = () => {
   };
 
   const renderContent = (): ReactNode | null => {
-    const myLibClass = !isAdmin(user.email) ? styles['my-library'] : undefined;
+    const myLibClass =
+      user && user?.email && !isAdmin(user.email)
+        ? styles['my-library']
+        : undefined;
 
     return !isLoading && !settingsError ? (
       <>
@@ -114,20 +117,20 @@ const ContainerBody: React.FC = () => {
                     root: myLibClass,
                   }}
                 />
-                {isAdmin(user.email) ? (
+                {user && user?.email && isAdmin(user.email) ? (
                   <Tab label="Movie Search - OMDB" id="tab1" />
                 ) : null}
-                {isAdmin(user.email) ? (
+                {user && user?.email && isAdmin(user.email) ? (
                   <Tab label="Movie Search Analysis" id="tab2" />
                 ) : null}
-                {isAdmin(user.email) ? (
+                {user && user?.email && isAdmin(user.email) ? (
                   <Tab label="Settings" id="tab3" />
                 ) : null}
               </Tabs>
             </div>
             <div className={styles['logout-button']}>
               <small className={globStyles['margin-r-10']}>
-                Welcome, {user.name.split(' ')[0]}
+                Welcome, {user && user?.name && user.name.split(' ')[0]}
               </small>
               <Button
                 id="logout-button"
@@ -147,7 +150,7 @@ const ContainerBody: React.FC = () => {
             renderNoApiKey()
           )}
         </TabPanel>
-        {isAdmin(user.email) ? (
+        {user && user?.email && isAdmin(user.email) ? (
           <>
             <TabPanel value={tabIndex} index={1}>
               {apiKeySetting && apiKeySetting.value ? (

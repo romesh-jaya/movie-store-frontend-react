@@ -8,15 +8,6 @@ import MovieLoadingSkeleton from '../Movies/MovieLoadingSkeleton';
 
 const CHART_OPTIONS = {
   responsive: false,
-  scales: {
-    yAxes: [
-      {
-        ticks: {
-          beginAtZero: true,
-        },
-      },
-    ],
-  },
   layout: {
     padding: {
       left: 50,

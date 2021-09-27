@@ -29,7 +29,7 @@ const ProtectedRoute: React.FC<IProps> = (props) => {
 
   if (isAuthenticated && !isAuthRef.current) {
     isAuthRef.current = true;
-    console.log('Sign in success', user.email);
+    console.log('Sign in success', user && user?.email);
   }
 
   return <>{isAuthenticated ? children : <Redirect to="/login" />}</>;
