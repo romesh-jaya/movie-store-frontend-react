@@ -6,4 +6,3 @@ export default interface IMovieLibrary extends IMovieStub {
   count: number;
   languages: string[];
 }
-  

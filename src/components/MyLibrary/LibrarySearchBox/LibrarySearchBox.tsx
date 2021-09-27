@@ -1,6 +1,21 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useCallback, ReactNode, ChangeEvent, ReactElement, useEffect, useContext } from 'react';
-import { Button, FormControl, MenuItem, Popover, Select, Typography } from '@material-ui/core';
+import React, {
+  useState,
+  useCallback,
+  ReactNode,
+  ChangeEvent,
+  ReactElement,
+  useEffect,
+  useContext,
+} from 'react';
+import {
+  Button,
+  FormControl,
+  MenuItem,
+  Popover,
+  Select,
+  Typography,
+} from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import HelpIcon from '@material-ui/icons/Help';
 import startCase from 'lodash/startCase';
@@ -17,12 +32,12 @@ import { ISearchInfo } from '../../../interfaces/ISearchInfo';
 import IMovieLibrary from '../../../interfaces/IMovieLibrary';
 import INameValue from '../../../interfaces/INameValue';
 import SettingsContext from '../../../context/SettingsContext';
-import {isAdmin} from '../../../utils/AuthUtil';
+import { isAdmin } from '../../../utils/AuthUtil';
 
 interface IProps {
-  enableExportButton : boolean;
+  enableExportButton: boolean;
   setLastSearchInfo: (searchInfo: ISearchInfo) => void;
-  exportMovies : () => Promise<IMovieLibrary[]>;
+  exportMovies: () => Promise<IMovieLibrary[]>;
 }
 
 const LibrarySearchBox: React.FC<IProps> = (props) => {
@@ -36,21 +51,41 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   const [searchYearExact, setSearchYearExact] = useState<number | undefined>();
   const [searchYearFrom, setSearchYearFrom] = useState<number | undefined>();
   const [searchYearTo, setSearchYearTo] = useState<number | undefined>();
-  const [searchYearIsBetweenValuesIncomplete, setSearchYearIsBetweenValuesIncomplete] = useState(false);
+  const [
+    searchYearIsBetweenValuesIncomplete,
+    setSearchYearIsBetweenValuesIncomplete,
+  ] = useState(false);
   const [searchGenres, setSearchGenres] = useState<string[]>([]);
   const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
   const settings = useContext(SettingsContext);
-  const languagesSetting = settings.find(setting => setting.name === 'languages');
-  const languages = languagesSetting && languagesSetting.value.split(',') || [];
+  const languagesSetting = settings.find(
+    (setting) => setting.name === 'languages'
+  );
+  const languages =
+    (languagesSetting && languagesSetting.value.split(',')) || [];
   const { user } = useAuth0();
 
   const { enableExportButton, setLastSearchInfo, exportMovies } = props;
 
   const isSearchTextValid = useCallback((): boolean => {
-    return !!(searchTitle.trim() || searchType.trim() || searchYearExact || searchYearFrom || searchYearTo || 
-    searchGenres.length || searchLanguage);
-  }, [searchGenres.length, searchLanguage, searchTitle, searchType, searchYearExact, searchYearFrom, searchYearTo]);
-
+    return !!(
+      searchTitle.trim() ||
+      searchType.trim() ||
+      searchYearExact ||
+      searchYearFrom ||
+      searchYearTo ||
+      searchGenres.length ||
+      searchLanguage
+    );
+  }, [
+    searchGenres.length,
+    searchLanguage,
+    searchTitle,
+    searchType,
+    searchYearExact,
+    searchYearFrom,
+    searchYearTo,
+  ]);
 
   const newSearch = useCallback((): void => {
     if (isSearchTextValid()) {
@@ -59,13 +94,15 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
         setErrorTextSearchYear(TextConstants.YEARINVALID1);
         return;
       }
-      if (searchYearFrom && searchYearTo && (searchYearFrom >= searchYearTo)) {
+      if (searchYearFrom && searchYearTo && searchYearFrom >= searchYearTo) {
         setErrorTextSearchYear(TextConstants.YEARINVALID2);
         return;
       }
-      if ((searchYearExact && searchYearExact.toString().length !== 4) ||
-                (searchYearFrom && searchYearFrom.toString().length !== 4) ||
-                (searchYearTo && searchYearTo.toString().length !== 4)) {
+      if (
+        (searchYearExact && searchYearExact.toString().length !== 4) ||
+        (searchYearFrom && searchYearFrom.toString().length !== 4) ||
+        (searchYearTo && searchYearTo.toString().length !== 4)
+      ) {
         setErrorTextSearchYear(TextConstants.YEARINVALID3);
         return;
       }
@@ -94,14 +131,33 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
       }
       setLastSearchInfo(searchInfo);
     }
-  }, [isSearchTextValid, searchGenres, searchLanguage, searchTitle, searchType, searchYearExact, searchYearFrom, searchYearIsBetweenValuesIncomplete, searchYearTo, setLastSearchInfo]);
+  }, [
+    isSearchTextValid,
+    searchGenres,
+    searchLanguage,
+    searchTitle,
+    searchType,
+    searchYearExact,
+    searchYearFrom,
+    searchYearIsBetweenValuesIncomplete,
+    searchYearTo,
+    setLastSearchInfo,
+  ]);
 
-  const handleChangeSearchTitle = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleChangeSearchTitle = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     setSearchTitle(event.target.value);
   };
 
-  const handleChangeSearchYear = (__: string, isBetweenValuesIncomplete: boolean, value: string, valueSingle?: number,
-    valueFrom?: number, valueTo?: number): void => {
+  const handleChangeSearchYear = (
+    __: string,
+    isBetweenValuesIncomplete: boolean,
+    value: string,
+    valueSingle?: number,
+    valueFrom?: number,
+    valueTo?: number
+  ): void => {
     setSearchYearInput(value);
     setSearchYearExact(valueSingle);
     setSearchYearFrom(valueFrom);
@@ -110,7 +166,9 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     setErrorTextSearchYear('');
   };
 
-  const handleChangeSearchType = (event: ChangeEvent<{ name?: string | undefined; value: unknown; }>): void => {
+  const handleChangeSearchType = (
+    event: ChangeEvent<{ name?: string | undefined; value: unknown }>
+  ): void => {
     const type = event.target.value as string;
     setSearchType(type);
     setSearchYearInput('');
@@ -121,7 +179,9 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     setErrorTextSearchYear('');
   };
 
-  const handleChangeSearchLanguage = (event: ChangeEvent<{ name?: string | undefined; value: unknown; }>): void => {
+  const handleChangeSearchLanguage = (
+    event: ChangeEvent<{ name?: string | undefined; value: unknown }>
+  ): void => {
     const language = event.target.value as string;
     setSearchLanguage(language);
   };
@@ -147,7 +207,9 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     clearFields();
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ): void => {
     if (event.key === 'Enter' || event.key === 'NumpadEnter') {
       newSearch();
     }
@@ -168,25 +230,27 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
 
   const onExportClicked = async (): Promise<void> => {
     const exportDataVal = await exportMovies();
-    if (exportDataVal.length){
+    if (exportDataVal.length) {
       // Note: setting headers property in ExportToCsv's options didn't work as of 2020-Oct
       // Thus we need a manual workaround to convert the keys to Title case
       const keys = Object.keys(exportDataVal[0]);
-      const keysMinusId = keys.filter(key => key !== 'id');
+      const keysMinusId = keys.filter((key) => key !== 'id');
       // convert keys to Title case
-      const formattedKeys : INameValue[] = keysMinusId.map(key => ({name: key, value: startCase(key)})); 
+      const formattedKeys: INameValue[] = keysMinusId.map((key) => ({
+        name: key,
+        value: startCase(key),
+      }));
 
       // create new data with capitalized keys
-      const capitalizedKeyData = exportDataVal.map(row=> {
-        const retVal : any = {};
-        formattedKeys.forEach(key => {
+      const capitalizedKeyData = exportDataVal.map((row) => {
+        const retVal: any = {};
+        formattedKeys.forEach((key) => {
           retVal[key.value] = row[key.name as keyof IMovieLibrary];
-        }
-        );
+        });
         return retVal;
       });
 
-      const formattedData = capitalizedKeyData.map(row => {
+      const formattedData = capitalizedKeyData.map((row) => {
         // convert array types to semicolon seperated
         const newData = {
           ...row,
@@ -196,9 +260,9 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
         return newData;
       });
 
-      const options = { 
+      const options = {
         filename: 'Export.csv',
-        useKeysAsHeaders: true
+        useKeysAsHeaders: true,
       };
 
       const csvExporter = new ExportToCsv(options);
@@ -206,11 +270,13 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     }
   };
 
-  const handleClickHelpIcon = (event : React.MouseEvent<SVGSVGElement, MouseEvent>) : void => {
+  const handleClickHelpIcon = (
+    event: React.MouseEvent<SVGSVGElement, MouseEvent>
+  ): void => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClosePopover = () : void => {
+  const handleClosePopover = (): void => {
     setAnchorEl(null);
   };
 
@@ -222,7 +288,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   const renderHelpYear = (): ReactElement => {
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
-  
+
     return (
       <span className={styles.helpicon}>
         <HelpIcon onClick={handleClickHelpIcon} color="primary" />
@@ -231,18 +297,14 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
           open={open}
           anchorEl={anchorEl}
           onClose={handleClosePopover}
-          anchorOrigin={
-          {
+          anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'center',
-          }
-          }
-          transformOrigin={
-          {
+          }}
+          transformOrigin={{
             vertical: 'top',
             horizontal: 'center',
-          }
-          }
+          }}
         >
           <div className={styles.helptext}>
             <div>Value can be entered in the following formats:</div>
@@ -256,13 +318,14 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     );
   };
 
-  const renderGenresModal = (): ReactElement | null => showGenresModal ? (
-    <GenreSelectModal
-      initialGenres={searchGenres}
-      onConfirmed={newGenresSelected}
-      onCancelled={onCancelledGenreSelect}
-    />
-  ) : null;
+  const renderGenresModal = (): ReactElement | null =>
+    showGenresModal ? (
+      <GenreSelectModal
+        initialGenres={searchGenres}
+        onConfirmed={newGenresSelected}
+        onCancelled={onCancelledGenreSelect}
+      />
+    ) : null;
 
   const renderButtons = (): ReactNode => (
     <div className={styles['button-div']}>
@@ -279,33 +342,32 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
         </Button>
       </span>
       <span className={globStyles['right-spacer']}>
-        <Button
-          onClick={onResetClicked}
-          color="secondary"
-          variant="contained"
-        >
+        <Button onClick={onResetClicked} color="secondary" variant="contained">
           Reset
         </Button>
       </span>
-      {
-        isAdmin(user.email) ? (
-          <Button
-            disabled={!enableExportButton}
-            onClick={onExportClicked}
-            color="secondary"
-            variant="contained"
-          >
-            Export to CSV
-          </Button>
-        ) : null
-      }
+      {isAdmin(user.email) ? (
+        <Button
+          disabled={!enableExportButton}
+          onClick={onExportClicked}
+          color="secondary"
+          variant="contained"
+        >
+          Export to CSV
+        </Button>
+      ) : null}
     </div>
   );
 
   const renderSearch = (): ReactNode => (
     <>
       <Card className={styles['card-style']}>
-        <Typography className={styles['card-title']} variant="h5" color="textSecondary" gutterBottom>
+        <Typography
+          className={styles['card-title']}
+          variant="h5"
+          color="textSecondary"
+          gutterBottom
+        >
           Search Library
         </Typography>
         <div className={styles['label-and-input-div']}>
@@ -327,7 +389,10 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
           <label htmlFor="searchType">
             Type
             <div className="inter-control-spacing">
-              <FormControl variant="outlined" className={styles['input-style-form-control']}>
+              <FormControl
+                variant="outlined"
+                className={styles['input-style-form-control']}
+              >
                 <Select
                   className={styles['input-style-select']}
                   value={searchType}
@@ -348,7 +413,10 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
           <label htmlFor="searchLanguage">
             Language
             <div className="inter-control-spacing">
-              <FormControl variant="outlined" className={styles['input-style-form-control']}>
+              <FormControl
+                variant="outlined"
+                className={styles['input-style-form-control']}
+              >
                 <Select
                   className={styles['input-style-select']}
                   value={searchLanguage}
@@ -358,7 +426,11 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
                   <MenuItem value="">
                     <em key="None">None</em>
                   </MenuItem>
-                  {languages.map(language => <MenuItem value={language} key={language}>{language}</MenuItem>)}
+                  {languages.map((language) => (
+                    <MenuItem value={language} key={language}>
+                      {language}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </div>
@@ -366,12 +438,12 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
         </div>
         <div className={styles['label-and-input-div']}>
           <label htmlFor="searchYear">
-            Year            
+            Year
             <div className="inter-control-spacing">
               <NumberRangeInput
                 name="searchYear"
                 disabled={searchType !== MovieType.Movie}
-                classNameCustom='input-style-search'
+                classNameCustom="input-style-search"
                 value={searchYearInput}
                 handleReturnValue={handleChangeSearchYear}
                 enterPressed={newSearch}
@@ -401,11 +473,9 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
                   onClick={onGenresClicked}
                   color="secondary"
                   variant="contained"
-                  classes={
-                  {
-                    root: styles['genre-button']
-                  }
-                  }
+                  classes={{
+                    root: styles['genre-button'],
+                  }}
                 >
                   Genres...
                 </Button>
@@ -414,7 +484,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
           </label>
         </div>
         {renderButtons()}
-      </Card>      
+      </Card>
     </>
   );
 

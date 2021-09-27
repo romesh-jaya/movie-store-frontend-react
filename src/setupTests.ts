@@ -2,8 +2,11 @@
 // allows you to do things like:
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
-import Enzyme from 'enzyme';  
+import Enzyme from 'enzyme';
 
-import EnzymeAdapter from 'enzyme-adapter-react-16'; 
+import EnzymeAdapter from 'enzyme-adapter-react-16';
 
-Enzyme.configure({ adapter: new EnzymeAdapter(), disableLifecycleMethods: true }); 
+Enzyme.configure({
+  adapter: new EnzymeAdapter(),
+  disableLifecycleMethods: true,
+});

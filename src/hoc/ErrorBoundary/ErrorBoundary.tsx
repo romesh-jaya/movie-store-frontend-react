@@ -12,35 +12,31 @@ interface IState {
 }
 
 class ErrorBoundary extends Component<IProps, IState> {
-  constructor(props : any) {
+  constructor(props: any) {
     super(props);
     this.state = { error: undefined };
   }
-  
-  componentDidCatch(error :Error | null) : void {    
-    // You can also log the error to an error reporting service    
+
+  componentDidCatch(error: Error | null): void {
+    // You can also log the error to an error reporting service
     this.setState({ error: error || new Error(MISSING_ERROR) });
   }
 
-  render() : ReactNode {
+  render(): ReactNode {
     const { error } = this.state;
     const { children } = this.props;
 
-    if (error) {      // You can render any custom fallback UI      
+    if (error) {
+      // You can render any custom fallback UI
       return (
         <>
-          <h1>
-            Something went wrong. See details below:
-          </h1>
-          <div className="error-text">
-            { error.message}
-          </div>
+          <h1>Something went wrong. See details below:</h1>
+          <div className="error-text">{error.message}</div>
         </>
       );
     }
-    return children; 
+    return children;
   }
 }
 
 export default ErrorBoundary;
-

@@ -6,5 +6,5 @@ export interface ISearchInfo {
   searchYearTo?: number;
   searchGenres?: string[];
   searchPgRating?: string;
-  searchLanguage? : string;
-};
+  searchLanguage?: string;
+}

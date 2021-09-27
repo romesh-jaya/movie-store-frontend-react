@@ -11,7 +11,6 @@ const DOMAIN = process.env.REACT_APP_AUTH0_DOMAIN || '';
 const CLIENT_ID = process.env.REACT_APP_AUTH0_CLIENT_ID || '';
 const AUDIENCE = process.env.REACT_APP_AUTH0_AUDIENCE;
 
-
 ReactDOM.render(
   <ErrorBoundary>
     <Auth0Provider
@@ -25,7 +24,8 @@ ReactDOM.render(
       </Router>
     </Auth0Provider>
   </ErrorBoundary>,
-  document.getElementById('root'));
+  document.getElementById('root')
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

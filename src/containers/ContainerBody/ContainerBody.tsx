@@ -16,7 +16,7 @@ import MovieContainerSkeleton from '../MovieContainerSkeleton';
 import axios from '../../axios';
 import MyLibrary from '../../components/MyLibrary/MyLibrary';
 import INameValue from '../../interfaces/INameValue';
-import {isAdmin} from '../../utils/AuthUtil';
+import { isAdmin } from '../../utils/AuthUtil';
 import MovieAnalysis from '../../components/MovieAnalysis/MovieAnalysis';
 
 const Settings = React.lazy(() => import('../../components/Settings/Settings'));
@@ -26,7 +26,7 @@ const ContainerBody: React.FC = () => {
   const [settings, setSettings] = useState<INameValue[]>([]);
   const [settingsError, setSettingsError] = useState('');
   const [tabIndex, setTabIndex] = useState(0);
-  const apiKeySetting = settings.find(setting => setting.name === 'apiKey');
+  const apiKeySetting = settings.find((setting) => setting.name === 'apiKey');
   const { logout, getAccessTokenSilently, user } = useAuth0();
 
   const updateContext = (context: INameValue[]): void => {
@@ -54,40 +54,44 @@ const ContainerBody: React.FC = () => {
 
   // load the settings
   useEffect(() => {
-    async function loadKey() : Promise<void> {
+    async function loadKey(): Promise<void> {
       try {
-        const responseApiKey = await axios.get(`${process.env.REACT_APP_NODE_SERVER}/settings/apiKey`);
+        const responseApiKey = await axios.get(
+          `${process.env.REACT_APP_NODE_SERVER}/settings/apiKey`
+        );
         if (responseApiKey.data.value) {
           console.log('Retrieved API key.');
         } else {
           console.log('API key was returned blank.');
         }
-        
-        const responseLang = await axios.get(`${process.env.REACT_APP_NODE_SERVER}/settings/languages`);
+
+        const responseLang = await axios.get(
+          `${process.env.REACT_APP_NODE_SERVER}/settings/languages`
+        );
         setIsLoading(false);
 
-        const settingsStore : INameValue[] = [
+        const settingsStore: INameValue[] = [
           {
             name: 'apiKey',
-            value: responseApiKey.data.value
+            value: responseApiKey.data.value,
           },
           {
             name: 'languages',
-            value: responseLang.data.value
-          }
-        ];    
+            value: responseLang.data.value,
+          },
+        ];
         setSettings(settingsStore);
       } catch {
         setIsLoading(false);
         setSettingsError(TextConstants.CANNOTCONNECTSERVER);
       }
     }
-    
+
     loadKey();
   }, [getAccessTokenSilently]);
 
-  const onLogoutClicked = () : void => {
-    logout({ returnTo: `${window.location.origin  }/login` });
+  const onLogoutClicked = (): void => {
+    logout({ returnTo: `${window.location.origin}/login` });
   };
 
   const renderNoApiKey = (): ReactNode => {
@@ -95,7 +99,7 @@ const ContainerBody: React.FC = () => {
   };
 
   const renderContent = (): ReactNode | null => {
-    const myLibClass = !isAdmin(user.email)? styles['my-library'] : undefined;
+    const myLibClass = !isAdmin(user.email) ? styles['my-library'] : undefined;
 
     return !isLoading && !settingsError ? (
       <>
@@ -105,38 +109,52 @@ const ContainerBody: React.FC = () => {
               <Tabs value={tabIndex} onChange={handleChange}>
                 <Tab
                   label="My Library"
-                  id="tab0" 
-                  classes={
-                  {
+                  id="tab0"
+                  classes={{
                     root: myLibClass,
-                  }
-                  }
+                  }}
                 />
-                {isAdmin(user.email)? <Tab label="Movie Search - OMDB" id="tab1" />: null}                                
-                {isAdmin(user.email)? <Tab label="Movie Search Analysis" id="tab2" />: null}                                
-                {isAdmin(user.email)? <Tab label="Settings" id="tab3" />: null}                
+                {isAdmin(user.email) ? (
+                  <Tab label="Movie Search - OMDB" id="tab1" />
+                ) : null}
+                {isAdmin(user.email) ? (
+                  <Tab label="Movie Search Analysis" id="tab2" />
+                ) : null}
+                {isAdmin(user.email) ? (
+                  <Tab label="Settings" id="tab3" />
+                ) : null}
               </Tabs>
             </div>
             <div className={styles['logout-button']}>
               <small className={globStyles['margin-r-10']}>
-                Welcome,
-                {' '}
-                {user.name.split(' ')[0]}
+                Welcome, {user.name.split(' ')[0]}
               </small>
-              <Button id="logout-button" variant="outlined" color="secondary" onClick={onLogoutClicked}>
+              <Button
+                id="logout-button"
+                variant="outlined"
+                color="secondary"
+                onClick={onLogoutClicked}
+              >
                 Logout
               </Button>
             </div>
           </div>
         </AppBar>
         <TabPanel value={tabIndex} index={0}>
-          {apiKeySetting && apiKeySetting.value? <MyLibrary /> : renderNoApiKey()}
+          {apiKeySetting && apiKeySetting.value ? (
+            <MyLibrary />
+          ) : (
+            renderNoApiKey()
+          )}
         </TabPanel>
-        {
-        isAdmin(user.email)? (
+        {isAdmin(user.email) ? (
           <>
             <TabPanel value={tabIndex} index={1}>
-              {apiKeySetting && apiKeySetting.value? <MovieSearch /> : renderNoApiKey()}
+              {apiKeySetting && apiKeySetting.value ? (
+                <MovieSearch />
+              ) : (
+                renderNoApiKey()
+              )}
             </TabPanel>
             <TabPanel value={tabIndex} index={2}>
               <MovieAnalysis />
@@ -147,18 +165,18 @@ const ContainerBody: React.FC = () => {
               </Suspense>
             </TabPanel>
           </>
-        ) : null 
-        }
+        ) : null}
       </>
     ) : null;
   };
-
 
   return (
     <SettingsContext.Provider value={settings}>
       {isLoading && <MovieContainerSkeleton />}
       {renderContent()}
-      {!isLoading && settingsError ? <p className={globStyles['error-text']}>{settingsError}</p> : null}
+      {!isLoading && settingsError ? (
+        <p className={globStyles['error-text']}>{settingsError}</p>
+      ) : null}
     </SettingsContext.Provider>
   );
 };

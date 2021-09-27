@@ -1,4 +1,11 @@
-import React, { useState, useEffect, useContext, ReactNode, useRef, useCallback } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  ReactNode,
+  useRef,
+  useCallback,
+} from 'react';
 import { Button, Drawer } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
 
@@ -27,46 +34,60 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
   const [movieLoading, setMovieLoading] = useState(false);
   const [movError, SetMovError] = useState('');
   const [movID, setMovID] = useState('');
-  const [selectedMovie, setSelectedMovie] = useState<IMovieSearch | undefined>();
+  const [selectedMovie, setSelectedMovie] = useState<
+    IMovieSearch | undefined
+  >();
   const [languagesInitial, setLanguagesInitial] = useState<string[]>([]);
   const settings = useContext(SettingsContext);
-  const apiKeySetting = settings.find(setting => setting.name === 'apiKey');
-  const apiKey = apiKeySetting && apiKeySetting.value || '';
-  const languagesSetting = settings.find(setting => setting.name === 'languages');
-  const languages = languagesSetting && languagesSetting.value.split(',') || [];
+  const apiKeySetting = settings.find((setting) => setting.name === 'apiKey');
+  const apiKey = (apiKeySetting && apiKeySetting.value) || '';
+  const languagesSetting = settings.find(
+    (setting) => setting.name === 'languages'
+  );
+  const languages =
+    (languagesSetting && languagesSetting.value.split(',')) || [];
   const prevSelIMDBId = useRef('');
 
   const handleDrawerToggle = (): void => {
     closeDrawer();
   };
 
-  const handleDrawerToggleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>): void => {
-    if (((event as React.KeyboardEvent).key === 'Tab' ||
-        (event as React.KeyboardEvent).key === 'Shift' || (event as React.KeyboardEvent).key === 'Control')
+  const handleDrawerToggleKeyDown = (
+    event: React.KeyboardEvent<HTMLDivElement>
+  ): void => {
+    if (
+      (event as React.KeyboardEvent).key === 'Tab' ||
+      (event as React.KeyboardEvent).key === 'Shift' ||
+      (event as React.KeyboardEvent).key === 'Control'
     ) {
       return;
     }
     closeDrawer();
   };
 
-  const retrieveLanguagesFromOMDB = useCallback((movie: IMovieSearch): string[] => {
-    const retVal : string[] = [];
+  const retrieveLanguagesFromOMDB = useCallback(
+    (movie: IMovieSearch): string[] => {
+      const retVal: string[] = [];
 
-    languages.forEach(language => {
-      if (movie.languages.includes(language)) {
-        retVal.push(language);
-      }
-    });
-    return retVal;
-  }, [languages]);
+      languages.forEach((language) => {
+        if (movie.languages.includes(language)) {
+          retVal.push(language);
+        }
+      });
+      return retVal;
+    },
+    [languages]
+  );
 
-  const onSaveClicked = async (selectedLanguages: string[], movieTotal: number): Promise<boolean> => {
+  const onSaveClicked = async (
+    selectedLanguages: string[],
+    movieTotal: number
+  ): Promise<boolean> => {
     if (selectedMovie) {
       try {
         setMovieLoading(true);
         if (!movID) {
-          const movieDetails : IMovieLibrary = 
-          {
+          const movieDetails: IMovieLibrary = {
             imdbID: selectedMovie.imdbID,
             count: movieTotal,
             title: selectedMovie.title,
@@ -74,23 +95,24 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
             type: selectedMovie.type,
             pGRating: selectedMovie.pGRating,
             languages: selectedLanguages,
-            genre: selectedMovie.genre
+            genre: selectedMovie.genre,
           };
 
-          const response = await axios.post(`${process.env.REACT_APP_NODE_SERVER}/movies`,
-            movieDetails);
+          const response = await axios.post(
+            `${process.env.REACT_APP_NODE_SERVER}/movies`,
+            movieDetails
+          );
           setMovID(response.data.id);
         } else {
-          await axios.patch(`${process.env.REACT_APP_NODE_SERVER}/movies`,
-            {
-              id: movID,
-              count: movieTotal,
-              languages: selectedLanguages
-            });
+          await axios.patch(`${process.env.REACT_APP_NODE_SERVER}/movies`, {
+            id: movID,
+            count: movieTotal,
+            languages: selectedLanguages,
+          });
         }
         SetMovError('');
         setMovieTotalInitial(movieTotal);
-        setLanguagesInitial(selectedLanguages);        
+        setLanguagesInitial(selectedLanguages);
         setMovieLoading(false);
         return true;
       } catch (error) {
@@ -103,27 +125,37 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
 
   // Perform init actions
   useEffect(() => {
-    async function fetchData() : Promise<void> {
+    async function fetchData(): Promise<void> {
       setMovieLoading(true);
 
       try {
-        const movie = await getMovieDetails(selectedMovieIMDBId, SEARCH_URL, apiKey);
+        const movie = await getMovieDetails(
+          selectedMovieIMDBId,
+          SEARCH_URL,
+          apiKey
+        );
         setSelectedMovie(movie);
-        const response = await axios.get(`${process.env.REACT_APP_NODE_SERVER}/movies/imdbid/${selectedMovieIMDBId}`);
+        const response = await axios.get(
+          `${process.env.REACT_APP_NODE_SERVER}/movies/imdbid/${selectedMovieIMDBId}`
+        );
         if (response) {
           setMovieTotalInitial(response.data.count);
-          setLanguagesInitial(response.data.languages.length? response.data.languages : retrieveLanguagesFromOMDB(movie));
+          setLanguagesInitial(
+            response.data.languages.length
+              ? response.data.languages
+              : retrieveLanguagesFromOMDB(movie)
+          );
           setMovID(response.data.id);
           SetMovError('');
           setMovieLoading(false);
-        } 
+        }
       } catch (error) {
         SetMovError(`${TextConstants.MOVIELOADERRORLIB}: ${error}`);
         setMovieLoading(false);
       }
     }
 
-    if (selectedMovieIMDBId && (prevSelIMDBId.current !== selectedMovieIMDBId)) {
+    if (selectedMovieIMDBId && prevSelIMDBId.current !== selectedMovieIMDBId) {
       prevSelIMDBId.current = selectedMovieIMDBId;
       fetchData();
     }
@@ -138,15 +170,20 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
     }
   };
 
-  const renderContent = () : ReactNode | null => {
+  const renderContent = (): ReactNode | null => {
     if (!selectedMovie) {
       return null;
     }
 
-    const heading = (selectedMovie.type === MovieType.TvSeries) ? '(TV series)' : '(Movie)';
-    const image = isValidUrl(selectedMovie.mediaURL) ? <img src={selectedMovie.mediaURL} alt={selectedMovie.title} /> : null;  
+    const heading =
+      selectedMovie.type === MovieType.TvSeries ? '(TV series)' : '(Movie)';
+    const image = isValidUrl(selectedMovie.mediaURL) ? (
+      <img src={selectedMovie.mediaURL} alt={selectedMovie.title} />
+    ) : null;
 
-    let borderBoxStyle = movieTotalInitial? styles['movie-present'] : styles['movie-absent'];
+    let borderBoxStyle = movieTotalInitial
+      ? styles['movie-present']
+      : styles['movie-absent'];
     borderBoxStyle += ` ${styles['movie-details']}`;
 
     return (
@@ -155,10 +192,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
           <div className={globStyles['margin-b-20']}>
             <h3 className={styles['header-custom']}>
               <div className={styles['header-custom-span']}>
-                {selectedMovie.title}
-                {' '}
-                {heading}
-                {' '}
+                {selectedMovie.title} {heading}{' '}
               </div>
               <div className={styles['close-button']}>
                 <Button onClick={closeDrawer}>
@@ -172,27 +206,25 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
           </div>
           {image}
         </div>
-        {
-          movieLoading? (
-            <div className={styles['spinner-div']}>
-              <Spinner />
-            </div>
-          ) : null
-        }
-        <MovieDetailsInput 
+        {movieLoading ? (
+          <div className={styles['spinner-div']}>
+            <Spinner />
+          </div>
+        ) : null}
+        <MovieDetailsInput
           languagesInitial={languagesInitial}
           movieTotalInitial={movieTotalInitial}
           onSaveClicked={onSaveClicked}
         />
         <div>
           <a
-            href={`https://www.imdb.com/title/${selectedMovie.imdbID}`} 
-            target="_blank" 
+            href={`https://www.imdb.com/title/${selectedMovie.imdbID}`}
+            target="_blank"
             rel="noopener noreferrer"
           >
             View in IMDB
           </a>
-        </div>        
+        </div>
       </div>
     );
   };
@@ -203,19 +235,18 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
       open={openDrawerValue}
       onClose={handleDrawerToggle}
       onKeyDown={handleDrawerToggleKeyDown}
-      classes={
-      {
+      classes={{
         paper: styles.drawer,
-      }
-      }
+      }}
     >
       <div>
         {!movError && renderContent()}
-        {movError ? <p className={globStyles['error-text']}>{movError}</p> : null}
+        {movError ? (
+          <p className={globStyles['error-text']}>{movError}</p>
+        ) : null}
       </div>
     </Drawer>
   );
 };
-
 
 export default MovieDetails;

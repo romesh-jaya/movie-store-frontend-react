@@ -6,12 +6,14 @@ interface IProps {
   name: string;
   classNameCustom: string;
   value: string;
-  handleReturnValue: (name: string,
+  handleReturnValue: (
+    name: string,
     isBetweenValuesIncomplete: boolean,
     value: string,
     valueSingle?: number,
     valueFrom?: number,
-    valueTo?: number) => void;
+    valueTo?: number
+  ) => void;
   enterPressed?: () => void;
   disabled?: boolean;
 }
@@ -34,11 +36,26 @@ const NumberRangeInput: React.FC<IProps> = (props) => {
   const regexpTo = new RegExp('^[<][0-9]*$');
   const regexpBetweenIncomplete = new RegExp('^[0-9]+[-][0-9]*$');
   const regexpBetweenComplete = new RegExp('^[0-9]+[-][0-9]+$');
-  const { name, classNameCustom, value, handleReturnValue, enterPressed, disabled } = props;
-  const className = classNameCustom === 'input-style-search' ? styles['input-style-search'] : '';
+  const {
+    name,
+    classNameCustom,
+    value,
+    handleReturnValue,
+    enterPressed,
+    disabled,
+  } = props;
+  const className =
+    classNameCustom === 'input-style-search'
+      ? styles['input-style-search']
+      : '';
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
-    if (enterPressed && (event.key === 'Enter' || event.key === 'NumpadEnter')) {
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ): void => {
+    if (
+      enterPressed &&
+      (event.key === 'Enter' || event.key === 'NumpadEnter')
+    ) {
       enterPressed();
     }
   };
@@ -52,17 +69,42 @@ const NumberRangeInput: React.FC<IProps> = (props) => {
       } else if (regexpFrom.test(newValue)) {
         const fromVal = newValue.substring(1, newValue.length);
         console.log('From value: ', fromVal);
-        handleReturnValue(name, false, newValue, undefined, parseFloat(fromVal));
+        handleReturnValue(
+          name,
+          false,
+          newValue,
+          undefined,
+          parseFloat(fromVal)
+        );
       } else if (regexpTo.test(newValue)) {
         const toVal = newValue.substring(1, newValue.length);
         console.log('To value: ', toVal);
-        handleReturnValue(name, false, newValue, undefined, undefined, parseFloat(toVal));
+        handleReturnValue(
+          name,
+          false,
+          newValue,
+          undefined,
+          undefined,
+          parseFloat(toVal)
+        );
       } else if (regexpBetweenIncomplete.test(newValue)) {
         if (regexpBetweenComplete.test(newValue)) {
           const numbers = newValue.split('-');
           if (numbers.length === 2) {
-            console.log('Between values complete: ', numbers[0], ' - ', numbers[1]);
-            handleReturnValue(name, false, newValue, undefined, parseFloat(numbers[0]), parseFloat(numbers[1]));
+            console.log(
+              'Between values complete: ',
+              numbers[0],
+              ' - ',
+              numbers[1]
+            );
+            handleReturnValue(
+              name,
+              false,
+              newValue,
+              undefined,
+              parseFloat(numbers[0]),
+              parseFloat(numbers[1])
+            );
           }
         } else {
           console.log('Between values incomplete: ', newValue);

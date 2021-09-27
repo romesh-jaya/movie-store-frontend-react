@@ -1,4 +1,10 @@
-import React, { useContext, useState, useEffect, useRef, ReactNode } from 'react';
+import React, {
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+  ReactNode,
+} from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
@@ -8,10 +14,10 @@ import SettingsContext from '../../context/SettingsContext';
 import axios from '../../axios';
 import { TextConstants } from '../../constants/TextConstants';
 import Spinner from '../UI/Spinner/Spinner';
-import  INameValue from '../../interfaces/INameValue';
+import INameValue from '../../interfaces/INameValue';
 
 interface IProps {
-  updateContext: (context: INameValue[]) => void
+  updateContext: (context: INameValue[]) => void;
 }
 
 const Settings: React.FC<IProps> = (props: IProps) => {
@@ -24,27 +30,32 @@ const Settings: React.FC<IProps> = (props: IProps) => {
   const { updateContext } = props;
   const isMountedRef = useRef(false);
   const settings = useContext(SettingsContext);
-  const apiKeySetting = settings.find(setting => setting.name === 'apiKey');
+  const apiKeySetting = settings.find((setting) => setting.name === 'apiKey');
 
-  const omdbAPIKeyEnteredOnChange = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
+  const omdbAPIKeyEnteredOnChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ): void => {
     setOmdbAPIKeyEntered(event.target.value.trim());
     setSettingsChanged(true);
   };
 
-  const languagesEnteredOnChange = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
+  const languagesEnteredOnChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ): void => {
     setLanguagesEntered(event.target.value);
     setLanguagesEnteredError('');
     setSettingsChanged(true);
   };
 
   // This formats user entered input into the Title case, which is the format used by OMDB
-  const formatLanguages = () : string[] => {
+  const formatLanguages = (): string[] => {
     const langArray = languagesEntered.split(',');
-    const formattedArray : string[] = [];
-    langArray.forEach(lang => {
+    const formattedArray: string[] = [];
+    langArray.forEach((lang) => {
       const trimmed = lang.trim();
       if (trimmed) {
-        const correctedCase = trimmed.charAt(0).toUpperCase() + trimmed.substr(1).toLowerCase();
+        const correctedCase =
+          trimmed.charAt(0).toUpperCase() + trimmed.substr(1).toLowerCase();
         formattedArray.push(correctedCase);
       }
     });
@@ -63,20 +74,22 @@ const Settings: React.FC<IProps> = (props: IProps) => {
       return;
     }
 
-    const dataSave : INameValue[] = [
+    const dataSave: INameValue[] = [
       {
         name: 'apiKey',
-        value: omdbAPIKeyEntered
+        value: omdbAPIKeyEntered,
       },
       {
         name: 'languages',
-        value: formattedArray.join(',')
-      }
+        value: formattedArray.join(','),
+      },
     ];
 
     try {
       setIsLoading(true);
-      await axios.patch(`${process.env.REACT_APP_NODE_SERVER}/settings`, {data: dataSave});
+      await axios.patch(`${process.env.REACT_APP_NODE_SERVER}/settings`, {
+        data: dataSave,
+      });
       updateContext(dataSave);
       // this var is to avoid the warning 'can't perform a react state update on an unmounted component.'
       if (isMountedRef.current) {
@@ -97,21 +110,23 @@ const Settings: React.FC<IProps> = (props: IProps) => {
       setOmdbAPIKeyEntered(apiKeySetting.value);
     }
 
-    async function loadLanguages() : Promise<void> {
+    async function loadLanguages(): Promise<void> {
       try {
         setIsLoading(true);
-        const response = await axios.get(`${process.env.REACT_APP_NODE_SERVER}/settings/languages`);
+        const response = await axios.get(
+          `${process.env.REACT_APP_NODE_SERVER}/settings/languages`
+        );
         setIsLoading(false);
         if (response.data.value) {
           setLanguagesEntered(response.data.value);
-        } 
+        }
       } catch {
         setIsLoading(false);
         setSettingsError(TextConstants.CANNOTCONNECTSERVER);
       }
     }
-    
-    loadLanguages();    
+
+    loadLanguages();
 
     return () => {
       isMountedRef.current = false;
@@ -120,17 +135,13 @@ const Settings: React.FC<IProps> = (props: IProps) => {
 
   const renderError = (): ReactNode | null => {
     return settingsError ? (
-      <p className={globStyles['error-text']}>
-        {settingsError}
-      </p>
+      <p className={globStyles['error-text']}>{settingsError}</p>
     ) : null;
   };
 
   return (
     <>
-      <h2>
-        Settings
-      </h2>
+      <h2>Settings</h2>
       <form className={globStyles['margin-b-20']}>
         <TextField
           variant="outlined"
@@ -154,14 +165,17 @@ const Settings: React.FC<IProps> = (props: IProps) => {
           helperText={languagesEnteredError}
         />
       </form>
-      {
-          isLoading? (
-            <div className={styles['spinner-div']}>
-              <Spinner />
-            </div>
-          ) : null
-        }      
-      <Button variant="outlined" color="primary" onClick={onSaveClicked} disabled={!settingsChanged}>
+      {isLoading ? (
+        <div className={styles['spinner-div']}>
+          <Spinner />
+        </div>
+      ) : null}
+      <Button
+        variant="outlined"
+        color="primary"
+        onClick={onSaveClicked}
+        disabled={!settingsChanged}
+      >
         Save
       </Button>
       {renderError()}

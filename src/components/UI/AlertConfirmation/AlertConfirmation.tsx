@@ -21,15 +21,10 @@ const AlertConfirmation: React.FC<IProps> = (props) => {
   const { onConfirmed, message, onCancelled, title, oKButtonText } = props;
 
   return (
-    <Dialog
-      open
-      onClose={onCancelled}
-    >
+    <Dialog open onClose={onCancelled}>
       <DialogTitle>
         <div className={styles.header}>
-          <div className={styles.title}>
-            {title}
-          </div>
+          <div className={styles.title}>{title}</div>
           <div className={styles['close-button']}>
             <Button onClick={onCancelled}>
               <ClearIcon />
@@ -38,9 +33,7 @@ const AlertConfirmation: React.FC<IProps> = (props) => {
         </div>
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          {message}
-        </DialogContentText>
+        <DialogContentText>{message}</DialogContentText>
       </DialogContent>
       <DialogActions>
         <span className={styles['first-button']}>

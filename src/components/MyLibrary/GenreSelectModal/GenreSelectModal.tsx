@@ -27,13 +27,13 @@ const GenreSelectModal: React.FC<IProps> = (props) => {
 
   const initForm = useCallback((): void => {
     setSelectedGenres(initialGenres);
-    Genres.forEach(genre => {
+    Genres.forEach((genre) => {
       if (initialGenres.includes(genre.genre)) {
-        setCheckboxValues(prevVal => {
+        setCheckboxValues((prevVal) => {
           return prevVal.concat([{ name: `is${genre.id}`, checked: true }]);
         });
       } else {
-        setCheckboxValues(prevVal => {
+        setCheckboxValues((prevVal) => {
           return prevVal.concat([{ name: `is${genre.id}`, checked: false }]);
         });
       }
@@ -45,32 +45,37 @@ const GenreSelectModal: React.FC<IProps> = (props) => {
   }, [initForm]);
 
   const setCheckboxGenre = (genre: IGenre, checked: boolean): void => {
-    setCheckboxValues(prevVal => {
-      const tempArray = prevVal.filter(prevCheckbox => (prevCheckbox.name !== `is${genre.id}`));
+    setCheckboxValues((prevVal) => {
+      const tempArray = prevVal.filter(
+        (prevCheckbox) => prevCheckbox.name !== `is${genre.id}`
+      );
       return tempArray.concat([{ name: `is${genre.id}`, checked }]);
     });
   };
 
   const onReset = (): void => {
     setSelectedGenres([]);
-    Genres.forEach(genre => {
+    Genres.forEach((genre) => {
       setCheckboxGenre(genre, false);
     });
   };
 
-  const onGenreChecked = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean): void => {
+  const onGenreChecked = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    checked: boolean
+  ): void => {
     const checkboxName = event.target.name;
 
-    Genres.forEach(genre => {
-      if (checkboxName === (`is${genre.id}`)) {
+    Genres.forEach((genre) => {
+      if (checkboxName === `is${genre.id}`) {
         if (checked) {
-          setSelectedGenres(prevGenres => {
+          setSelectedGenres((prevGenres) => {
             return prevGenres.concat([genre.genre]);
           });
           setCheckboxGenre(genre, true);
         } else {
-          setSelectedGenres(prevGenres => {
-            return prevGenres.filter(prevGenre => (prevGenre !== genre.genre));
+          setSelectedGenres((prevGenres) => {
+            return prevGenres.filter((prevGenre) => prevGenre !== genre.genre);
           });
           setCheckboxGenre(genre, false);
         }
@@ -79,43 +84,40 @@ const GenreSelectModal: React.FC<IProps> = (props) => {
   };
 
   const renderGenres = (): ReactNode => {
-    const contClass = isDesktopWidth? styles['genre-container-3'] : styles['genre-container-2'];
+    const contClass = isDesktopWidth
+      ? styles['genre-container-3']
+      : styles['genre-container-2'];
     return (
       <div className={contClass}>
-        {
-          Genres.map(genre => {
-            return (
-              <FormControlLabel
-                key={`label${genre.id}`}
-                control={
-                  (
-                    <Checkbox
-                      checked={checkboxValues.find(checkbox => (checkbox.name === `is${genre.id}`))?.checked}
-                      onChange={onGenreChecked}
-                      name={`is${genre.id}`}
-                      color="primary"
-                    />
-                )
-                }
-                label={genre.genre}
-              />
-            );
-          })
-        }
+        {Genres.map((genre) => {
+          return (
+            <FormControlLabel
+              key={`label${genre.id}`}
+              control={
+                <Checkbox
+                  checked={
+                    checkboxValues.find(
+                      (checkbox) => checkbox.name === `is${genre.id}`
+                    )?.checked
+                  }
+                  onChange={onGenreChecked}
+                  name={`is${genre.id}`}
+                  color="primary"
+                />
+              }
+              label={genre.genre}
+            />
+          );
+        })}
       </div>
     );
   };
 
   return (
-    <Dialog
-      open
-      onClose={onCancelled}
-    >
+    <Dialog open onClose={onCancelled}>
       <DialogTitle>
         <div className={styles.header}>
-          <div className={styles.title}>
-            Select Genres
-          </div>
+          <div className={styles.title}>Select Genres</div>
           <div className={styles['close-button']}>
             <Button onClick={onCancelled}>
               <ClearIcon />
@@ -123,9 +125,7 @@ const GenreSelectModal: React.FC<IProps> = (props) => {
           </div>
         </div>
       </DialogTitle>
-      <DialogContent>
-        {renderGenres()}
-      </DialogContent>
+      <DialogContent>{renderGenres()}</DialogContent>
       <DialogActions>
         <span className={styles['first-button']}>
           <Button onClick={onReset} color="primary" variant="contained">
@@ -151,5 +151,3 @@ const GenreSelectModal: React.FC<IProps> = (props) => {
 };
 
 export default GenreSelectModal;
-
-

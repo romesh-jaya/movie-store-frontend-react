@@ -6,7 +6,7 @@ import axios from '../../axios';
 import { TextConstants } from '../../constants/TextConstants';
 import MovieLoadingSkeleton from '../Movies/MovieLoadingSkeleton';
 
-const CHART_OPTIONS = { 
+const CHART_OPTIONS = {
   responsive: false,
   scales: {
     yAxes: [
@@ -22,8 +22,8 @@ const CHART_OPTIONS = {
       left: 50,
       top: 20,
       bottom: 50,
-    }
-  }   
+    },
+  },
 };
 
 const MovieAnalysis: React.FC = () => {
@@ -32,11 +32,11 @@ const MovieAnalysis: React.FC = () => {
   const [chartDataLib, setChartDataLib] = useState<any>();
   const [chartDataSearch, setChartDataSearch] = useState<any>();
 
-  const setChartDataInternalLib =  (analData: any[]) : void => {
+  const setChartDataInternalLib = (analData: any[]): void => {
     const genres: string[] = [];
     const genreCounts: number[] = [];
 
-    analData.forEach(dataOne => {
+    analData.forEach((dataOne) => {
       genres.push(dataOne.genre);
       genreCounts.push(dataOne.count);
     });
@@ -52,15 +52,15 @@ const MovieAnalysis: React.FC = () => {
           borderWidth: 1,
         },
       ],
-    };    
+    };
     setChartDataLib(data);
   };
 
-  const setChartDataInternalSearch =  (analData: any[]) : void => {
+  const setChartDataInternalSearch = (analData: any[]): void => {
     const genres: string[] = [];
     const genreCounts: number[] = [];
 
-    analData.forEach(dataOne => {
+    analData.forEach((dataOne) => {
       genres.push(dataOne.genre);
       genreCounts.push(dataOne.count);
     });
@@ -76,54 +76,67 @@ const MovieAnalysis: React.FC = () => {
           borderWidth: 1,
         },
       ],
-    };    
+    };
     setChartDataSearch(data);
   };
 
   // load the analysis data
   useEffect(() => {
-    async function loadLanguages() : Promise<void> {
+    async function loadLanguages(): Promise<void> {
       try {
         setIsLoading(true);
-        const response = await axios.get(`${process.env.REACT_APP_NODE_SERVER}/movies/analysis/lib`);
-        const resSearch = await axios.get(`${process.env.REACT_APP_NODE_SERVER}/movies/analysis/search`);
+        const response = await axios.get(
+          `${process.env.REACT_APP_NODE_SERVER}/movies/analysis/lib`
+        );
+        const resSearch = await axios.get(
+          `${process.env.REACT_APP_NODE_SERVER}/movies/analysis/search`
+        );
         setIsLoading(false);
         if (response.data) {
           setChartDataInternalLib(response.data);
-        } 
+        }
         if (resSearch.data) {
           setChartDataInternalSearch(resSearch.data);
-        } 
+        }
       } catch (err) {
         setIsLoading(false);
         setError(`${TextConstants.CHARTLOADERROR}: ${err}`);
       }
     }
-        
-    loadLanguages();    
+
+    loadLanguages();
   }, []);
 
   const renderError = (): ReactNode | null => {
-    return error ? (
-      <p className={globStyles['error-text']}>
-        {error}
-      </p>
-    ) : null;
+    return error ? <p className={globStyles['error-text']}>{error}</p> : null;
   };
 
   const renderContent = (): ReactNode | null => {
     return !error ? (
       <>
-        <h2 className={globStyles['margin-b-20']}>
-          Library Movie Analysis
-        </h2>
+        <h2 className={globStyles['margin-b-20']}>Library Movie Analysis</h2>
         <p>Below chart displays top 5 genres of all titles in the library.</p>
-        {chartDataLib? <Bar data={chartDataLib} height={500} width={500} options={CHART_OPTIONS} /> : null }
-        <h2 className={globStyles['margin-b-20']}>
-          Search Movie Analysis
-        </h2>
-        <p>Below chart displays top 5 genres of all titles that users viewed details of, the past month.</p>
-        {chartDataSearch? <Bar data={chartDataSearch} height={500} width={500} options={CHART_OPTIONS} /> : null }
+        {chartDataLib ? (
+          <Bar
+            data={chartDataLib}
+            height={500}
+            width={500}
+            options={CHART_OPTIONS}
+          />
+        ) : null}
+        <h2 className={globStyles['margin-b-20']}>Search Movie Analysis</h2>
+        <p>
+          Below chart displays top 5 genres of all titles that users viewed
+          details of, the past month.
+        </p>
+        {chartDataSearch ? (
+          <Bar
+            data={chartDataSearch}
+            height={500}
+            width={500}
+            options={CHART_OPTIONS}
+          />
+        ) : null}
       </>
     ) : null;
   };

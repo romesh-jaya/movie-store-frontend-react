@@ -4,7 +4,6 @@ import logo from '../../assets/img/movie.png';
 import * as styles from './containerHeader.module.css';
 
 const ContainerHeader: React.FC = () => {
-
   return (
     <>
       <div className={styles.header}>
@@ -15,7 +14,7 @@ const ContainerHeader: React.FC = () => {
           Ultra Movie Shop
         </h1>
       </div>
-    </>    
+    </>
   );
 };
 

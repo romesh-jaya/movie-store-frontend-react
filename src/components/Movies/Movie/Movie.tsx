@@ -11,10 +11,16 @@ interface IProps {
 }
 
 const Movie: React.FC<IProps> = (props) => {
-  const { title, year, body, clicked} = props;
+  const { title, year, body, clicked } = props;
 
   return (
-    <div className={styles.movie} onClick={clicked} onKeyDown={clicked} role="button" tabIndex={0}>
+    <div
+      className={styles.movie}
+      onClick={clicked}
+      onKeyDown={clicked}
+      role="button"
+      tabIndex={0}
+    >
       <h1>{title}</h1>
       <div>
         {year}
@@ -30,7 +36,7 @@ Movie.propTypes = {
   title: PropTypes.string.isRequired,
   year: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
-  clicked: PropTypes.func.isRequired
+  clicked: PropTypes.func.isRequired,
 };
 
 export default Movie;

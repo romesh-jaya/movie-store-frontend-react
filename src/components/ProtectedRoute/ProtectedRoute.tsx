@@ -1,6 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import React, { useRef } from 'react';
-import {Redirect} from 'react-router';
+import { Redirect } from 'react-router';
 
 import * as styles from './protectedRoute.module.css';
 import * as globStyles from '../../index.module.css';
@@ -12,14 +12,14 @@ interface IProps {
 
 const ProtectedRoute: React.FC<IProps> = (props) => {
   const { isLoading, isAuthenticated, error, user } = useAuth0();
-  const { children} = props;
+  const { children } = props;
   const isAuthRef = useRef<boolean>(false);
 
   if (isLoading) {
     return (
       <div className={styles['spinner-full-page']}>
         <Spinner />
-      </div>  
+      </div>
     );
   }
 
@@ -32,11 +32,7 @@ const ProtectedRoute: React.FC<IProps> = (props) => {
     console.log('Sign in success', user.email);
   }
 
-  return (
-    <>
-      {isAuthenticated? children : <Redirect to="/login" />}
-    </>
-  );
+  return <>{isAuthenticated ? children : <Redirect to="/login" />}</>;
 };
 
 export default ProtectedRoute;

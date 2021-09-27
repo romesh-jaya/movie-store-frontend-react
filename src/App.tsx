@@ -23,9 +23,9 @@ const theme = createMuiTheme({
     },
     secondary: {
       main: SEC_COLOUR,
-      contrastText: SEC_COLOUR_TEXT
-    }
-  }
+      contrastText: SEC_COLOUR_TEXT,
+    },
+  },
 });
 
 const App: React.FC = () => {
@@ -34,7 +34,7 @@ const App: React.FC = () => {
   axios.interceptors.request.use(async (req) => {
     if (req.url?.toUpperCase().includes(SERVER_PATH.toUpperCase())) {
       // token is auto cached by Auth0, so that multiple requests are not sent each time we need a token
-      const token = await getAccessTokenSilently(); 
+      const token = await getAccessTokenSilently();
       req.headers.authorization = `Bearer ${token}`;
     }
     return req;
