@@ -40,5 +40,10 @@ module.exports = {
     'react/display-name': 'off',
     'no-var': 'error',
   },
-  plugins: ['@typescript-eslint'],
+  settings: {
+    react: {
+      pragma: 'React', // used for React plugin
+    },
+  },
+  plugins: ['@typescript-eslint', 'react'],
 };
