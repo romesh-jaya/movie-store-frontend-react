@@ -9,8 +9,9 @@ const dotenv = require('dotenv');
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
 
-const env = dotenv.config({ path: path.resolve(process.cwd(), 'webpack.env') })
-  .parsed;
+const env = dotenv.config({
+  path: path.resolve(process.cwd(), 'webpack.env'),
+}).parsed;
 const envKeys = Object.keys(env).reduce((prev, next) => {
   prev[`process.env.${next}`] = JSON.stringify(env[next]);
   return prev;
@@ -35,6 +36,12 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+      },
+    },
     // https: true,
   },
   module: {
@@ -63,6 +70,7 @@ module.exports = {
       {
         enforce: 'pre',
         test: /\.js$/,
+        exclude: /node_modules/,
         loader: 'source-map-loader',
       },
       {
