@@ -29,22 +29,20 @@ const NavBar: React.FC<IProps> = (props: IProps) => {
     <AppBar position="static">
       <div>
         <div className={styles['tabs-div']}>
-          <Tabs value={tabIndex} onChange={handleTabChange}>
-            <Tab
-              label="My Library"
-              id="tab0"
-              classes={{
-                root: myLibClass,
-              }}
-            />
-            {user && user?.email && isAdmin(user.email) && (
-              <>
-                <Tab label="Movie Search - OMDB" id="tab1" />
-                <Tab label="Movie Search Analysis" id="tab2" />
-                <Tab label="Settings" id="tab3" />
-              </>
-            )}
-          </Tabs>
+          {user && user?.email && isAdmin(user.email) && (
+            <Tabs value={tabIndex} onChange={handleTabChange}>
+              <Tab
+                label="My Library"
+                id="tab0"
+                classes={{
+                  root: myLibClass,
+                }}
+              />
+              <Tab label="Movie Search - OMDB" id="tab1" />
+              <Tab label="Movie Search Analysis" id="tab2" />
+              <Tab label="Settings" id="tab3" />
+            </Tabs>
+          )}
         </div>
         <div className={styles['logout-button']}>
           <small className={globStyles['margin-r-10']}>
