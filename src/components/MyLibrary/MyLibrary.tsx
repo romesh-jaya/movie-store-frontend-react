@@ -51,7 +51,6 @@ const MyLibrary: React.FC = () => {
         );
 
         setCurrentPage(page);
-        setIsLoading(false);
         if (page === 1 && !response.data.movies.movies.length) {
           // Perform this for first query only
           setMovies([]);
@@ -68,7 +67,7 @@ const MyLibrary: React.FC = () => {
       } catch (err) {
         setMovies([]);
         setMovInfo('');
-        setIsLoading(false);
+
         if (isErrorResponse(err)) {
           setMovError(
             `${TextConstants.MOVIELOADERROR}: ${err.response.data.Error}`
@@ -77,6 +76,8 @@ const MyLibrary: React.FC = () => {
           setMovError(TextConstants.MOVIELOADERROR);
         }
         setLastSearchMovieCount(0);
+      } finally {
+        setIsLoading(false);
       }
     },
     [lastSearchInfo, pageSize]
@@ -103,6 +104,7 @@ const MyLibrary: React.FC = () => {
           setMovError(TextConstants.MOVIEDELETEERROR);
         }
         setShowDeleteConfirm(false);
+      } finally {
         setIsLoading(false);
       }
     }
@@ -120,7 +122,6 @@ const MyLibrary: React.FC = () => {
         `${process.env.REACT_APP_NODE_SERVER}/movies`,
         { params: newSearchInfo }
       );
-      setIsLoading(false);
       if (!response.data.movies.movies.length) {
         setMovError('No movies returned from server.');
         return [];
@@ -128,7 +129,6 @@ const MyLibrary: React.FC = () => {
       setMovError('');
       return response.data.movies.movies;
     } catch (err) {
-      setIsLoading(false);
       if (isErrorResponse(err)) {
         setMovError(
           `${TextConstants.MOVIELOADERROR}: ${err.response.data.Error}`
@@ -136,6 +136,8 @@ const MyLibrary: React.FC = () => {
       } else {
         setMovError(TextConstants.MOVIELOADERROR);
       }
+    } finally {
+      setIsLoading(false);
     }
     return [];
   };
@@ -182,9 +184,7 @@ const MyLibrary: React.FC = () => {
   };
 
   const renderError = (): ReactNode | null => {
-    return movError ? (
-      <p className={globStyles['error-text']}>{movError}</p>
-    ) : null;
+    return movError && <p className={globStyles['error-text']}>{movError}</p>;
   };
 
   const renderConfirmModal = (): ReactElement | null => {

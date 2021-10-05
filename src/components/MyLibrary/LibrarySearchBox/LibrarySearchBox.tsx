@@ -17,7 +17,6 @@ import {
 } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import HelpIcon from '@material-ui/icons/Help';
-import startCase from 'lodash/startCase';
 import { ExportToCsv } from 'export-to-csv';
 
 import { useAuth0 } from '@auth0/auth0-react';
@@ -29,15 +28,17 @@ import NumberRangeInput from '../../Controls/Input/NumberRangeInput/NumberRangeI
 import GenreSelectModal from '../GenreSelectModal/GenreSelectModal';
 import { ISearchInfo } from '../../../interfaces/ISearchInfo';
 import IMovieLibrary from '../../../interfaces/IMovieLibrary';
-import INameValue from '../../../interfaces/INameValue';
 import SettingsContext from '../../../context/SettingsContext';
 import { isAdmin } from '../../../utils/AuthUtil';
+import { formatExportData } from '../../../utils/ExportUtil';
 
 interface IProps {
   enableExportButton: boolean;
   setLastSearchInfo: (searchInfo: ISearchInfo) => void;
   exportMovies: () => Promise<IMovieLibrary[]>;
 }
+
+const exportFileName = 'Export.csv';
 
 const LibrarySearchBox: React.FC<IProps> = (props) => {
   const [showGenresModal, setShowGenresModal] = useState(false);
@@ -106,28 +107,15 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
         return;
       }
 
-      const searchInfo: ISearchInfo = {};
-      if (searchTitle) {
-        searchInfo.searchTitle = searchTitle.trim();
-      }
-      if (searchType) {
-        searchInfo.searchType = searchType.trim();
-      }
-      if (searchYearExact) {
-        searchInfo.searchYearExact = searchYearExact;
-      }
-      if (searchYearFrom) {
-        searchInfo.searchYearFrom = searchYearFrom;
-      }
-      if (searchYearTo) {
-        searchInfo.searchYearTo = searchYearTo;
-      }
-      if (searchGenres) {
-        searchInfo.searchGenres = searchGenres;
-      }
-      if (searchLanguage) {
-        searchInfo.searchLanguage = searchLanguage;
-      }
+      const searchInfo: ISearchInfo = {
+        ...(searchTitle && { searchTitle: searchTitle.trim() }),
+        ...(searchType && { searchType: searchType.trim() }),
+        ...(searchYearExact && { searchYearExact }),
+        ...(searchYearFrom && { searchYearFrom }),
+        ...(searchYearTo && { searchYearTo }),
+        ...(searchGenres && { searchGenres }),
+        ...(searchLanguage && { searchLanguage }),
+      };
       setLastSearchInfo(searchInfo);
     }
   }, [
@@ -232,35 +220,10 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     if (exportDataVal.length) {
       // Note: setting headers property in ExportToCsv's options didn't work as of 2020-Oct
       // Thus we need a manual workaround to convert the keys to Title case
-      const keys = Object.keys(exportDataVal[0]);
-      const keysMinusId = keys.filter((key) => key !== 'id');
-      // convert keys to Title case
-      const formattedKeys: INameValue[] = keysMinusId.map((key) => ({
-        name: key,
-        value: startCase(key),
-      }));
-
-      // create new data with capitalized keys
-      const capitalizedKeyData = exportDataVal.map((row) => {
-        const retVal: any = {};
-        formattedKeys.forEach((key) => {
-          retVal[key.value] = row[key.name as keyof IMovieLibrary];
-        });
-        return retVal;
-      });
-
-      const formattedData = capitalizedKeyData.map((row) => {
-        // convert array types to semicolon seperated
-        const newData = {
-          ...row,
-          Genre: row.Genre.join(';'),
-          Languages: row.Languages.join(';'),
-        };
-        return newData;
-      });
+      const formattedData = formatExportData(exportDataVal);
 
       const options = {
-        filename: 'Export.csv',
+        filename: exportFileName,
         useKeysAsHeaders: true,
       };
 
@@ -317,15 +280,6 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     );
   };
 
-  const renderGenresModal = (): ReactElement | null =>
-    showGenresModal ? (
-      <GenreSelectModal
-        initialGenres={searchGenres}
-        onConfirmed={newGenresSelected}
-        onCancelled={onCancelledGenreSelect}
-      />
-    ) : null;
-
   const renderButtons = (): ReactNode => (
     <div className={styles['button-div']}>
       <span className={globStyles['right-spacer']}>
@@ -345,7 +299,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
           Reset
         </Button>
       </span>
-      {user && user?.email && isAdmin(user.email) ? (
+      {user && user?.email && isAdmin(user.email) && (
         <Button
           disabled={!enableExportButton}
           onClick={onExportClicked}
@@ -354,7 +308,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
         >
           Export to CSV
         </Button>
-      ) : null}
+      )}
     </div>
   );
 
@@ -487,16 +441,18 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     </>
   );
 
-  const renderContent = (): ReactElement => {
-    return (
-      <>
-        {renderSearch()}
-        {renderGenresModal()}
-      </>
-    );
-  };
-
-  return renderContent();
+  return (
+    <>
+      {renderSearch()}
+      {showGenresModal && (
+        <GenreSelectModal
+          initialGenres={searchGenres}
+          onConfirmed={newGenresSelected}
+          onCancelled={onCancelledGenreSelect}
+        />
+      )}
+    </>
+  );
 };
 
 export default LibrarySearchBox;
