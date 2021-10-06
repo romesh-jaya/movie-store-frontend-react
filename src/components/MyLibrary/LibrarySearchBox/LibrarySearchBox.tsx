@@ -1,36 +1,22 @@
-import React, {
-  useState,
-  useCallback,
-  ReactNode,
-  ChangeEvent,
-  ReactElement,
-  useEffect,
-  useContext,
-} from 'react';
-import {
-  Button,
-  FormControl,
-  MenuItem,
-  Popover,
-  Select,
-  Typography,
-} from '@material-ui/core';
+import React, { useState, useCallback } from 'react';
+import { Button, Typography } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
-import HelpIcon from '@material-ui/icons/Help';
 import { ExportToCsv } from 'export-to-csv';
 
-import { useAuth0 } from '@auth0/auth0-react';
 import styles from './librarySearchBox.module.css';
 import * as globStyles from '../../../index.module.css';
+import { useAuth0 } from '@auth0/auth0-react';
 import { TextConstants } from '../../../constants/TextConstants';
 import { MovieType } from '../../../enums/MovieType';
-import NumberRangeInput from '../../Controls/Input/NumberRangeInput/NumberRangeInput';
 import GenreSelectModal from '../GenreSelectModal/GenreSelectModal';
 import { ISearchInfo } from '../../../interfaces/ISearchInfo';
 import IMovieLibrary from '../../../interfaces/IMovieLibrary';
-import SettingsContext from '../../../context/SettingsContext';
+
 import { isAdmin } from '../../../utils/AuthUtil';
 import { formatExportData } from '../../../utils/ExportUtil';
+import SearchControls from './SearchControls/SearchControls';
+
+const exportFileName = 'Export.csv';
 
 interface IProps {
   enableExportButton: boolean;
@@ -38,16 +24,14 @@ interface IProps {
   exportMovies: () => Promise<IMovieLibrary[]>;
 }
 
-const exportFileName = 'Export.csv';
-
 const LibrarySearchBox: React.FC<IProps> = (props) => {
   const [showGenresModal, setShowGenresModal] = useState(false);
   // Search related:
   const [searchTitle, setSearchTitle] = useState('');
-  const [searchType, setSearchType] = useState('');
+  const [searchType, setSearchType] = useState<string>(MovieType.Movie);
   const [searchLanguage, setSearchLanguage] = useState('');
   const [errorTextSearchYear, setErrorTextSearchYear] = useState('');
-  const [searchYearInput, setSearchYearInput] = useState<string>('');
+  const [searchYearInput, setSearchYearInput] = useState('');
   const [searchYearExact, setSearchYearExact] = useState<number | undefined>();
   const [searchYearFrom, setSearchYearFrom] = useState<number | undefined>();
   const [searchYearTo, setSearchYearTo] = useState<number | undefined>();
@@ -57,12 +41,6 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   ] = useState(false);
   const [searchGenres, setSearchGenres] = useState<string[]>([]);
   const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
-  const settings = useContext(SettingsContext);
-  const languagesSetting = settings.find(
-    (setting) => setting.name === 'languages'
-  );
-  const languages =
-    (languagesSetting && languagesSetting.value.split(',')) || [];
   const { user } = useAuth0();
 
   const { enableExportButton, setLastSearchInfo, exportMovies } = props;
@@ -131,10 +109,8 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     setLastSearchInfo,
   ]);
 
-  const handleChangeSearchTitle = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    setSearchTitle(event.target.value);
+  const handleChangeSearchTitle = (title: string): void => {
+    setSearchTitle(title);
   };
 
   const handleChangeSearchYear = (
@@ -153,11 +129,8 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     setErrorTextSearchYear('');
   };
 
-  const handleChangeSearchType = (
-    event: ChangeEvent<{ name?: string | undefined; value: unknown }>
-  ): void => {
-    const type = event.target.value as string;
-    setSearchType(type);
+  const handleChangeSearchType = (searchType: string): void => {
+    setSearchType(searchType);
     setSearchYearInput('');
     setSearchYearExact(undefined);
     setSearchYearFrom(undefined);
@@ -166,10 +139,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     setErrorTextSearchYear('');
   };
 
-  const handleChangeSearchLanguage = (
-    event: ChangeEvent<{ name?: string | undefined; value: unknown }>
-  ): void => {
-    const language = event.target.value as string;
+  const handleChangeSearchLanguage = (language: string): void => {
     setSearchLanguage(language);
   };
 
@@ -194,10 +164,8 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     clearFields();
   };
 
-  const handleKeyDown = (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ): void => {
-    if (event.key === 'Enter' || event.key === 'NumpadEnter') {
+  const handleKeyDown = (keyName: string): void => {
+    if (keyName === 'Enter' || keyName === 'NumpadEnter') {
       newSearch();
     }
   };
@@ -232,54 +200,6 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     }
   };
 
-  const handleClickHelpIcon = (
-    event: React.MouseEvent<SVGSVGElement, MouseEvent>
-  ): void => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClosePopover = (): void => {
-    setAnchorEl(null);
-  };
-
-  useEffect(() => {
-    // Set default type
-    setSearchType(MovieType.Movie);
-  }, []);
-
-  const renderHelpYear = (): ReactElement => {
-    const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
-
-    return (
-      <span className={styles.helpicon}>
-        <HelpIcon onClick={handleClickHelpIcon} color="primary" />
-        <Popover
-          id={id}
-          open={open}
-          anchorEl={anchorEl}
-          onClose={handleClosePopover}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-        >
-          <div className={styles.helptext}>
-            <div>Value can be entered in the following formats:</div>
-            <div>Enter a single year: 2020</div>
-            <div>Enter a year to search from: &gt; 2020</div>
-            <div>Enter a year to search upto: &lt; 2020</div>
-            <div>Enter a range of years: 2010-2020</div>
-          </div>
-        </Popover>
-      </span>
-    );
-  };
-
   const renderButtons = (): ReactNode => (
     <div className={styles['button-div']}>
       <span className={globStyles['right-spacer']}>
@@ -312,7 +232,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     </div>
   );
 
-  const renderSearch = (): ReactNode => (
+  return (
     <>
       <Card className={styles['card-style']}>
         <Typography
@@ -323,127 +243,24 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
         >
           Search Library
         </Typography>
-        <div className={styles['label-and-input-div']}>
-          <label htmlFor="searchTitle">
-            Title
-            <div className="inter-control-spacing">
-              <input
-                type="text"
-                name="searchTitle"
-                value={searchTitle}
-                className={styles['input-style-search']}
-                onChange={handleChangeSearchTitle}
-                onKeyDown={handleKeyDown}
-              />
-            </div>
-          </label>
-        </div>
-        <div className={styles['label-and-input-div']}>
-          <label htmlFor="searchType">
-            Type
-            <div className="inter-control-spacing">
-              <FormControl
-                variant="outlined"
-                className={styles['input-style-form-control']}
-              >
-                <Select
-                  className={styles['input-style-select']}
-                  value={searchType}
-                  onChange={handleChangeSearchType}
-                  name="searchType"
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={MovieType.Movie}>Movie</MenuItem>
-                  <MenuItem value={MovieType.TvSeries}>TV Series</MenuItem>
-                </Select>
-              </FormControl>
-            </div>
-          </label>
-        </div>
-        <div className={styles['label-and-input-div']}>
-          <label htmlFor="searchLanguage">
-            Language
-            <div className="inter-control-spacing">
-              <FormControl
-                variant="outlined"
-                className={styles['input-style-form-control']}
-              >
-                <Select
-                  className={styles['input-style-select']}
-                  value={searchLanguage}
-                  onChange={handleChangeSearchLanguage}
-                  name="searchLanguage"
-                >
-                  <MenuItem value="">
-                    <em key="None">None</em>
-                  </MenuItem>
-                  {languages.map((language) => (
-                    <MenuItem value={language} key={language}>
-                      {language}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-          </label>
-        </div>
-        <div className={styles['label-and-input-div']}>
-          <label htmlFor="searchYear">
-            Year
-            <div className="inter-control-spacing">
-              <NumberRangeInput
-                name="searchYear"
-                disabled={searchType !== MovieType.Movie}
-                classNameCustom="input-style-search"
-                value={searchYearInput}
-                handleReturnValue={handleChangeSearchYear}
-                enterPressed={newSearch}
-              />
-              {renderHelpYear()}
-            </div>
-          </label>
-          <div className={globStyles['error-text-small']}>
-            <small>{errorTextSearchYear}</small>
-          </div>
-        </div>
-        <div className={styles['label-and-input-div']}>
-          <label htmlFor="searchGenres">
-            Genres
-            <div className="inter-control-spacing">
-              <span className={styles.genre}>
-                <input
-                  disabled
-                  type="text"
-                  name="searchGenres"
-                  value={searchGenres.join(', ')}
-                  className={styles['input-style-search-genre']}
-                />
-              </span>
-              <span>
-                <Button
-                  onClick={onGenresClicked}
-                  color="secondary"
-                  variant="contained"
-                  classes={{
-                    root: styles['genre-button'],
-                  }}
-                >
-                  Genres...
-                </Button>
-              </span>
-            </div>
-          </label>
-        </div>
+        <SearchControls
+          anchorEl={anchorEl}
+          searchTitle={searchTitle}
+          searchType={searchType}
+          searchLanguage={searchLanguage}
+          searchYearInput={searchYearInput}
+          searchGenres={searchGenres}
+          errorTextSearchYear={errorTextSearchYear}
+          setAnchorEl={setAnchorEl}
+          handleChangeSearchTitle={handleChangeSearchTitle}
+          handleKeyDown={handleKeyDown}
+          handleChangeSearchType={handleChangeSearchType}
+          handleChangeSearchLanguage={handleChangeSearchLanguage}
+          handleChangeSearchYear={handleChangeSearchYear}
+          onGenresClicked={onGenresClicked}
+        />
         {renderButtons()}
       </Card>
-    </>
-  );
-
-  return (
-    <>
-      {renderSearch()}
       {showGenresModal && (
         <GenreSelectModal
           initialGenres={searchGenres}
