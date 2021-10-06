@@ -3,7 +3,7 @@ import React, {
   useEffect,
   useCallback,
   useContext,
-  ReactNode,
+  ReactElement,
 } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -164,7 +164,7 @@ const MovieSearch: React.FC = () => {
     loadMovies(page);
   };
 
-  const renderMovies = (): ReactNode => {
+  const renderMovies = (): ReactElement => {
     return (
       <section className={styles.movies}>
         {movies.map((movie) => {
@@ -182,13 +182,13 @@ const MovieSearch: React.FC = () => {
     );
   };
 
-  const renderError = (): ReactNode | null => {
+  const renderError = (): ReactElement | null => {
     return movError ? (
       <p className={globStyles['error-text']}>{movError}</p>
     ) : null;
   };
 
-  const renderContent = (): ReactNode | null => {
+  const renderContent = (): ReactElement | null => {
     return !isLoading ? (
       <div>
         <div className={styles['search-input']}>

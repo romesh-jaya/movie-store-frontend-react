@@ -2,7 +2,7 @@ import React, {
   useState,
   useEffect,
   useContext,
-  ReactNode,
+  ReactElement,
   useRef,
   useCallback,
 } from 'react';
@@ -170,7 +170,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
     }
   };
 
-  const renderContent = (): ReactNode | null => {
+  const renderContent = (): ReactElement | null => {
     if (!selectedMovie) {
       return null;
     }

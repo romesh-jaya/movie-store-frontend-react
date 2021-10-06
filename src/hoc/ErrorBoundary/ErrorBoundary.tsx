@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
-import React, { Component, ReactNode } from 'react';
+import React, { Component, ReactElement } from 'react';
 
 const MISSING_ERROR = 'Unknown Error';
 
 interface IProps {
-  children: ReactNode;
+  children: ReactElement;
 }
 
 interface IState {
@@ -22,7 +22,7 @@ class ErrorBoundary extends Component<IProps, IState> {
     this.setState({ error: error || new Error(MISSING_ERROR) });
   }
 
-  render(): ReactNode {
+  render(): ReactElement {
     const { error } = this.state;
     const { children } = this.props;
 

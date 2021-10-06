@@ -3,7 +3,7 @@ import React, {
   useState,
   useEffect,
   useRef,
-  ReactNode,
+  ReactElement,
 } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -133,7 +133,7 @@ const Settings: React.FC<IProps> = (props: IProps) => {
     };
   }, [apiKeySetting]);
 
-  const renderError = (): ReactNode | null => {
+  const renderError = (): ReactElement | null => {
     return settingsError ? (
       <p className={globStyles['error-text']}>{settingsError}</p>
     ) : null;

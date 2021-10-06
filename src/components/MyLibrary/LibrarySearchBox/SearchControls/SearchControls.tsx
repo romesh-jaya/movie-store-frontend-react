@@ -160,7 +160,7 @@ const SearchControls: React.FC<IProps> = (props) => {
                 className={styles['input-style-select']}
                 value={searchLanguage}
                 onChange={(event) =>
-                  handleChangeSearchLanguage(event.target.value)
+                  handleChangeSearchLanguage(event.target.value as string)
                 }
                 name="searchLanguage"
               >

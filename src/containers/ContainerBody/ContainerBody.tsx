@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, ReactNode } from 'react';
+import React, { useState, useEffect, Suspense, ReactElement } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -92,45 +92,42 @@ const ContainerBody: React.FC = () => {
     loadSettings();
   }, []);
 
-  const renderNoApiKey = (): ReactNode => {
+  const renderNoApiKey = (): ReactElement => {
     return <p>{TextConstants.NOAPIKEYDEFINED}</p>;
   };
 
-  const renderWithSuspense = (children: ReactNode): ReactNode => {
+  const renderWithSuspense = (children: ReactElement): ReactElement => {
     return <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>;
   };
 
-  const renderContent = (): ReactNode | null => {
-    return (
-      !isLoading &&
-      !settingsError && (
-        <>
-          <NavBar tabIndex={tabIndex} handleTabChange={handleTabChange} />
-          <TabPanel value={tabIndex} index={0}>
-            {apiKeySetting && apiKeySetting.value ? (
-              <MyLibrary />
-            ) : (
-              renderNoApiKey()
-            )}
-          </TabPanel>
-          {user && user?.email && isAdmin(user.email) && (
-            <>
-              <TabPanel value={tabIndex} index={1}>
-                {apiKeySetting && apiKeySetting.value
-                  ? renderWithSuspense(<MovieSearch />)
-                  : renderNoApiKey()}
-              </TabPanel>
-              <TabPanel value={tabIndex} index={2}>
-                {renderWithSuspense(<MovieAnalysis />)}
-              </TabPanel>
-              <TabPanel value={tabIndex} index={3}>
-                {renderWithSuspense(<Settings updateContext={updateContext} />)}
-              </TabPanel>
-            </>
+  const renderContent = (): ReactElement | null => {
+    return !isLoading && !settingsError ? (
+      <>
+        <NavBar tabIndex={tabIndex} handleTabChange={handleTabChange} />
+        <TabPanel value={tabIndex} index={0}>
+          {apiKeySetting && apiKeySetting.value ? (
+            <MyLibrary />
+          ) : (
+            renderNoApiKey()
           )}
-        </>
-      )
-    );
+        </TabPanel>
+        {user && user?.email && isAdmin(user.email) && (
+          <>
+            <TabPanel value={tabIndex} index={1}>
+              {apiKeySetting && apiKeySetting.value
+                ? renderWithSuspense(<MovieSearch />)
+                : renderNoApiKey()}
+            </TabPanel>
+            <TabPanel value={tabIndex} index={2}>
+              {renderWithSuspense(<MovieAnalysis />)}
+            </TabPanel>
+            <TabPanel value={tabIndex} index={3}>
+              {renderWithSuspense(<Settings updateContext={updateContext} />)}
+            </TabPanel>
+          </>
+        )}
+      </>
+    ) : null;
   };
 
   return (

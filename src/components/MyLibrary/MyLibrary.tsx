@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useCallback,
-  ReactNode,
-  useEffect,
-  ReactElement,
-} from 'react';
+import React, { useState, useCallback, useEffect, ReactElement } from 'react';
 
 import * as globStyles from '../../index.module.css';
 import { TextConstants } from '../../constants/TextConstants';
@@ -183,10 +177,6 @@ const MyLibrary: React.FC = () => {
     setShowDeleteConfirm(false);
   };
 
-  const renderError = (): ReactNode | null => {
-    return movError && <p className={globStyles['error-text']}>{movError}</p>;
-  };
-
   const renderConfirmModal = (): ReactElement | null => {
     return showDeleteConfirm ? (
       <AlertConfirmation
@@ -199,7 +189,7 @@ const MyLibrary: React.FC = () => {
     ) : null;
   };
 
-  const renderContent = (): ReactNode => {
+  const renderContent = (): ReactElement => {
     return (
       <>
         {lastSearchMovieCount > 0 && (
@@ -222,7 +212,7 @@ const MyLibrary: React.FC = () => {
           </>
         )}
         {renderConfirmModal()}
-        {renderError()}
+        {movError && <p className={globStyles['error-text']}>{movError}</p>}
         {movInfo ? <p>{movInfo}</p> : null}
       </>
     );

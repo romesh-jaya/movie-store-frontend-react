@@ -7,7 +7,7 @@ import * as globStyles from '../../index.module.css';
 import Spinner from '../UI/Spinner/Spinner';
 
 interface IProps {
-  children: React.ReactNode;
+  children: React.ReactElement;
 }
 
 const ProtectedRoute: React.FC<IProps> = (props) => {

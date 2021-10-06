@@ -3,7 +3,7 @@ import React, {
   useState,
   useEffect,
   useContext,
-  ReactNode,
+  ReactElement,
   useCallback,
   useRef,
 } from 'react';
@@ -145,7 +145,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
     }
   };
 
-  const renderLanguages = (): ReactNode => {
+  const renderLanguages = (): ReactElement => {
     return (
       <div className={globStyles['margin-b-20']}>
         <div className={globStyles['margin-b-10']}>Movie Languages:</div>
@@ -175,7 +175,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
     );
   };
 
-  const renderNonLanguages = (): ReactNode | null => {
+  const renderNonLanguages = (): ReactElement | null => {
     return user && user?.email && isAdmin(user.email) ? (
       <>
         <div className={globStyles['margin-b-20']}>

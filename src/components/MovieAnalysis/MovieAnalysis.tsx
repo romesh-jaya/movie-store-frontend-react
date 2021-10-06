@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactNode } from 'react';
+import React, { useState, useEffect, ReactElement } from 'react';
 import { Bar } from 'react-chartjs-2';
 
 import * as globStyles from '../../index.module.css';
@@ -98,11 +98,11 @@ const MovieAnalysis: React.FC = () => {
     loadLanguages();
   }, []);
 
-  const renderError = (): ReactNode | null => {
+  const renderError = (): ReactElement | null => {
     return error ? <p className={globStyles['error-text']}>{error}</p> : null;
   };
 
-  const renderContent = (): ReactNode | null => {
+  const renderContent = (): ReactElement | null => {
     return !error ? (
       <>
         <h2 className={globStyles['margin-b-20']}>Library Movie Analysis</h2>

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, ReactElement } from 'react';
 import { Button, Typography } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import { ExportToCsv } from 'export-to-csv';
@@ -200,7 +200,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     }
   };
 
-  const renderButtons = (): ReactNode => (
+  const renderButtons = (): ReactElement => (
     <div className={styles['button-div']}>
       <span className={globStyles['right-spacer']}>
         <Button

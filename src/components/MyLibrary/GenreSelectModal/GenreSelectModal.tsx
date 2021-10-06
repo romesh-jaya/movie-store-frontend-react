@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useEffect, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -83,7 +83,7 @@ const GenreSelectModal: React.FC<IProps> = (props) => {
     });
   };
 
-  const renderGenres = (): ReactNode => {
+  const renderGenres = (): ReactElement => {
     const contClass = isDesktopWidth
       ? styles['genre-container-3']
       : styles['genre-container-2'];
