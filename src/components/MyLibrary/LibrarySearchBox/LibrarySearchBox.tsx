@@ -129,14 +129,18 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     setErrorTextSearchYear('');
   };
 
-  const handleChangeSearchType = (searchType: string): void => {
-    setSearchType(searchType);
+  const clearYearFields = () => {
     setSearchYearInput('');
     setSearchYearExact(undefined);
     setSearchYearFrom(undefined);
     setSearchYearTo(undefined);
     setSearchYearIsBetweenValuesIncomplete(false);
     setErrorTextSearchYear('');
+  };
+
+  const handleChangeSearchType = (searchType: string): void => {
+    setSearchType(searchType);
+    clearYearFields();
   };
 
   const handleChangeSearchLanguage = (language: string): void => {
@@ -146,18 +150,9 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   const clearFields = (): void => {
     setSearchTitle('');
     setSearchType('');
-    setSearchYearInput('');
     setSearchGenres([]);
-    setSearchYearExact(undefined);
-    setSearchYearFrom(undefined);
-    setSearchYearTo(undefined);
-    setSearchYearIsBetweenValuesIncomplete(false);
-    setErrorTextSearchYear('');
+    clearYearFields();
     setSearchLanguage('');
-  };
-
-  const onSearchClicked = (): void => {
-    newSearch();
   };
 
   const onResetClicked = (): void => {
@@ -206,7 +201,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
         <Button
           id="search-button"
           disabled={!isSearchTextValid()}
-          onClick={onSearchClicked}
+          onClick={newSearch}
           color="primary"
           variant="contained"
           autoFocus

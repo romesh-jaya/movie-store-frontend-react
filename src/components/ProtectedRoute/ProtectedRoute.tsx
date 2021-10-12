@@ -32,7 +32,7 @@ const ProtectedRoute: React.FC<IProps> = (props) => {
     console.log('Sign in success', user && user?.email);
   }
 
-  return <>{isAuthenticated ? children : <Redirect to="/login" />}</>;
+  return isAuthenticated ? children : <Redirect to="/login" />;
 };
 
 export default ProtectedRoute;

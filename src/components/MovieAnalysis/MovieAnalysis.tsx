@@ -23,11 +23,11 @@ const MovieAnalysis: React.FC = () => {
   const [chartDataLib, setChartDataLib] = useState<any>();
   const [chartDataSearch, setChartDataSearch] = useState<any>();
 
-  const setChartDataInternalLib = (analData: any[]): void => {
+  const setChartDataInternalLib = (analysisData: any[]): void => {
     const genres: string[] = [];
     const genreCounts: number[] = [];
 
-    analData.forEach((dataOne) => {
+    analysisData.forEach((dataOne) => {
       genres.push(dataOne.genre);
       genreCounts.push(dataOne.count);
     });
@@ -47,11 +47,11 @@ const MovieAnalysis: React.FC = () => {
     setChartDataLib(data);
   };
 
-  const setChartDataInternalSearch = (analData: any[]): void => {
+  const setChartDataInternalSearch = (analysisData: any[]): void => {
     const genres: string[] = [];
     const genreCounts: number[] = [];
 
-    analData.forEach((dataOne) => {
+    analysisData.forEach((dataOne) => {
       genres.push(dataOne.genre);
       genreCounts.push(dataOne.count);
     });
@@ -82,7 +82,6 @@ const MovieAnalysis: React.FC = () => {
         const resSearch = await axios.get(
           `${process.env.REACT_APP_NODE_SERVER}/movies/analysis/search`
         );
-        setIsLoading(false);
         if (response.data) {
           setChartDataInternalLib(response.data);
         }
@@ -90,44 +89,41 @@ const MovieAnalysis: React.FC = () => {
           setChartDataInternalSearch(resSearch.data);
         }
       } catch (err) {
-        setIsLoading(false);
         setError(`${TextConstants.CHARTLOADERROR}: ${err}`);
+      } finally {
+        setIsLoading(false);
       }
     }
 
     loadLanguages();
   }, []);
 
-  const renderError = (): ReactElement | null => {
-    return error ? <p className={globStyles['error-text']}>{error}</p> : null;
-  };
-
   const renderContent = (): ReactElement | null => {
     return !error ? (
       <>
         <h2 className={globStyles['margin-b-20']}>Library Movie Analysis</h2>
         <p>Below chart displays top 5 genres of all titles in the library.</p>
-        {chartDataLib ? (
+        {chartDataLib && (
           <Bar
             data={chartDataLib}
             height={500}
             width={500}
             options={CHART_OPTIONS}
           />
-        ) : null}
+        )}
         <h2 className={globStyles['margin-b-20']}>Search Movie Analysis</h2>
         <p>
           Below chart displays top 5 genres of all titles that users viewed
           details of, the past month.
         </p>
-        {chartDataSearch ? (
+        {chartDataSearch && (
           <Bar
             data={chartDataSearch}
             height={500}
             width={500}
             options={CHART_OPTIONS}
           />
-        ) : null}
+        )}
       </>
     ) : null;
   };
@@ -135,7 +131,7 @@ const MovieAnalysis: React.FC = () => {
   return (
     <>
       {isLoading ? <MovieLoadingSkeleton /> : renderContent()}
-      {renderError()}
+      {error && <p className={globStyles['error-text']}>{error}</p>}
     </>
   );
 };

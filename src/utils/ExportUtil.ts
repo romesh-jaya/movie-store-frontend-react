@@ -4,31 +4,36 @@ import IMovieLibrary from '../interfaces/IMovieLibrary';
 import INameValue from '../interfaces/INameValue';
 
 export function formatExportData(exportDataVal: IMovieLibrary[]) {
-  const keys = Object.keys(exportDataVal[0]);
-  const keysMinusId = keys.filter((key) => key !== 'id');
-  // convert keys to Title case
-  const formattedKeys: INameValue[] = keysMinusId.map((key) => ({
-    name: key,
-    value: startCase(key),
-  }));
+  // Use the keys of the first data row as the column headings
+  const columnHeadings = Object.keys(exportDataVal[0]);
+  //Remove id column as its not useful to us
+  const columnHeadingsMinusId = columnHeadings.filter(
+    (heading) => heading !== 'id'
+  );
 
-  // create new data with capitalized keys
+  // convert keys to Title case
+  const formattedHeadings: INameValue[] = columnHeadingsMinusId.map(
+    (heading) => ({
+      name: heading,
+      value: startCase(heading),
+    })
+  );
+
   const capitalizedKeyData = exportDataVal.map((row) => {
     const retVal: any = {};
-    formattedKeys.forEach((key) => {
-      retVal[key.value] = row[key.name as keyof IMovieLibrary];
+    formattedHeadings.forEach((key) => {
+      const val = row[key.name as keyof IMovieLibrary];
+      // convert array types to semicolon seperated
+      if (Array.isArray(val)) {
+        // create same data rows, but with capitalized keys
+        retVal[key.value] = val.join(';');
+      } else {
+        // create same data rows, but with capitalized keys
+        retVal[key.value] = val;
+      }
     });
     return retVal;
   });
 
-  const formattedData = capitalizedKeyData.map((row) => {
-    // convert array types to semicolon seperated
-    const newData = {
-      ...row,
-      Genre: row.Genre.join(';'),
-      Languages: row.Languages.join(';'),
-    };
-    return newData;
-  });
-  return formattedData;
+  return capitalizedKeyData;
 }

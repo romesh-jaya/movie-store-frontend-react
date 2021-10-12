@@ -1,10 +1,4 @@
-import React, {
-  useContext,
-  useState,
-  useEffect,
-  useRef,
-  ReactElement,
-} from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
@@ -68,8 +62,8 @@ const Settings: React.FC<IProps> = (props: IProps) => {
       return;
     }
 
-    const formattedArray = formatLanguages();
-    if (!formattedArray.length) {
+    const formattedLangArray = formatLanguages();
+    if (!formattedLangArray.length) {
       setLanguagesEnteredError(TextConstants.NOLANGENTERED);
       return;
     }
@@ -81,7 +75,7 @@ const Settings: React.FC<IProps> = (props: IProps) => {
       },
       {
         name: 'languages',
-        value: formattedArray.join(','),
+        value: formattedLangArray.join(','),
       },
     ];
 
@@ -93,13 +87,13 @@ const Settings: React.FC<IProps> = (props: IProps) => {
       updateContext(dataSave);
       // this var is to avoid the warning 'can't perform a react state update on an unmounted component.'
       if (isMountedRef.current) {
-        setIsLoading(false);
         setSettingsChanged(false);
         setSettingsError('');
       }
     } catch (error) {
-      setIsLoading(false);
       setSettingsError(`${TextConstants.MOVIESAVESETTINGS}: ${error}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -116,13 +110,13 @@ const Settings: React.FC<IProps> = (props: IProps) => {
         const response = await axios.get(
           `${process.env.REACT_APP_NODE_SERVER}/settings/languages`
         );
-        setIsLoading(false);
         if (response.data.value) {
           setLanguagesEntered(response.data.value);
         }
       } catch {
-        setIsLoading(false);
         setSettingsError(TextConstants.CANNOTCONNECTSERVER);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -132,12 +126,6 @@ const Settings: React.FC<IProps> = (props: IProps) => {
       isMountedRef.current = false;
     };
   }, [apiKeySetting]);
-
-  const renderError = (): ReactElement | null => {
-    return settingsError ? (
-      <p className={globStyles['error-text']}>{settingsError}</p>
-    ) : null;
-  };
 
   return (
     <>
@@ -165,11 +153,11 @@ const Settings: React.FC<IProps> = (props: IProps) => {
           helperText={languagesEnteredError}
         />
       </form>
-      {isLoading ? (
+      {isLoading && (
         <div className={styles['spinner-div']}>
           <Spinner />
         </div>
-      ) : null}
+      )}
       <Button
         variant="outlined"
         color="primary"
@@ -178,7 +166,9 @@ const Settings: React.FC<IProps> = (props: IProps) => {
       >
         Save
       </Button>
-      {renderError()}
+      {settingsError && (
+        <p className={globStyles['error-text']}>{settingsError}</p>
+      )}
     </>
   );
 };
