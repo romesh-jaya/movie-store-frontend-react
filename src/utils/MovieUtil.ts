@@ -6,7 +6,9 @@ export const getMovieDetails = async (
   searchURL: string,
   apiKey: string
 ): Promise<IMovieSearch> => {
-  const res = await axios.get(`${searchURL}?apikey=${apiKey}&i=${movieIMDBId}`);
+  const res = await axios.get(
+    `${searchURL}?apikey=${apiKey}&i=${movieIMDBId}&plot=full`
+  );
   const movie = res.data;
   const genres = movie.Genre ? movie.Genre.split(', ') : 'None';
   return {
