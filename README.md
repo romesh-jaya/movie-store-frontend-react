@@ -19,6 +19,7 @@ https://github.com/romesh-jaya/movie-store-frontend-react/blob/master/Quick%20St
 Tech Stack used:
 
 - Webpack
+- Typescript
 - React Skeletons
 - REST API with Axios
 - Lazy loading of code
@@ -32,6 +33,7 @@ Tech Stack used:
 - chart-js
 - Side-drawer
 - Cypress e2e testing
+- MERN
 
 This project uses OMDB API to search for movie data. The latter has a 1,000 daily API call limit. Another free alternative might be TMDB: https://developers.themoviedb.org/3/getting-started
 
@@ -41,6 +43,8 @@ To deploy to Firebase, first perform a build, then run the following command fro
 firebase deploy --only hosting
 
 .env file is required for deployment. The webpack.env is required for local testing.
+
+Note: MongoDB automatically goes to inactive state after a period of inactivity, and needs restarting manually.
 
 ## Available Scripts
 

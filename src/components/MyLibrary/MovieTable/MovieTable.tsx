@@ -57,7 +57,7 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
       : undefined;
   };
 
-  const getOptions = (): Options<IMovieLibrary> => {
+  const getOptions = (): Options => {
     const retVal = {
       showTitle: false,
       search: false,
