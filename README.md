@@ -1,12 +1,23 @@
+# DVD Rental shop with client and Admin UI (React)
+
 Movie Shop is an app that can be used for managing a movie library in a DVD rental store. Functionality is divided into 3 main categories:
-1.	Adding movies to the library
-2.	Browsing the titles available in the library
-3.	Configuring settings 
+
+1. Adding movies to the library
+2. Browsing the titles available in the library
+3. Configuring settings
 
 The app also allows potential customers to login and browse the available titles.
 
+The app is hosted here:
+https://movie-shop-dev.web.app/
 
-Tech Stack used: 
+Quick start guide can be found here:
+https://github.com/romesh-jaya/movie-store-frontend-react/blob/master/Quick%20Start%20Guide.pdf?raw=true
+
+## Technical details
+
+Tech Stack used:
+
 - Webpack
 - React Skeletons
 - REST API with Axios
@@ -24,10 +35,7 @@ Tech Stack used:
 
 This project uses OMDB API to search for movie data. The latter has a 1,000 daily API call limit. Another free alternative might be TMDB: https://developers.themoviedb.org/3/getting-started
 
-The Dev app is hosted here:
-https://movie-shop-dev.web.app/
-
-This app communicates with the backend - which is available in a separate git project: movie-shop-backend. 
+This app communicates with the backend - which is available in a separate git project: movie-shop-backend.
 
 To deploy to Firebase, first perform a build, then run the following command from the terminal:
 firebase deploy --only hosting
