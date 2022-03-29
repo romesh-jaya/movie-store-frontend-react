@@ -1,1 +1,1 @@
-export const SEARCH_URL = import.meta.env.REACT_APP_SEARCH_URL || '';
+export const SEARCH_URL = import.meta.env.VITE_SEARCH_URL || '';

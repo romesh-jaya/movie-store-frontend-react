@@ -40,7 +40,7 @@ const MyLibrary: React.FC = () => {
 
       try {
         const response = await axios.get(
-          `${import.meta.env.REACT_APP_NODE_SERVER}/movies`,
+          `${import.meta.env.VITE_NODE_SERVER}/movies`,
           { params: newSearchInfo }
         );
 
@@ -84,7 +84,7 @@ const MyLibrary: React.FC = () => {
       setMovError('');
       setIsLoading(true);
       try {
-        await axios.delete(`${import.meta.env.REACT_APP_NODE_SERVER}/movies`, {
+        await axios.delete(`${import.meta.env.VITE_NODE_SERVER}/movies`, {
           params: { idArray },
         });
         setShowDeleteConfirm(false);
@@ -113,7 +113,7 @@ const MyLibrary: React.FC = () => {
 
     try {
       const response = await axios.get(
-        `${import.meta.env.REACT_APP_NODE_SERVER}/movies`,
+        `${import.meta.env.VITE_NODE_SERVER}/movies`,
         { params: newSearchInfo }
       );
       if (!response.data.movies.movies.length) {

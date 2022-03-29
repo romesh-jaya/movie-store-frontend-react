@@ -81,7 +81,7 @@ const Settings: React.FC<IProps> = (props: IProps) => {
 
     try {
       setIsLoading(true);
-      await axios.patch(`${import.meta.env.REACT_APP_NODE_SERVER}/settings`, {
+      await axios.patch(`${import.meta.env.VITE_NODE_SERVER}/settings`, {
         data: dataSave,
       });
       updateContext(dataSave);
@@ -108,7 +108,7 @@ const Settings: React.FC<IProps> = (props: IProps) => {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          `${import.meta.env.REACT_APP_NODE_SERVER}/settings/languages`
+          `${import.meta.env.VITE_NODE_SERVER}/settings/languages`
         );
         if (response.data.value) {
           setLanguagesEntered(response.data.value);

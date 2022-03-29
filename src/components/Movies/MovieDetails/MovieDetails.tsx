@@ -99,12 +99,12 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
           };
 
           const response = await axios.post(
-            `${import.meta.env.REACT_APP_NODE_SERVER}/movies`,
+            `${import.meta.env.VITE_NODE_SERVER}/movies`,
             movieDetails
           );
           setMovID(response.data.id);
         } else {
-          await axios.patch(`${import.meta.env.REACT_APP_NODE_SERVER}/movies`, {
+          await axios.patch(`${import.meta.env.VITE_NODE_SERVER}/movies`, {
             id: movID,
             count: movieTotal,
             languages: selectedLanguages,
@@ -137,7 +137,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
         setSelectedMovie(movie);
         const response = await axios.get(
           `${
-            import.meta.env.REACT_APP_NODE_SERVER
+            import.meta.env.VITE_NODE_SERVER
           }/movies/imdbid/${selectedMovieIMDBId}`
         );
         if (response) {

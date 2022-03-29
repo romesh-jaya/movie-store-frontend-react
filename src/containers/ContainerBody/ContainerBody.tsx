@@ -59,7 +59,7 @@ const ContainerBody: React.FC = () => {
     async function loadSettings(): Promise<void> {
       try {
         const responseApiKey = await axios.get(
-          `${import.meta.env.REACT_APP_NODE_SERVER}/settings/apiKey`
+          `${import.meta.env.VITE_NODE_SERVER}/settings/apiKey`
         );
         if (responseApiKey.data.value) {
           console.log('Retrieved API key.');
@@ -68,7 +68,7 @@ const ContainerBody: React.FC = () => {
         }
 
         const responseLang = await axios.get(
-          `${import.meta.env.REACT_APP_NODE_SERVER}/settings/languages`
+          `${import.meta.env.VITE_NODE_SERVER}/settings/languages`
         );
 
         const settings: INameValue[] = [

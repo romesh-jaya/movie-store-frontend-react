@@ -11,7 +11,7 @@ import Login from './components/Pages/Login';
 import ErrorPage from './components/Pages/Error';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
-const SERVER_PATH = import.meta.env.REACT_APP_NODE_SERVER || '';
+const SERVER_PATH = import.meta.env.VITE_NODE_SERVER || '';
 
 const theme = createTheme({
   palette: {

@@ -7,9 +7,9 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import ErrorBoundary from './hoc/ErrorBoundary/ErrorBoundary';
 
-const DOMAIN = import.meta.env.REACT_APP_AUTH0_DOMAIN || '';
-const CLIENT_ID = import.meta.env.REACT_APP_AUTH0_CLIENT_ID || '';
-const AUDIENCE = import.meta.env.REACT_APP_AUTH0_AUDIENCE;
+const DOMAIN = import.meta.env.VITE_AUTH0_DOMAIN || '';
+const CLIENT_ID = import.meta.env.VITE_AUTH0_CLIENT_ID || '';
+const AUDIENCE = import.meta.env.VITE_AUTH0_AUDIENCE;
 
 ReactDOM.render(
   <ErrorBoundary>
