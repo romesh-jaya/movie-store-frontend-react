@@ -1,6 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
 import styles from './movie.module.css';
 
 interface IProps {
@@ -30,13 +28,6 @@ const Movie: React.FC<IProps> = (props) => {
       </div>
     </div>
   );
-};
-
-Movie.propTypes = {
-  title: PropTypes.string.isRequired,
-  year: PropTypes.string.isRequired,
-  body: PropTypes.string.isRequired,
-  clicked: PropTypes.func.isRequired,
 };
 
 export default Movie;
