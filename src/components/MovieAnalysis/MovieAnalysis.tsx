@@ -77,10 +77,10 @@ const MovieAnalysis: React.FC = () => {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          `${process.env.REACT_APP_NODE_SERVER}/movies/analysis/lib`
+          `${import.meta.env.REACT_APP_NODE_SERVER}/movies/analysis/lib`
         );
         const resSearch = await axios.get(
-          `${process.env.REACT_APP_NODE_SERVER}/movies/analysis/search`
+          `${import.meta.env.REACT_APP_NODE_SERVER}/movies/analysis/search`
         );
         if (response.data) {
           setChartDataInternalLib(response.data);

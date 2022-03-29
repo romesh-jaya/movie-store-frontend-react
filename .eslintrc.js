@@ -39,6 +39,7 @@ module.exports = {
     'arrow-body-style': 0,
     'react/display-name': 'off',
     'no-var': 'error',
+    'react/no-unknown-property': 'off',
   },
   settings: {
     react: {

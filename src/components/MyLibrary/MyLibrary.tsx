@@ -40,7 +40,7 @@ const MyLibrary: React.FC = () => {
 
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_NODE_SERVER}/movies`,
+          `${import.meta.env.REACT_APP_NODE_SERVER}/movies`,
           { params: newSearchInfo }
         );
 
@@ -84,7 +84,7 @@ const MyLibrary: React.FC = () => {
       setMovError('');
       setIsLoading(true);
       try {
-        await axios.delete(`${process.env.REACT_APP_NODE_SERVER}/movies`, {
+        await axios.delete(`${import.meta.env.REACT_APP_NODE_SERVER}/movies`, {
           params: { idArray },
         });
         setShowDeleteConfirm(false);
@@ -113,7 +113,7 @@ const MyLibrary: React.FC = () => {
 
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_NODE_SERVER}/movies`,
+        `${import.meta.env.REACT_APP_NODE_SERVER}/movies`,
         { params: newSearchInfo }
       );
       if (!response.data.movies.movies.length) {
@@ -194,7 +194,7 @@ const MyLibrary: React.FC = () => {
       <>
         {lastSearchMovieCount > 0 && (
           <>
-            <MovieTable
+            {/*             <MovieTable
               lastSearchMovieCount={lastSearchMovieCount}
               currentPage={currentPage}
               pageSize={pageSize}
@@ -203,7 +203,7 @@ const MyLibrary: React.FC = () => {
               handleChangePage={handleChangePage}
               handleClickTitle={handleClickTitle}
               handleChangeRowsPerPage={handleChangeRowsPerPage}
-            />
+            /> */}
             <MovieDetails
               selectedMovieIMDBId={selectedMovieIMDBId}
               openDrawerValue={openDrawerValue}

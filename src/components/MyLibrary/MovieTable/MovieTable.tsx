@@ -1,4 +1,4 @@
-import React from 'react';
+/* import React from 'react';
 import MaterialTable, { Action, Column, Options } from 'material-table';
 import { Chip, TablePagination, useMediaQuery } from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
@@ -169,3 +169,4 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
 };
 
 export default MovieTable;
+ */

@@ -13,7 +13,7 @@ const env = dotenv.config({
   path: path.resolve(process.cwd(), 'webpack.env'),
 }).parsed;
 const envKeys = Object.keys(env).reduce((prev, next) => {
-  prev[`process.env.${next}`] = JSON.stringify(env[next]);
+  prev[`import.meta.env.${next}`] = JSON.stringify(env[next]);
   return prev;
 }, {});
 
