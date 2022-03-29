@@ -18,13 +18,13 @@ https://github.com/romesh-jaya/movie-store-frontend-react/blob/master/Quick%20St
 
 Tech Stack used:
 
-- Webpack
+- Vite
 - Typescript
 - React Skeletons
 - REST API with Axios
 - Lazy loading of code
 - Material UI
-- React material-table
+- React material-table (@material-table/core had to be used with Vite)
 - Pagination
 - React Context
 - Auth0 Authentication
