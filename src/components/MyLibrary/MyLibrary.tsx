@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, ReactElement } from 'react';
 
-import * as globStyles from '../../index.module.css';
+import globStyles from '../../index.module.css';
 import { TextConstants } from '../../constants/TextConstants';
 import axios from '../../axios';
 import MovieLoadingSkeleton from '../Movies/MovieLoadingSkeleton';

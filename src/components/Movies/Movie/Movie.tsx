@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import * as styles from './movie.module.css';
+import styles from './movie.module.css';
 
 interface IProps {
   title: string;

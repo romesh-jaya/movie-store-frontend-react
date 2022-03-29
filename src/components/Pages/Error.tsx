@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as globStyles from '../../index.module.css';
+import globStyles from '../../index.module.css';
 
 const ErrorPage: React.FC = () => {
   return (

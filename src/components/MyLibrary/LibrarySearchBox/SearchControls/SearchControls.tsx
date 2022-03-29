@@ -11,7 +11,7 @@ import HelpIcon from '@material-ui/icons/Help';
 import SettingsContext from '../../../../context/SettingsContext';
 import NumberRangeInput from '../../../Controls/Input/NumberRangeInput/NumberRangeInput';
 import styles from '../librarySearchBox.module.css';
-import * as globStyles from '../../../../index.module.css';
+import globStyles from '../../../../index.module.css';
 import { MovieType } from '../../../../enums/MovieType';
 
 interface IProps {

@@ -3,8 +3,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 import Button from '@material-ui/core/Button';
 import { Redirect, useLocation } from 'react-router';
 
-import * as globStyles from '../../index.module.css';
-import * as styles from './login.module.css';
+import globStyles from '../../index.module.css';
+import styles from './login.module.css';
 import Spinner from '../UI/Spinner/Spinner';
 
 // Note: the Auth0 hosted Universal classic login screen has been customized in order to pass a custom

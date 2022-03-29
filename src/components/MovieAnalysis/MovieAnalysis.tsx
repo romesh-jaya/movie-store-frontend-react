@@ -1,7 +1,7 @@
 import React, { useState, useEffect, ReactElement } from 'react';
 import { Bar } from 'react-chartjs-2';
 
-import * as globStyles from '../../index.module.css';
+import globStyles from '../../index.module.css';
 import axios from '../../axios';
 import { TextConstants } from '../../constants/TextConstants';
 import MovieLoadingSkeleton from '../Movies/MovieLoadingSkeleton';

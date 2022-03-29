@@ -1,7 +1,7 @@
 import React from 'react';
 
 import logo from '../../assets/img/movie.png';
-import * as styles from './containerHeader.module.css';
+import styles from './containerHeader.module.css';
 
 const ContainerHeader: React.FC = () => {
   return (

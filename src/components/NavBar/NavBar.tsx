@@ -6,8 +6,8 @@ import { Button } from '@material-ui/core';
 import { useAuth0 } from '@auth0/auth0-react';
 
 import { isAdmin } from '../../utils/AuthUtil';
-import * as styles from './navbar.module.css';
-import * as globStyles from '../../index.module.css';
+import styles from './navbar.module.css';
+import globStyles from '../../index.module.css';
 
 interface IProps {
   tabIndex: number;

@@ -2,8 +2,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 import React, { useRef } from 'react';
 import { Redirect } from 'react-router';
 
-import * as styles from './protectedRoute.module.css';
-import * as globStyles from '../../index.module.css';
+import styles from './protectedRoute.module.css';
+import globStyles from '../../index.module.css';
 import Spinner from '../UI/Spinner/Spinner';
 
 interface IProps {
