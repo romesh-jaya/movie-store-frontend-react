@@ -1,5 +1,5 @@
-/* import React from 'react';
-import MaterialTable, { Action, Column, Options } from 'material-table';
+import React from 'react';
+import MaterialTable, { Action, Column, Options } from '@material-table/core';
 import { Chip, TablePagination, useMediaQuery } from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
 
@@ -57,7 +57,7 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
       : undefined;
   };
 
-  const getOptions = (): Options => {
+  const getOptions = (): Options<IMovieLibrary> => {
     const retVal = {
       showTitle: false,
       search: false,
@@ -158,7 +158,7 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
           page={currentPage - 1}
           onPageChange={handleChangePage}
           rowsPerPage={pageSize}
-          onChangeRowsPerPage={(
+          onRowsPerPageChange={(
             event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
           ) => handleChangeRowsPerPage(parseInt(event.target.value, 10))}
           rowsPerPageOptions={isDesktopWidth ? [10, 25, 50] : []}
@@ -169,4 +169,3 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
 };
 
 export default MovieTable;
- */

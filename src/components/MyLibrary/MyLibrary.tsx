@@ -194,7 +194,7 @@ const MyLibrary: React.FC = () => {
       <>
         {lastSearchMovieCount > 0 && (
           <>
-            {/*             <MovieTable
+            <MovieTable
               lastSearchMovieCount={lastSearchMovieCount}
               currentPage={currentPage}
               pageSize={pageSize}
@@ -203,7 +203,7 @@ const MyLibrary: React.FC = () => {
               handleChangePage={handleChangePage}
               handleClickTitle={handleClickTitle}
               handleChangeRowsPerPage={handleChangeRowsPerPage}
-            /> */}
+            />
             <MovieDetails
               selectedMovieIMDBId={selectedMovieIMDBId}
               openDrawerValue={openDrawerValue}
