@@ -9,10 +9,6 @@
 
 .nowrap-div {
   display: inline-block;
-  *display: inline;
-  /*for IE 7 */
-  *zoom: 1;
-  /*for IE 7 */
   vertical-align: top;
 }
 

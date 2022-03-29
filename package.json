@@ -40,7 +40,8 @@
     "start": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
-    "lint": "eslint --fix ./src/**/*"
+    "lint": "eslint --fix ./src/**/*",
+    "deploy": "firebase deploy --only hosting"
   },
   "eslintConfig": {
     "extends": "react-app"
