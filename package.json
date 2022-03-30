@@ -38,7 +38,7 @@
   },
   "scripts": {
     "start": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "serve": "vite preview",
     "lint": "eslint --fix ./src/**/*",
     "deploy": "firebase deploy --only hosting",
