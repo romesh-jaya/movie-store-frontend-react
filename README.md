@@ -1,4 +1,4 @@
-# DVD Rental shop with client and Admin UI (React)
+# DVD Rental shop with client and Admin UI (React with Vite)
 
 Movie Shop is an app that can be used for managing a movie library in a DVD rental store. Functionality is divided into 3 main categories:
 
