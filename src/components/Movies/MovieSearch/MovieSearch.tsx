@@ -182,15 +182,17 @@ const MovieSearch: React.FC = () => {
     );
   };
 
-  const renderError = (): ReactElement | null => {
-    return movError ? (
-      <p className={globStyles['error-text']}>{movError}</p>
-    ) : null;
+  const renderError = (): ReactElement => {
+    return <p className={globStyles['error-text']}>{movError}</p>;
   };
 
   const renderContent = (): ReactElement | null => {
-    return !isLoading ? (
-      <div>
+    if (isLoading) {
+      return null;
+    }
+
+    return (
+      <>
         <div className={styles['search-input']}>
           <span className={globStyles['margin-r-30']}>
             <TextField
@@ -209,28 +211,29 @@ const MovieSearch: React.FC = () => {
             Search
           </Button>
         </div>
-        {wasLastSearchSuccess ? (
+        {wasLastSearchSuccess && (
           <Pagination
             count={10}
             onChange={onPageNoChanged}
             page={currentPage}
           />
-        ) : null}
+        )}
         {renderMovies()}
-        <MovieDetails
-          selectedMovieIMDBId={selectedMovieIMDBId}
-          openDrawerValue={openDrawerValue}
-          closeDrawer={handleDrawerCloseFromDrawer}
-        />
+        {openDrawerValue && (
+          <MovieDetails
+            selectedMovieIMDBId={selectedMovieIMDBId}
+            closeDrawer={handleDrawerCloseFromDrawer}
+          />
+        )}
         <section>
-          {!selectedMovieIMDBId && !movError && movies.length ? (
+          {!selectedMovieIMDBId && !movError && movies.length && (
             <p>{TextConstants.CLICKTOSEEDETAILS}</p>
-          ) : null}
+          )}
         </section>
-        {renderError()}
-        {movInfo ? <p>{movInfo}</p> : null}
-      </div>
-    ) : null;
+        {movError && renderError()}
+        {movInfo && <p>{movInfo}</p>}
+      </>
+    );
   };
 
   return (

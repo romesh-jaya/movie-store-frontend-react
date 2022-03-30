@@ -99,7 +99,11 @@ const MovieAnalysis: React.FC = () => {
   }, []);
 
   const renderContent = (): ReactElement | null => {
-    return !error ? (
+    if (error) {
+      return null;
+    }
+
+    return (
       <>
         <h2 className={globStyles['margin-b-20']}>Library Movie Analysis</h2>
         <p>Below chart displays top 5 genres of all titles in the library.</p>
@@ -125,7 +129,7 @@ const MovieAnalysis: React.FC = () => {
           />
         )}
       </>
-    ) : null;
+    );
   };
 
   return (

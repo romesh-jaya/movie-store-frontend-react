@@ -177,8 +177,8 @@ const MyLibrary: React.FC = () => {
     setShowDeleteConfirm(false);
   };
 
-  const renderConfirmModal = (): ReactElement | null => {
-    return showDeleteConfirm ? (
+  const renderConfirmModal = (): ReactElement => {
+    return (
       <AlertConfirmation
         message="Are you sure you wish to delete these movies?"
         title="Delete"
@@ -186,7 +186,7 @@ const MyLibrary: React.FC = () => {
         onConfirmed={deleteMovies}
         onCancelled={onCancelledDelete}
       />
-    ) : null;
+    );
   };
 
   const renderContent = (): ReactElement => {
@@ -204,16 +204,17 @@ const MyLibrary: React.FC = () => {
               handleClickTitle={handleClickTitle}
               handleChangeRowsPerPage={handleChangeRowsPerPage}
             />
-            <MovieDetails
-              selectedMovieIMDBId={selectedMovieIMDBId}
-              openDrawerValue={openDrawerValue}
-              closeDrawer={handleDrawerCloseFromDrawer}
-            />
+            {openDrawerValue && (
+              <MovieDetails
+                selectedMovieIMDBId={selectedMovieIMDBId}
+                closeDrawer={handleDrawerCloseFromDrawer}
+              />
+            )}
           </>
         )}
-        {renderConfirmModal()}
+        {showDeleteConfirm && renderConfirmModal()}
         {movError && <p className={globStyles['error-text']}>{movError}</p>}
-        {movInfo ? <p>{movInfo}</p> : null}
+        {movInfo && <p>{movInfo}</p>}
       </>
     );
   };

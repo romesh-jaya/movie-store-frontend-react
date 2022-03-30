@@ -48,9 +48,11 @@ const Login: React.FC = () => {
   return !isAuthenticated ? (
     <>
       <div className={globStyles['margin-t-20']}>
-        {!isAdminLogin
-          ? 'Welcome! Sign in to browse movies and TV series at Ultra Movie Shop'
-          : null}
+        {!isAdminLogin && (
+          <p>
+            Welcome! Sign in to browse movies and TV series at Ultra Movie Shop
+          </p>
+        )}
       </div>
       <div className={styles['login-div']}>
         <Button

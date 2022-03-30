@@ -101,7 +101,11 @@ const ContainerBody: React.FC = () => {
   };
 
   const renderContent = (): ReactElement | null => {
-    return !isLoading && !settingsError ? (
+    if (isLoading || settingsError) {
+      return null;
+    }
+
+    return (
       <>
         <NavBar tabIndex={tabIndex} handleTabChange={handleTabChange} />
         <TabPanel value={tabIndex} index={0}>
@@ -127,7 +131,7 @@ const ContainerBody: React.FC = () => {
           </>
         )}
       </>
-    ) : null;
+    );
   };
 
   return (

@@ -176,7 +176,11 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
   };
 
   const renderNonLanguages = (): ReactElement | null => {
-    return user && user?.email && isAdmin(user.email) ? (
+    if (!user || !user?.email || !isAdmin(user.email)) {
+      return null;
+    }
+
+    return (
       <>
         <div className={globStyles['margin-b-20']}>
           <span className={globStyles['margin-r-10']}>
@@ -223,7 +227,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
           </Button>
         </div>
       </>
-    ) : null;
+    );
   };
 
   return (

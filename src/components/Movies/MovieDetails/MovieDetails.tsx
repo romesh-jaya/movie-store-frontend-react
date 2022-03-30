@@ -25,12 +25,11 @@ import { isValidUrl } from '../../../utils/UrlUtil';
 
 interface IProps {
   selectedMovieIMDBId: string;
-  openDrawerValue: boolean;
   closeDrawer: () => void;
 }
 
 const MovieDetails: React.FC<IProps> = (props: IProps) => {
-  const { selectedMovieIMDBId, closeDrawer, openDrawerValue } = props;
+  const { selectedMovieIMDBId, closeDrawer } = props;
   const [movieTotalInitial, setMovieTotalInitial] = useState(0);
   const [movieLoading, setMovieLoading] = useState(false);
   const [movError, SetMovError] = useState('');
@@ -127,8 +126,6 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
   // Perform init actions
   useEffect(() => {
     async function fetchData(): Promise<void> {
-      setMovieLoading(true);
-
       try {
         const movie = await getMovieDetails(
           selectedMovieIMDBId,
@@ -150,11 +147,9 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
           );
           setMovID(response.data.id);
           SetMovError('');
-          setMovieLoading(false);
         }
       } catch (error) {
         SetMovError(`${TextConstants.MOVIELOADERRORLIB}: ${error}`);
-        setMovieLoading(false);
       }
     }
 
@@ -171,13 +166,13 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
 
     const heading =
       selectedMovie.type === MovieType.TvSeries ? '(TV series)' : '(Movie)';
-    const image = isValidUrl(selectedMovie.mediaURL) ? (
+    const image = isValidUrl(selectedMovie.mediaURL) && (
       <img
         src={selectedMovie.mediaURL}
         alt={selectedMovie.title}
         height={300}
       />
-    ) : null;
+    );
 
     let borderBoxStyle = movieTotalInitial
       ? styles['movie-present']
@@ -205,11 +200,11 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
             </div>
             <div className={styles['image-container']}>{image}</div>
           </div>
-          {movieLoading ? (
+          {movieLoading && (
             <div className={styles['spinner-div']}>
               <Spinner />
             </div>
-          ) : null}
+          )}
           <MovieDetailsInput
             languagesInitial={languagesInitial}
             movieTotalInitial={movieTotalInitial}
@@ -232,7 +227,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
   return (
     <Drawer
       anchor="right"
-      open={openDrawerValue}
+      open
       onClose={handleDrawerToggle}
       onKeyDown={handleDrawerToggleKeyDown}
       classes={{
@@ -241,9 +236,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
     >
       <>
         {!movError && renderContent()}
-        {movError ? (
-          <p className={globStyles['error-text']}>{movError}</p>
-        ) : null}
+        {movError && <p className={globStyles['error-text']}>{movError}</p>}
       </>
     </Drawer>
   );
