@@ -21,6 +21,7 @@ import IMovieSearch from '../../../interfaces/IMovieSearch';
 import Spinner from '../../UI/Spinner/Spinner';
 import { SEARCH_URL } from '../../../constants/Constants';
 import MovieDetailsInput from './MovieDetailsInput/MovieDetailsInput';
+import { isValidUrl } from '../../../utils/UrlUtil';
 
 interface IProps {
   selectedMovieIMDBId: string;
@@ -163,15 +164,6 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
     }
   }, [apiKey, retrieveLanguagesFromOMDB, selectedMovieIMDBId]);
 
-  const isValidUrl = (toValidate: string | undefined): boolean => {
-    try {
-      const url = new URL(toValidate || '');
-      return !!url;
-    } catch (_) {
-      return false;
-    }
-  };
-
   const renderContent = (): ReactElement | null => {
     if (!selectedMovie) {
       return null;
@@ -180,7 +172,11 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
     const heading =
       selectedMovie.type === MovieType.TvSeries ? '(TV series)' : '(Movie)';
     const image = isValidUrl(selectedMovie.mediaURL) ? (
-      <img src={selectedMovie.mediaURL} alt={selectedMovie.title} />
+      <img
+        src={selectedMovie.mediaURL}
+        alt={selectedMovie.title}
+        height={300}
+      />
     ) : null;
 
     let borderBoxStyle = movieTotalInitial
@@ -189,43 +185,45 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
     borderBoxStyle += ` ${styles['movie-details']}`;
 
     return (
-      <div className={borderBoxStyle}>
-        <div className={globStyles['margin-b-20']}>
-          <div className={globStyles['margin-b-20']}>
-            <h3 className={styles['header-custom']}>
-              <div className={styles['header-custom-span']}>
-                {selectedMovie.title} {heading}{' '}
-              </div>
-              <div className={styles['close-button']}>
-                <Button onClick={closeDrawer}>
-                  <ClearIcon />
-                </Button>
-              </div>
-            </h3>
-            <p>{selectedMovie.year}</p>
-            <p>{selectedMovie.actors}</p>
-            <small>{selectedMovie.plot}</small>
+      <div className={styles.container}>
+        <div className={borderBoxStyle}>
+          <div className={styles['top-half']}>
+            <div className={globStyles['margin-b-20']}>
+              <h3 className={styles['header-custom']}>
+                <div className={styles['header-custom-span']}>
+                  {selectedMovie.title} {heading}{' '}
+                </div>
+                <div className={styles['close-button']}>
+                  <Button onClick={closeDrawer}>
+                    <ClearIcon />
+                  </Button>
+                </div>
+              </h3>
+              <p>{selectedMovie.year}</p>
+              <p>{selectedMovie.actors}</p>
+              <small>{selectedMovie.plot}</small>
+            </div>
+            <div className={styles['image-container']}>{image}</div>
           </div>
-          {image}
-        </div>
-        {movieLoading ? (
-          <div className={styles['spinner-div']}>
-            <Spinner />
+          {movieLoading ? (
+            <div className={styles['spinner-div']}>
+              <Spinner />
+            </div>
+          ) : null}
+          <MovieDetailsInput
+            languagesInitial={languagesInitial}
+            movieTotalInitial={movieTotalInitial}
+            onSaveClicked={onSaveClicked}
+          />
+          <div>
+            <a
+              href={`https://www.imdb.com/title/${selectedMovie.imdbID}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View in IMDB
+            </a>
           </div>
-        ) : null}
-        <MovieDetailsInput
-          languagesInitial={languagesInitial}
-          movieTotalInitial={movieTotalInitial}
-          onSaveClicked={onSaveClicked}
-        />
-        <div>
-          <a
-            href={`https://www.imdb.com/title/${selectedMovie.imdbID}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View in IMDB
-          </a>
         </div>
       </div>
     );
@@ -241,12 +239,12 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
         paper: styles.drawer,
       }}
     >
-      <div>
+      <>
         {!movError && renderContent()}
         {movError ? (
           <p className={globStyles['error-text']}>{movError}</p>
         ) : null}
-      </div>
+      </>
     </Drawer>
   );
 };

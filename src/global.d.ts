@@ -1,7 +1,6 @@
 declare module 'enzyme-adapter-react-16';
 declare module 'enzyme';
 declare module '*.png';
-declare module 'react-export-excel';
 
 declare module '*.css' {
   interface IClassNames {

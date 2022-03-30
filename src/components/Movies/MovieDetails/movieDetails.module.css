@@ -1,7 +1,15 @@
+.container {
+  min-height: 100%;
+  padding: 20px 0;
+}
+
 .movie-details {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
   padding: 20px;
   width: 90%;
-  margin: 20px auto;
+  margin: 0 auto;
   text-align: center;
   box-shadow: 0 2px 3px #ccc;
 }
@@ -12,6 +20,22 @@
 
 .movie-present {
   border: 2px solid darkblue;
+}
+
+.top-half {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  flex: 1;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  margin: auto 0;
 }
 
 .header-custom {
