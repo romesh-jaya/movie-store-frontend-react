@@ -10,6 +10,11 @@ body {
 
   margin: auto;
   text-align: center;
+  height: 100%;
+}
+
+root {
+  height: 100%;
 }
 
 input {

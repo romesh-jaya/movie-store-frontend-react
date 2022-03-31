@@ -23,7 +23,7 @@ const GenreSelectModal: React.FC<IProps> = (props) => {
   const { initialGenres, onConfirmed, onCancelled } = props;
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [checkboxValues, setCheckboxValues] = useState<ICheckboxValue[]>([]);
-  const isDesktopWidth = useMediaQuery('(min-width:600px)');
+  const isDesktopWidth = useMediaQuery('(min-width:640px)');
 
   const initForm = useCallback((): void => {
     setSelectedGenres(initialGenres);

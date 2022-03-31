@@ -1,8 +1,9 @@
 import React from 'react';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { Route, Switch, withRouter } from 'react-router-dom';
-
 import { useAuth0 } from '@auth0/auth0-react';
+
+import styles from './app.module.scss';
 import axios from './axios';
 import ContainerBody from './containers/ContainerBody/ContainerBody';
 import { MAIN_COLOUR, SEC_COLOUR_TEXT, SEC_COLOUR } from './constants/Colours';
@@ -40,15 +41,19 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <ContainerHeader />
-      <Switch>
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/login-admin" component={Login} />
-        <ProtectedRoute>
-          <Route exact path="/" component={ContainerBody} />
-        </ProtectedRoute>
-        <Route component={ErrorPage} />
-      </Switch>
+      <div className={styles.container}>
+        <ContainerHeader />
+        <div className={styles.content}>
+          <Switch>
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/login-admin" component={Login} />
+            <ProtectedRoute>
+              <Route exact path="/" component={ContainerBody} />
+            </ProtectedRoute>
+            <Route component={ErrorPage} />
+          </Switch>
+        </div>
+      </div>
     </ThemeProvider>
   );
 };
