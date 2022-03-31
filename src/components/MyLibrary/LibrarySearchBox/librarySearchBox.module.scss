@@ -1,3 +1,5 @@
+@import '../../../styles/globalTheme.module.scss';
+
 .label-and-input-div {
   margin-bottom: 20px;
   font-size: 0.9rem;
@@ -5,9 +7,12 @@
 
 .input-style-search {
   max-width: 350px;
-  width: 80%;
+  width: 250px;
   height: 30px;
-  margin-top: 5px;
+
+  @media #{$md} {
+    width: 328px;
+  }
 }
 
 .input-style-select {
@@ -16,18 +21,26 @@
 
 .input-style-form-control {
   max-width: 350px;
-  width: 80%;
-  margin-top: 5px !important;
+  width: 250px;
+  @media #{$md} {
+    width: 328px;
+  }
 }
 
 .input-style-search-genre {
   height: 35px;
-  width: 55%;
-  margin-top: 5px;
+  margin-right: 10px;
+  width: 207px;
+  @media #{$md} {
+    width: 286px;
+  }
 }
 
-.genre {
-  margin-right: 10px;
+.inter-control-spacing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px;
 }
 
 .card-style {
@@ -44,7 +57,8 @@
 }
 
 .genre-button {
-  width: 23%;
+  min-width: unset !important;
+  padding: 5px 10px !important;
 }
 
 .button-div {

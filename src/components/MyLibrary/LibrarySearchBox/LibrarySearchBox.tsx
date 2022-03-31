@@ -3,8 +3,8 @@ import { Button, Typography } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import { ExportToCsv } from 'export-to-csv';
 
-import styles from './librarySearchBox.module.css';
-import globStyles from '../../../index.module.css';
+import styles from './librarySearchBox.module.scss';
+import globStyles from '../../../index.module.scss';
 import { useAuth0 } from '@auth0/auth0-react';
 import { TextConstants } from '../../../constants/TextConstants';
 import { MovieType } from '../../../enums/MovieType';

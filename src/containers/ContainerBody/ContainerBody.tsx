@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { useAuth0 } from '@auth0/auth0-react';
 
-import globStyles from '../../index.module.css';
+import globStyles from '../../index.module.scss';
 import { TextConstants } from '../../constants/TextConstants';
 import SettingsContext from '../../context/SettingsContext';
 import MovieContainerSkeleton from '../MovieContainerSkeleton';

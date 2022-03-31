@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import { Redirect } from 'react-router';
 
 import styles from './protectedRoute.module.css';
-import globStyles from '../../index.module.css';
+import globStyles from '../../index.module.scss';
 import Spinner from '../UI/Spinner/Spinner';
 
 interface IProps {

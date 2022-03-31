@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
 import styles from './settings.module.css';
-import globStyles from '../../index.module.css';
+import globStyles from '../../index.module.scss';
 import SettingsContext from '../../context/SettingsContext';
 import axios from '../../axios';
 import { TextConstants } from '../../constants/TextConstants';

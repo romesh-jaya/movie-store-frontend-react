@@ -10,8 +10,8 @@ import HelpIcon from '@material-ui/icons/Help';
 
 import SettingsContext from '../../../../context/SettingsContext';
 import NumberRangeInput from '../../../Controls/Input/NumberRangeInput/NumberRangeInput';
-import styles from '../librarySearchBox.module.css';
-import globStyles from '../../../../index.module.css';
+import styles from '../librarySearchBox.module.scss';
+import globStyles from '../../../../index.module.scss';
 import { MovieType } from '../../../../enums/MovieType';
 
 interface IProps {
@@ -77,7 +77,7 @@ const SearchControls: React.FC<IProps> = (props) => {
     const id = open ? 'simple-popover' : undefined;
 
     return (
-      <span className={styles.helpicon}>
+      <div className={styles.helpicon}>
         <HelpIcon onClick={handleClickHelpIcon} color="primary" />
         <Popover
           id={id}
@@ -101,7 +101,7 @@ const SearchControls: React.FC<IProps> = (props) => {
             <div>Enter a range of years: 2010-2020</div>
           </div>
         </Popover>
-      </span>
+      </div>
     );
   };
 
@@ -110,7 +110,7 @@ const SearchControls: React.FC<IProps> = (props) => {
       <div className={styles['label-and-input-div']}>
         <label htmlFor="searchTitle">
           Title
-          <div className="inter-control-spacing">
+          <div className={styles['inter-control-spacing']}>
             <input
               type="text"
               name="searchTitle"
@@ -125,7 +125,7 @@ const SearchControls: React.FC<IProps> = (props) => {
       <div className={styles['label-and-input-div']}>
         <label htmlFor="searchType">
           Type
-          <div className="inter-control-spacing">
+          <div className={styles['inter-control-spacing']}>
             <FormControl
               variant="outlined"
               className={styles['input-style-form-control']}
@@ -151,7 +151,7 @@ const SearchControls: React.FC<IProps> = (props) => {
       <div className={styles['label-and-input-div']}>
         <label htmlFor="searchLanguage">
           Language
-          <div className="inter-control-spacing">
+          <div className={styles['inter-control-spacing']}>
             <FormControl
               variant="outlined"
               className={styles['input-style-form-control']}
@@ -180,7 +180,7 @@ const SearchControls: React.FC<IProps> = (props) => {
       <div className={styles['label-and-input-div']}>
         <label htmlFor="searchYear">
           Year
-          <div className="inter-control-spacing">
+          <div className={styles['inter-control-spacing']}>
             <NumberRangeInput
               name="searchYear"
               disabled={searchType !== MovieType.Movie}
@@ -198,28 +198,24 @@ const SearchControls: React.FC<IProps> = (props) => {
       <div className={styles['label-and-input-div']}>
         <label htmlFor="searchGenres">
           Genres
-          <div className="inter-control-spacing">
-            <span className={styles.genre}>
-              <input
-                disabled
-                type="text"
-                name="searchGenres"
-                value={searchGenres.join(', ')}
-                className={styles['input-style-search-genre']}
-              />
-            </span>
-            <span>
-              <Button
-                onClick={onGenresClicked}
-                color="secondary"
-                variant="contained"
-                classes={{
-                  root: styles['genre-button'],
-                }}
-              >
-                Genres...
-              </Button>
-            </span>
+          <div className={styles['inter-control-spacing']}>
+            <input
+              disabled
+              type="text"
+              name="searchGenres"
+              value={searchGenres.join(', ')}
+              className={styles['input-style-search-genre']}
+            />
+            <Button
+              onClick={onGenresClicked}
+              color="secondary"
+              variant="contained"
+              classes={{
+                root: styles['genre-button'],
+              }}
+            >
+              ...
+            </Button>
           </div>
         </label>
       </div>

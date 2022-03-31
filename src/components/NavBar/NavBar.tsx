@@ -7,7 +7,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 import { isAdmin } from '../../utils/AuthUtil';
 import styles from './navbar.module.css';
-import globStyles from '../../index.module.css';
+import globStyles from '../../index.module.scss';
 
 interface IProps {
   tabIndex: number;

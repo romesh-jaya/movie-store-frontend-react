@@ -3,7 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import Button from '@material-ui/core/Button';
 import { Redirect, useLocation } from 'react-router';
 
-import globStyles from '../../index.module.css';
+import globStyles from '../../index.module.scss';
 import styles from './login.module.css';
 import Spinner from '../UI/Spinner/Spinner';
 
@@ -46,7 +46,7 @@ const Login: React.FC = () => {
   }
 
   return !isAuthenticated ? (
-    <>
+    <div className={styles.content}>
       <div className={globStyles['margin-t-20']}>
         {!isAdminLogin && (
           <p>
@@ -64,7 +64,7 @@ const Login: React.FC = () => {
           {isAdminLogin ? 'Sign in - Admin' : 'Sign in'}
         </Button>
       </div>
-    </>
+    </div>
   ) : (
     <Redirect to="/" />
   );

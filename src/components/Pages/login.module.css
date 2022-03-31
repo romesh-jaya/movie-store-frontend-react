@@ -7,3 +7,11 @@
 .spinner-full-page {
   padding: 40px;
 }
+
+.content {
+  width: 90%;
+  height: 100%;
+  margin: auto;
+  display: grid;
+  place-items: center;
+}

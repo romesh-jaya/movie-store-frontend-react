@@ -43,16 +43,14 @@ const App: React.FC = () => {
     <ThemeProvider theme={theme}>
       <div className={styles.container}>
         <ContainerHeader />
-        <div className={styles.content}>
-          <Switch>
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/login-admin" component={Login} />
-            <ProtectedRoute>
-              <Route exact path="/" component={ContainerBody} />
-            </ProtectedRoute>
-            <Route component={ErrorPage} />
-          </Switch>
-        </div>
+        <Switch>
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/login-admin" component={Login} />
+          <ProtectedRoute>
+            <Route exact path="/" component={ContainerBody} />
+          </ProtectedRoute>
+          <Route component={ErrorPage} />
+        </Switch>
       </div>
     </ThemeProvider>
   );

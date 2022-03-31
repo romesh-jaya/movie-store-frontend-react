@@ -11,7 +11,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 
 import axios from '../../../axios';
 import styles from './movieDetails.module.css';
-import globStyles from '../../../index.module.css';
+import globStyles from '../../../index.module.scss';
 import { MovieType } from '../../../enums/MovieType';
 import IMovieLibrary from '../../../interfaces/IMovieLibrary';
 import { TextConstants } from '../../../constants/TextConstants';

@@ -9,7 +9,7 @@ import { MovieType } from '../../../enums/MovieType';
 import TableIcons from '../../../constants/TableIcons';
 import styles from './movieTable.module.css';
 import IMovieLibrary from '../../../interfaces/IMovieLibrary';
-import globStyles from '../../../index.module.css';
+import globStyles from '../../../index.module.scss';
 
 interface IProps {
   lastSearchMovieCount: number;
