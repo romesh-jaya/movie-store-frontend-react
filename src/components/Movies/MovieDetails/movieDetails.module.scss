@@ -1,3 +1,5 @@
+@import '../../../styles/globalTheme.module.scss';
+
 .container {
   min-height: 100%;
   padding: 20px 0;
@@ -7,11 +9,15 @@
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  padding: 20px;
+  padding: 20px 0;
   width: 90%;
   margin: 0 auto;
   text-align: center;
-  box-shadow: 0 2px 3px #ccc;
+
+  @media #{$md} {
+    padding: 20px;
+    box-shadow: 0 2px 3px #ccc;
+  }
 }
 
 .movie-absent {
@@ -19,7 +25,9 @@
 }
 
 .movie-present {
-  border: 2px solid darkblue;
+  @media #{$md} {
+    border: 2px solid darkblue;
+  }
 }
 
 .top-half {

@@ -10,7 +10,7 @@ import { Button, Drawer } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
 
 import axios from '../../../axios';
-import styles from './movieDetails.module.css';
+import styles from './movieDetails.module.scss';
 import globStyles from '../../../index.module.scss';
 import { MovieType } from '../../../enums/MovieType';
 import IMovieLibrary from '../../../interfaces/IMovieLibrary';
