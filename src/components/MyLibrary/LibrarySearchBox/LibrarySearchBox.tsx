@@ -1,7 +1,8 @@
-import React, { useState, useCallback, ReactElement } from 'react';
-import { Button, Typography } from '@material-ui/core';
+import React, { useState, useCallback, ReactElement, useEffect } from 'react';
+import { Button, Typography, useMediaQuery } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import { ExportToCsv } from 'export-to-csv';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import styles from './librarySearchBox.module.scss';
 import globStyles from '../../../index.module.scss';
@@ -15,6 +16,7 @@ import IMovieLibrary from '../../../interfaces/IMovieLibrary';
 import { isAdmin } from '../../../utils/AuthUtil';
 import { formatExportData } from '../../../utils/ExportUtil';
 import SearchControls from './SearchControls/SearchControls';
+import { DESKTOP_WIDTH_MEDIA_QUERY } from '../../../constants/Constants';
 
 const exportFileName = 'Export.csv';
 
@@ -42,6 +44,8 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   const [searchGenres, setSearchGenres] = useState<string[]>([]);
   const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
   const { user } = useAuth0();
+  const isDesktopWidth = useMediaQuery(DESKTOP_WIDTH_MEDIA_QUERY);
+  const [isBoxExpanded, setIsBoxExpanded] = useState(false);
 
   const { enableExportButton, setLastSearchInfo, exportMovies } = props;
 
@@ -64,6 +68,10 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     searchYearFrom,
     searchYearTo,
   ]);
+
+  useEffect(() => {
+    setIsBoxExpanded(isDesktopWidth);
+  }, [isDesktopWidth]);
 
   const newSearch = useCallback((): void => {
     if (isSearchTextValid()) {
@@ -95,6 +103,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
         ...(searchLanguage && { searchLanguage }),
       };
       setLastSearchInfo(searchInfo);
+      setIsBoxExpanded(false);
     }
   }, [
     isSearchTextValid,
@@ -236,25 +245,41 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
           color="textSecondary"
           gutterBottom
         >
-          Search Library
+          <div className={styles.heading}>
+            Search Library
+            <Button
+              classes={{
+                root: `${styles['expand-button']} ${
+                  isBoxExpanded ? '' : styles['expand-button-rotated']
+                }`,
+              }}
+              onClick={() => setIsBoxExpanded(!isBoxExpanded)}
+            >
+              <ExpandMoreIcon />
+            </Button>
+          </div>
         </Typography>
-        <SearchControls
-          anchorEl={anchorEl}
-          searchTitle={searchTitle}
-          searchType={searchType}
-          searchLanguage={searchLanguage}
-          searchYearInput={searchYearInput}
-          searchGenres={searchGenres}
-          errorTextSearchYear={errorTextSearchYear}
-          setAnchorEl={setAnchorEl}
-          handleChangeSearchTitle={handleChangeSearchTitle}
-          handleKeyDown={handleKeyDown}
-          handleChangeSearchType={handleChangeSearchType}
-          handleChangeSearchLanguage={handleChangeSearchLanguage}
-          handleChangeSearchYear={handleChangeSearchYear}
-          onGenresClicked={onGenresClicked}
-        />
-        {renderButtons()}
+        {isBoxExpanded && (
+          <>
+            <SearchControls
+              anchorEl={anchorEl}
+              searchTitle={searchTitle}
+              searchType={searchType}
+              searchLanguage={searchLanguage}
+              searchYearInput={searchYearInput}
+              searchGenres={searchGenres}
+              errorTextSearchYear={errorTextSearchYear}
+              setAnchorEl={setAnchorEl}
+              handleChangeSearchTitle={handleChangeSearchTitle}
+              handleKeyDown={handleKeyDown}
+              handleChangeSearchType={handleChangeSearchType}
+              handleChangeSearchLanguage={handleChangeSearchLanguage}
+              handleChangeSearchYear={handleChangeSearchYear}
+              onGenresClicked={onGenresClicked}
+            />
+            {renderButtons()}
+          </>
+        )}
       </Card>
       {showGenresModal && (
         <GenreSelectModal

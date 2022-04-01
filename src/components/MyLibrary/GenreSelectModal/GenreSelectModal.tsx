@@ -12,6 +12,7 @@ import { useMediaQuery } from '@material-ui/core';
 import styles from './genreSelectModal.module.css';
 import { Genres, IGenre } from '../../../constants/Genres';
 import { ICheckboxValue } from '../../../interfaces/ICheckboxValue';
+import { DESKTOP_WIDTH_MEDIA_QUERY } from '../../../constants/Constants';
 
 interface IProps {
   initialGenres: string[];
@@ -23,7 +24,7 @@ const GenreSelectModal: React.FC<IProps> = (props) => {
   const { initialGenres, onConfirmed, onCancelled } = props;
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [checkboxValues, setCheckboxValues] = useState<ICheckboxValue[]>([]);
-  const isDesktopWidth = useMediaQuery('(min-width:640px)');
+  const isDesktopWidth = useMediaQuery(DESKTOP_WIDTH_MEDIA_QUERY);
 
   const initForm = useCallback((): void => {
     setSelectedGenres(initialGenres);

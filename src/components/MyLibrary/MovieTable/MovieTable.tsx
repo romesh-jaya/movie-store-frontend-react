@@ -10,6 +10,7 @@ import TableIcons from '../../../constants/TableIcons';
 import styles from './movieTable.module.css';
 import IMovieLibrary from '../../../interfaces/IMovieLibrary';
 import globStyles from '../../../index.module.scss';
+import { DESKTOP_WIDTH_MEDIA_QUERY } from '../../../constants/Constants';
 
 interface IProps {
   lastSearchMovieCount: number;
@@ -37,7 +38,7 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
     handleChangeRowsPerPage,
   } = props;
   const { user } = useAuth0();
-  const isDesktopWidth = useMediaQuery('(min-width:600px)');
+  const isDesktopWidth = useMediaQuery(DESKTOP_WIDTH_MEDIA_QUERY);
 
   const getActions = ():
     | (
