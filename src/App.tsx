@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 
 import styles from './app.module.scss';
@@ -10,7 +10,7 @@ import { MAIN_COLOUR, SEC_COLOUR_TEXT, SEC_COLOUR } from './constants/Colours';
 import ContainerHeader from './containers/ContainerHeader/ContainerHeader';
 import Login from './components/Pages/Login';
 import ErrorPage from './components/Pages/Error';
-import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import PrivateRoute from './components/PrivateRoute';
 
 const SERVER_PATH = import.meta.env.VITE_NODE_SERVER || '';
 
@@ -43,17 +43,19 @@ const App: React.FC = () => {
     <ThemeProvider theme={theme}>
       <div className={styles.container}>
         <ContainerHeader />
-        <Switch>
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/login-admin" component={Login} />
-          <ProtectedRoute>
-            <Route exact path="/" component={ContainerBody} />
-          </ProtectedRoute>
-          <Route component={ErrorPage} />
-        </Switch>
+        <Suspense fallback={<div />}>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/login-admin" element={<Login />} />
+            <Route path="/" element={<PrivateRoute />}>
+              <Route path="/" element={<ContainerBody />} />
+            </Route>
+            <Route element={<ErrorPage />} />
+          </Routes>
+        </Suspense>
       </div>
     </ThemeProvider>
   );
 };
 
-export default withRouter(App);
+export default App;

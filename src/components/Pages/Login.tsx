@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import Button from '@material-ui/core/Button';
-import { Redirect, useLocation } from 'react-router';
+import { Navigate, useLocation } from 'react-router';
 
 import globStyles from '../../index.module.scss';
 import styles from './login.module.css';
@@ -47,26 +47,29 @@ const Login: React.FC = () => {
 
   return !isAuthenticated ? (
     <div className={styles.content}>
-      <div className={globStyles['margin-t-20']}>
-        {!isAdminLogin && (
-          <p>
-            Welcome! Sign in to browse movies and TV series at Ultra Movie Shop
-          </p>
-        )}
-      </div>
-      <div className={styles['login-div']}>
-        <Button
-          id="login-button"
-          onClick={onLogin}
-          color="secondary"
-          variant="contained"
-        >
-          {isAdminLogin ? 'Sign in - Admin' : 'Sign in'}
-        </Button>
+      <div>
+        <div className={globStyles['margin-t-20']}>
+          {!isAdminLogin && (
+            <p>
+              Welcome! Sign in to browse movies and TV series at Ultra Movie
+              Shop
+            </p>
+          )}
+        </div>
+        <div className={styles['login-div']}>
+          <Button
+            id="login-button"
+            onClick={onLogin}
+            color="secondary"
+            variant="contained"
+          >
+            {isAdminLogin ? 'Sign in - Admin' : 'Sign in'}
+          </Button>
+        </div>
       </div>
     </div>
   ) : (
-    <Redirect to="/" />
+    <Navigate to="/" />
   );
 };
 

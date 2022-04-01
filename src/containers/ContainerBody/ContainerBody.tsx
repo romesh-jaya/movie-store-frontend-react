@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, ReactElement } from 'react';
+import React, { useState, useEffect, ReactElement } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -96,10 +96,6 @@ const ContainerBody: React.FC = () => {
     return <p>{TextConstants.NOAPIKEYDEFINED}</p>;
   };
 
-  const renderWithSuspense = (children: ReactElement): ReactElement => {
-    return <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>;
-  };
-
   const renderContent = (): ReactElement | null => {
     if (isLoading || settingsError) {
       return null;
@@ -118,15 +114,17 @@ const ContainerBody: React.FC = () => {
         {user && user?.email && isAdmin(user.email) && (
           <>
             <TabPanel value={tabIndex} index={1}>
-              {apiKeySetting && apiKeySetting.value
-                ? renderWithSuspense(<MovieSearch />)
-                : renderNoApiKey()}
+              {apiKeySetting && apiKeySetting.value ? (
+                <MovieSearch />
+              ) : (
+                renderNoApiKey()
+              )}
             </TabPanel>
             <TabPanel value={tabIndex} index={2}>
-              {renderWithSuspense(<MovieAnalysis />)}
+              {<MovieAnalysis />}
             </TabPanel>
             <TabPanel value={tabIndex} index={3}>
-              {renderWithSuspense(<Settings updateContext={updateContext} />)}
+              {<Settings updateContext={updateContext} />}
             </TabPanel>
           </>
         )}
