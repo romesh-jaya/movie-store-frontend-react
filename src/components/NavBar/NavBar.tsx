@@ -2,7 +2,7 @@ import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { Button } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
 
 import { isAdmin } from '../../utils/AuthUtil';
@@ -14,12 +14,29 @@ interface IProps {
   handleTabChange: (_: React.ChangeEvent<{}>, newTabIndex: number) => void;
 }
 
+interface StyledTabProps {
+  label: string;
+  id: string;
+  hidden?: boolean;
+}
+
+const StyledTab = styled((props: StyledTabProps) => (
+  <Tab disableRipple {...props} />
+))(({ hidden }) => ({
+  color: 'rgba(255, 255, 255, 0.7)',
+  '&.Mui-selected': {
+    color: '#fff',
+  },
+  '&:hover': {
+    color: '#fff',
+  },
+  display: hidden ? 'none !important' : '',
+}));
+
 const NavBar: React.FC<IProps> = (props: IProps) => {
   const { tabIndex, handleTabChange } = props;
   const { logout, user } = useAuth0();
-  const myLibClass =
-    (user && user?.email && !isAdmin(user.email) && styles['my-library']) ||
-    undefined;
+  const tabIsHidden = !!(user && user?.email && !isAdmin(user.email)) ?? true;
 
   const onLogoutClicked = (): void => {
     logout({ returnTo: `${window.location.origin}/login` });
@@ -27,20 +44,18 @@ const NavBar: React.FC<IProps> = (props: IProps) => {
 
   return (
     <AppBar position="static">
-      <div>
+      <div className={styles['tab-container']}>
         <div className={styles['tabs-div']}>
           {user && user?.email && isAdmin(user.email) && (
-            <Tabs value={tabIndex} onChange={handleTabChange}>
-              <Tab
-                label="My Library"
-                id="tab0"
-                classes={{
-                  root: myLibClass,
-                }}
-              />
-              <Tab label="Movie Search - OMDB" id="tab1" />
-              <Tab label="Movie Search Analysis" id="tab2" />
-              <Tab label="Settings" id="tab3" />
+            <Tabs
+              value={tabIndex}
+              onChange={handleTabChange}
+              indicatorColor="secondary"
+            >
+              <StyledTab label="My Library" id="tab0" hidden={tabIsHidden} />
+              <StyledTab label="Movie Search - OMDB" id="tab1" />
+              <StyledTab label="Movie Search Analysis" id="tab2" />
+              <StyledTab label="Settings" id="tab3" />
             </Tabs>
           )}
         </div>
