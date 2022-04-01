@@ -1,9 +1,5 @@
 import React, { Suspense } from 'react';
-import {
-  createTheme,
-  ThemeProvider,
-  StyledEngineProvider,
-} from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Route, Routes } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 
@@ -44,23 +40,21 @@ const App: React.FC = () => {
   });
 
   return (
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <div className={styles.container}>
-          <ContainerHeader />
-          <Suspense fallback={<div />}>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/login-admin" element={<Login />} />
-              <Route path="/" element={<PrivateRoute />}>
-                <Route path="/" element={<ContainerBody />} />
-              </Route>
-              <Route element={<ErrorPage />} />
-            </Routes>
-          </Suspense>
-        </div>
-      </ThemeProvider>
-    </StyledEngineProvider>
+    <ThemeProvider theme={theme}>
+      <div className={styles.container}>
+        <ContainerHeader />
+        <Suspense fallback={<div />}>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/login-admin" element={<Login />} />
+            <Route path="/" element={<PrivateRoute />}>
+              <Route path="/" element={<ContainerBody />} />
+            </Route>
+            <Route element={<ErrorPage />} />
+          </Routes>
+        </Suspense>
+      </div>
+    </ThemeProvider>
   );
 };
 

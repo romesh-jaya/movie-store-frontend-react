@@ -6,7 +6,7 @@
     "@auth0/auth0-react": "^1.8.0",
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
-    "@material-table/core": "^4.3.38",
+    "@material-table/core": "^0.2.29",
     "@mui/icons-material": "^5.5.1",
     "@mui/lab": "^5.0.0-alpha.75",
     "@mui/material": "^5.5.3",
