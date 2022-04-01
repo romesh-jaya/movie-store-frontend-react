@@ -1,6 +1,11 @@
 import React from 'react';
-import MaterialTable, { Action, Column, Options } from '@material-table/core';
-import { Chip, TablePagination, useMediaQuery } from '@mui/material';
+import MaterialTable, {
+  Action,
+  Column,
+  MTableToolbar,
+  Options,
+} from '@material-table/core';
+import { Chip, styled, TablePagination, useMediaQuery } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 
 import { useAuth0 } from '@auth0/auth0-react';
@@ -26,6 +31,16 @@ interface IProps {
   handleChangeRowsPerPage: (pageSizeVal: number) => void;
 }
 
+interface StyledMTableToolbarProps {
+  hidden?: boolean;
+}
+
+const StyledMTableToolbar = styled((props: StyledMTableToolbarProps) => (
+  <MTableToolbar {...props} />
+))(({ hidden }) => ({
+  display: hidden ? 'none !important' : '',
+}));
+
 const MovieTable: React.FC<IProps> = (props: IProps) => {
   const {
     lastSearchMovieCount,
@@ -39,6 +54,7 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
   } = props;
   const { user } = useAuth0();
   const isDesktopWidth = useMediaQuery(DESKTOP_WIDTH_MEDIA_QUERY);
+  const isAdminUser = (!!user && !!user?.email && isAdmin(user.email)) ?? false;
 
   const getActions = ():
     | (
@@ -46,7 +62,7 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
         | ((rowData: IMovieLibrary) => Action<IMovieLibrary>)
       )[]
     | undefined => {
-    return user && user?.email && isAdmin(user.email)
+    return isAdminUser
       ? [
           {
             tooltip: 'Delete selected movies',
@@ -73,7 +89,7 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
       selection: false,
     };
 
-    if (user && user?.email && isAdmin(user.email)) {
+    if (isAdminUser) {
       retVal.selection = true;
     }
 
@@ -151,6 +167,11 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
         options={getOptions()}
         actions={getActions()}
         icons={TableIcons}
+        components={{
+          Toolbar: (props) => (
+            <StyledMTableToolbar {...props} hidden={!isAdminUser} />
+          ),
+        }}
       />
       <div className={styles['pagination-style']}>
         <TablePagination
