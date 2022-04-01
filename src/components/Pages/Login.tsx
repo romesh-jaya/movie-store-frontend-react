@@ -5,7 +5,6 @@ import { Navigate, useLocation } from 'react-router';
 
 import globStyles from '../../index.module.scss';
 import styles from './login.module.css';
-import Spinner from '../UI/Spinner/Spinner';
 
 // Note: the Auth0 hosted Universal classic login screen has been customized in order to pass a custom
 //       param - passwordLoginOnly. The customized login screen can be accessed via:
@@ -21,7 +20,7 @@ const connection = connConfig;
 */
 
 const Login: React.FC = () => {
-  const { loginWithRedirect, isLoading, isAuthenticated, error } = useAuth0();
+  const { loginWithRedirect, isAuthenticated, error } = useAuth0();
   const location = useLocation();
   const isAdminLogin = location.pathname.includes('login-admin');
 
@@ -32,14 +31,6 @@ const Login: React.FC = () => {
     }
     loginWithRedirect();
   };
-
-  if (isLoading) {
-    return (
-      <div className={styles['spinner-full-page']}>
-        <Spinner />
-      </div>
-    );
-  }
 
   if (error) {
     return <p className={globStyles['error-text']}>{error}</p>;

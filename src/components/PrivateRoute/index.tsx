@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
 const PrivateRoute = () => {
-  const { user, isLoading, isAuthenticated, error } = useAuth0();
+  const { user, isAuthenticated, error } = useAuth0();
   const isAuthRef = useRef(false);
 
   if (isAuthenticated && !isAuthRef.current) {
@@ -11,7 +11,7 @@ const PrivateRoute = () => {
     console.info('Sign in success', user && user?.email);
   }
 
-  return isAuthenticated || isLoading || error ? (
+  return isAuthenticated || error ? (
     <Outlet />
   ) : (
     <Navigate to={{ pathname: '/login' }} />

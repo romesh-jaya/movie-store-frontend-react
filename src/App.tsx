@@ -11,6 +11,7 @@ import ContainerHeader from './containers/ContainerHeader/ContainerHeader';
 import Login from './components/Pages/Login';
 import ErrorPage from './components/Pages/Error';
 import PrivateRoute from './components/PrivateRoute';
+import Spinner from './components/UI/Spinner/Spinner';
 
 const SERVER_PATH = import.meta.env.VITE_NODE_SERVER || '';
 
@@ -28,7 +29,7 @@ const theme = createTheme({
 });
 
 const App: React.FC = () => {
-  const { getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently, isLoading } = useAuth0();
 
   axios.interceptors.request.use(async (req) => {
     if (req.url?.toUpperCase().includes(SERVER_PATH.toUpperCase())) {
@@ -39,20 +40,33 @@ const App: React.FC = () => {
     return req;
   });
 
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <div className={styles['spinner-full-page']}>
+          <Spinner />
+        </div>
+      );
+    }
+    return (
+      <Suspense fallback={<div />}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/login-admin" element={<Login />} />
+          <Route path="/" element={<PrivateRoute />}>
+            <Route path="/" element={<ContainerBody />} />
+          </Route>
+          <Route element={<ErrorPage />} />
+        </Routes>
+      </Suspense>
+    );
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <div className={styles.container}>
         <ContainerHeader />
-        <Suspense fallback={<div />}>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/login-admin" element={<Login />} />
-            <Route path="/" element={<PrivateRoute />}>
-              <Route path="/" element={<ContainerBody />} />
-            </Route>
-            <Route element={<ErrorPage />} />
-          </Routes>
-        </Suspense>
+        {renderContent()}
       </div>
     </ThemeProvider>
   );
