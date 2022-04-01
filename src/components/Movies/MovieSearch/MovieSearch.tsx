@@ -5,9 +5,9 @@ import React, {
   useContext,
   ReactElement,
 } from 'react';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Pagination from '@material-ui/lab/Pagination';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Pagination from '@mui/material/Pagination';
 
 import axios from '../../../axios';
 import Movie from '../Movie/Movie';

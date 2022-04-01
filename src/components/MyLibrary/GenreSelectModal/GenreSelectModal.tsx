@@ -1,14 +1,14 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import ClearIcon from '@material-ui/icons/Clear';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import ClearIcon from '@mui/icons-material/Clear';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
-import { useMediaQuery } from '@material-ui/core';
+import { useMediaQuery } from '@mui/material';
 import styles from './genreSelectModal.module.css';
 import { Genres, IGenre } from '../../../constants/Genres';
 import { ICheckboxValue } from '../../../interfaces/ICheckboxValue';

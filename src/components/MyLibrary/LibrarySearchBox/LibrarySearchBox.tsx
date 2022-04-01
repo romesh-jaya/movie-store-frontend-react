@@ -1,8 +1,8 @@
 import React, { useState, useCallback, ReactElement, useEffect } from 'react';
-import { Button, Typography, useMediaQuery } from '@material-ui/core';
-import Card from '@material-ui/core/Card';
+import { Button, Typography, useMediaQuery } from '@mui/material';
+import Card from '@mui/material/Card';
 import { ExportToCsv } from 'export-to-csv';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import styles from './librarySearchBox.module.scss';
 import globStyles from '../../../index.module.scss';

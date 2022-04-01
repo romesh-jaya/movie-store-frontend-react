@@ -7,10 +7,10 @@ import React, {
   useCallback,
   useRef,
 } from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 import { useAuth0 } from '@auth0/auth0-react';
 import styles from './movieDetailsInput.module.css';

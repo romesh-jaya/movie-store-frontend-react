@@ -6,8 +6,8 @@ import React, {
   useRef,
   useCallback,
 } from 'react';
-import { Button, Drawer } from '@material-ui/core';
-import ClearIcon from '@material-ui/icons/Clear';
+import { Button, Drawer } from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
 
 import axios from '../../../axios';
 import styles from './movieDetails.module.scss';

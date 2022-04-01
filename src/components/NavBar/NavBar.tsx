@@ -1,8 +1,8 @@
 import React from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import { Button } from '@material-ui/core';
+import AppBar from '@mui/material/AppBar';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import { Button } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
 
 import { isAdmin } from '../../utils/AuthUtil';

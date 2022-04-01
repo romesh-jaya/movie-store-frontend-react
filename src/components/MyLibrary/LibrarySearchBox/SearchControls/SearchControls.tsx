@@ -1,12 +1,6 @@
 import React, { ReactElement, useContext } from 'react';
-import {
-  Button,
-  FormControl,
-  MenuItem,
-  Popover,
-  Select,
-} from '@material-ui/core';
-import HelpIcon from '@material-ui/icons/Help';
+import { Button, FormControl, MenuItem, Popover, Select } from '@mui/material';
+import HelpIcon from '@mui/icons-material/Help';
 
 import SettingsContext from '../../../../context/SettingsContext';
 import NumberRangeInput from '../../../Controls/Input/NumberRangeInput/NumberRangeInput';

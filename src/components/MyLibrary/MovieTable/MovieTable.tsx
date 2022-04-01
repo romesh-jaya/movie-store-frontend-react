@@ -1,7 +1,7 @@
 import React from 'react';
 import MaterialTable, { Action, Column, Options } from '@material-table/core';
-import { Chip, TablePagination, useMediaQuery } from '@material-ui/core';
-import Delete from '@material-ui/icons/Delete';
+import { Chip, TablePagination, useMediaQuery } from '@mui/material';
+import Delete from '@mui/icons-material/Delete';
 
 import { useAuth0 } from '@auth0/auth0-react';
 import { isAdmin } from '../../../utils/AuthUtil';

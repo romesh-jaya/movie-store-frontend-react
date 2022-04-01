@@ -1,5 +1,10 @@
 import React, { Suspense } from 'react';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import {
+  createTheme,
+  ThemeProvider,
+  StyledEngineProvider,
+  adaptV4Theme,
+} from '@mui/material/styles';
 import { Route, Routes } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 
@@ -14,18 +19,20 @@ import PrivateRoute from './components/PrivateRoute';
 
 const SERVER_PATH = import.meta.env.VITE_NODE_SERVER || '';
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: MAIN_COLOUR,
-      // Note: light, dark and contrastText will be calculated from palette.primary.main,
+const theme = createTheme(
+  adaptV4Theme({
+    palette: {
+      primary: {
+        main: MAIN_COLOUR,
+        // Note: light, dark and contrastText will be calculated from palette.primary.main,
+      },
+      secondary: {
+        main: SEC_COLOUR,
+        contrastText: SEC_COLOUR_TEXT,
+      },
     },
-    secondary: {
-      main: SEC_COLOUR,
-      contrastText: SEC_COLOUR_TEXT,
-    },
-  },
-});
+  })
+);
 
 const App: React.FC = () => {
   const { getAccessTokenSilently } = useAuth0();
@@ -40,21 +47,23 @@ const App: React.FC = () => {
   });
 
   return (
-    <ThemeProvider theme={theme}>
-      <div className={styles.container}>
-        <ContainerHeader />
-        <Suspense fallback={<div />}>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/login-admin" element={<Login />} />
-            <Route path="/" element={<PrivateRoute />}>
-              <Route path="/" element={<ContainerBody />} />
-            </Route>
-            <Route element={<ErrorPage />} />
-          </Routes>
-        </Suspense>
-      </div>
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <div className={styles.container}>
+          <ContainerHeader />
+          <Suspense fallback={<div />}>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/login-admin" element={<Login />} />
+              <Route path="/" element={<PrivateRoute />}>
+                <Route path="/" element={<ContainerBody />} />
+              </Route>
+              <Route element={<ErrorPage />} />
+            </Routes>
+          </Suspense>
+        </div>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 };
 
