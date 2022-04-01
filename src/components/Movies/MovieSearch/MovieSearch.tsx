@@ -226,7 +226,7 @@ const MovieSearch: React.FC = () => {
           />
         )}
         <section>
-          {!selectedMovieIMDBId && !movError && movies.length && (
+          {!selectedMovieIMDBId && !movError && movies.length > 0 && (
             <p>{TextConstants.CLICKTOSEEDETAILS}</p>
           )}
         </section>

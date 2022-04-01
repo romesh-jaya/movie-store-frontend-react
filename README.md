@@ -21,6 +21,7 @@ Tech Stack used:
 - Vite
 - Typescript
 - React Skeletons
+- React Router v6
 - REST API with Axios
 - Lazy loading of code
 - Material UI
