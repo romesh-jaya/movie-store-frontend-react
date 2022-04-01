@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Route, Routes } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -30,6 +30,7 @@ const theme = createTheme({
 
 const App: React.FC = () => {
   const { getAccessTokenSilently, isLoading } = useAuth0();
+  const [tabIndex, setTabIndex] = useState(0);
 
   axios.interceptors.request.use(async (req) => {
     if (req.url?.toUpperCase().includes(SERVER_PATH.toUpperCase())) {
@@ -54,7 +55,7 @@ const App: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/login-admin" element={<Login />} />
           <Route path="/" element={<PrivateRoute />}>
-            <Route path="/" element={<ContainerBody />} />
+            <Route path="/" element={<ContainerBody tabIndex={tabIndex} />} />
           </Route>
           <Route element={<ErrorPage />} />
         </Routes>
@@ -65,7 +66,7 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <div className={styles.container}>
-        <ContainerHeader />
+        <ContainerHeader tabIndex={tabIndex} setTabIndex={setTabIndex} />
         {renderContent()}
       </div>
     </ThemeProvider>

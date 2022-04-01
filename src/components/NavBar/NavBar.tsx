@@ -11,7 +11,7 @@ import globStyles from '../../index.module.scss';
 
 interface IProps {
   tabIndex: number;
-  handleTabChange: (_: React.ChangeEvent<{}>, newTabIndex: number) => void;
+  setTabIndex: (newTabIndex: number) => void;
 }
 
 interface StyledTabProps {
@@ -34,12 +34,19 @@ const StyledTab = styled((props: StyledTabProps) => (
 }));
 
 const NavBar: React.FC<IProps> = (props: IProps) => {
-  const { tabIndex, handleTabChange } = props;
+  const { tabIndex, setTabIndex } = props;
   const { logout, user } = useAuth0();
   const tabIsHidden = !!(user && user?.email && !isAdmin(user.email)) ?? true;
 
   const onLogoutClicked = (): void => {
     logout({ returnTo: `${window.location.origin}/login` });
+  };
+
+  const handleTabChange = (
+    _: React.ChangeEvent<{}>,
+    newTabIndex: number
+  ): void => {
+    setTabIndex(newTabIndex);
   };
 
   return (

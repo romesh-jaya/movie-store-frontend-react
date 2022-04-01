@@ -11,7 +11,10 @@ import axios from '../../axios';
 import INameValue from '../../interfaces/INameValue';
 import { isAdmin } from '../../utils/AuthUtil';
 import MyLibrary from '../../components/MyLibrary/MyLibrary';
-import NavBar from '../../components/NavBar/NavBar';
+
+interface IProps {
+  tabIndex: number;
+}
 
 const MovieSearch = React.lazy(
   () => import('../../components/Movies/MovieSearch/MovieSearch')
@@ -21,23 +24,17 @@ const MovieAnalysis = React.lazy(
 );
 const Settings = React.lazy(() => import('../../components/Settings/Settings'));
 
-const ContainerBody: React.FC = () => {
+const ContainerBody: React.FC<IProps> = (props: IProps) => {
+  const { tabIndex } = props;
   const [isLoading, setIsLoading] = useState(true);
   const [settings, setSettings] = useState<INameValue[]>([]);
   const [settingsError, setSettingsError] = useState('');
-  const [tabIndex, setTabIndex] = useState(0);
+
   const apiKeySetting = settings.find((setting) => setting.name === 'apiKey');
   const { user } = useAuth0();
 
   const updateContext = (context: INameValue[]): void => {
     setSettings(context);
-  };
-
-  const handleTabChange = (
-    _: React.ChangeEvent<{}>,
-    newTabIndex: number
-  ): void => {
-    setTabIndex(newTabIndex);
   };
 
   const TabPanel = (tPanelProps: any): React.ReactElement => {
@@ -103,7 +100,6 @@ const ContainerBody: React.FC = () => {
 
     return (
       <>
-        <NavBar tabIndex={tabIndex} handleTabChange={handleTabChange} />
         <TabPanel value={tabIndex} index={0}>
           {apiKeySetting && apiKeySetting.value ? (
             <MyLibrary />
