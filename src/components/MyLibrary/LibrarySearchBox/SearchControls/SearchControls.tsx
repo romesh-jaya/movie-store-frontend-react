@@ -131,6 +131,7 @@ const SearchControls: React.FC<IProps> = (props) => {
                   handleChangeSearchType(event.target.value as string)
                 }
                 name="searchType"
+                variant="standard"
               >
                 <MenuItem value="">
                   <em>None</em>
@@ -157,6 +158,7 @@ const SearchControls: React.FC<IProps> = (props) => {
                   handleChangeSearchLanguage(event.target.value as string)
                 }
                 name="searchLanguage"
+                variant="standard"
               >
                 <MenuItem value="">
                   <em key="None">None</em>

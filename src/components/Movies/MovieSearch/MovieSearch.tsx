@@ -200,6 +200,7 @@ const MovieSearch: React.FC = () => {
               value={inputQuery}
               onChange={queryOnChange}
               autoFocus
+              variant="standard"
             />
           </span>
           <Button

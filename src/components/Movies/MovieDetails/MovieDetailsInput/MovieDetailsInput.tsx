@@ -210,6 +210,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
               }}
               value={movieTotal}
               type="number"
+              variant="standard"
             />
           </span>
           <span className={styles['first-button']}>

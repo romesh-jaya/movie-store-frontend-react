@@ -3,7 +3,6 @@ import {
   createTheme,
   ThemeProvider,
   StyledEngineProvider,
-  adaptV4Theme,
 } from '@mui/material/styles';
 import { Route, Routes } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -19,20 +18,18 @@ import PrivateRoute from './components/PrivateRoute';
 
 const SERVER_PATH = import.meta.env.VITE_NODE_SERVER || '';
 
-const theme = createTheme(
-  adaptV4Theme({
-    palette: {
-      primary: {
-        main: MAIN_COLOUR,
-        // Note: light, dark and contrastText will be calculated from palette.primary.main,
-      },
-      secondary: {
-        main: SEC_COLOUR,
-        contrastText: SEC_COLOUR_TEXT,
-      },
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: MAIN_COLOUR,
+      // Note: light, dark and contrastText will be calculated from palette.primary.main,
     },
-  })
-);
+    secondary: {
+      main: SEC_COLOUR,
+      contrastText: SEC_COLOUR_TEXT,
+    },
+  },
+});
 
 const App: React.FC = () => {
   const { getAccessTokenSilently } = useAuth0();
