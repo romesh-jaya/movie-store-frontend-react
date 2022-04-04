@@ -107,7 +107,7 @@ const ContainerBody: React.FC<IProps> = (props: IProps) => {
             renderNoApiKey()
           )}
         </TabPanel>
-        {user && user?.email && isAdmin(user.email) && (
+        {isAdmin(user) && (
           <>
             <TabPanel value={tabIndex} index={1}>
               {apiKeySetting && apiKeySetting.value ? (

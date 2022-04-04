@@ -223,7 +223,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
           Reset
         </Button>
       </span>
-      {user && user?.email && isAdmin(user.email) && (
+      {isAdmin(user) && (
         <Button
           disabled={!enableExportButton}
           onClick={onExportClicked}

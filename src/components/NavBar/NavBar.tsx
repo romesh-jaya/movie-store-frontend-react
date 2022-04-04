@@ -36,7 +36,7 @@ const StyledTab = styled((props: StyledTabProps) => (
 const NavBar: React.FC<IProps> = (props: IProps) => {
   const { tabIndex, setTabIndex } = props;
   const { logout, user } = useAuth0();
-  const tabIsHidden = !!(user && user?.email && !isAdmin(user.email)) ?? true;
+  const tabIsHidden = !isAdmin(user);
 
   const onLogoutClicked = (): void => {
     logout({ returnTo: `${window.location.origin}/login` });
@@ -53,7 +53,7 @@ const NavBar: React.FC<IProps> = (props: IProps) => {
     <AppBar position="static">
       <div className={styles['tab-container']}>
         <div className={styles['tabs-div']}>
-          {user && user?.email && isAdmin(user.email) && (
+          {isAdmin(user) && (
             <Tabs
               value={tabIndex}
               onChange={handleTabChange}

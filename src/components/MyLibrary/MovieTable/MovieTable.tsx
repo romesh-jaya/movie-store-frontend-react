@@ -54,7 +54,7 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
   } = props;
   const { user } = useAuth0();
   const isDesktopWidth = useMediaQuery(DESKTOP_WIDTH_MEDIA_QUERY);
-  const isAdminUser = (!!user && !!user?.email && isAdmin(user.email)) ?? false;
+  const isAdminUser = isAdmin(user);
 
   const getActions = ():
     | (
