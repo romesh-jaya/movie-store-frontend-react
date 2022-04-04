@@ -7,3 +7,7 @@
   grid-template-columns: 100px 100px 100px;
   text-align: left;
 }
+
+.imdb-link {
+  margin-right: 10px;
+}

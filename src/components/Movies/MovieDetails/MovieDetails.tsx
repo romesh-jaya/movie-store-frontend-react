@@ -209,16 +209,8 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
             languagesInitial={languagesInitial}
             movieTotalInitial={movieTotalInitial}
             onSaveClicked={onSaveClicked}
+            imdbID={selectedMovie.imdbID}
           />
-          <div>
-            <a
-              href={`https://www.imdb.com/title/${selectedMovie.imdbID}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View in IMDB
-            </a>
-          </div>
         </div>
       </div>
     );

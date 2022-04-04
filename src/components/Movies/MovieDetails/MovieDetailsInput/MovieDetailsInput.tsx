@@ -23,6 +23,7 @@ import { isAdmin } from '../../../../utils/AuthUtil';
 interface IProps {
   languagesInitial: string[];
   movieTotalInitial: number;
+  imdbID: string;
   onSaveClicked: (
     selectedLanguages: string[],
     movieTotal: number
@@ -30,7 +31,7 @@ interface IProps {
 }
 
 const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
-  const { languagesInitial, movieTotalInitial, onSaveClicked } = props;
+  const { languagesInitial, movieTotalInitial, imdbID, onSaveClicked } = props;
   const [movieTotal, setMovieTotal] = useState(0);
   const [movieValuesChanged, setMovieValuesChanged] = useState(false);
   const [checkboxValues, setCheckboxValues] = useState<ICheckboxValue[]>([]);
@@ -176,56 +177,79 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
   };
 
   const renderNonLanguages = (): ReactElement | null => {
-    if (!isAdmin(user)) {
-      return null;
-    }
-
     return (
       <>
-        <div className={globStyles['margin-b-20']}>
-          <span className={globStyles['margin-r-10']}>
-            <Button variant="contained" color="primary" onClick={onAddClicked}>
-              +1 to library
-            </Button>
-          </span>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={onRemoveClicked}
-            disabled={movieTotal < 2}
+        {isAdmin(user) && (
+          <>
+            <div className={globStyles['margin-b-20']}>
+              <span className={globStyles['margin-r-10']}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={onAddClicked}
+                >
+                  +1 to library
+                </Button>
+              </span>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={onRemoveClicked}
+                disabled={movieTotal < 2}
+              >
+                -1 from library
+              </Button>
+            </div>
+            <div className={globStyles['margin-b-20']}>
+              <span className={globStyles['margin-r-30']}>
+                <TextField
+                  id="outlined-basic"
+                  label="Total Count"
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  inputProps={{
+                    style: { textAlign: 'right', width: '90px' },
+                  }}
+                  value={movieTotal}
+                  type="number"
+                  variant="standard"
+                />
+              </span>
+              <span className={styles['first-button']}>
+                <Button onClick={onReset} color="primary" variant="contained">
+                  Reset
+                </Button>
+              </span>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={onSaveClickedInternal}
+                disabled={!(movieValuesChanged && movieTotal)}
+              >
+                Save
+              </Button>
+            </div>
+          </>
+        )}
+        <div>
+          <a
+            href={`https://www.imdb.com/title/${imdbID}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles['imdb-link']}
           >
-            -1 from library
-          </Button>
-        </div>
-        <div className={globStyles['margin-b-20']}>
-          <span className={globStyles['margin-r-30']}>
-            <TextField
-              id="outlined-basic"
-              label="Total Count"
-              InputProps={{
-                readOnly: true,
-              }}
-              inputProps={{
-                style: { textAlign: 'right', width: '90px' },
-              }}
-              value={movieTotal}
-              type="number"
-              variant="standard"
-            />
-          </span>
-          <span className={styles['first-button']}>
-            <Button onClick={onReset} color="primary" variant="contained">
-              Reset
+            View in IMDB
+          </a>
+          {!isAdmin(user) && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={onSaveClickedInternal}
+            >
+              Add to Cart
             </Button>
-          </span>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={onSaveClickedInternal}
-            disabled={!(movieValuesChanged && movieTotal)}
-          >
-            Save
-          </Button>
+          )}
         </div>
       </>
     );
