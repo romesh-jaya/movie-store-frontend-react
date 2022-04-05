@@ -1,37 +1,36 @@
 import MaterialTable, { Action, Column, Options } from '@material-table/core';
-import React from 'react';
+import React, { useState } from 'react';
 import Delete from '@mui/icons-material/Delete';
 
 import TableIcons from '../../constants/TableIcons';
-import { cartItems } from '../../state/cart';
+import { cartItems, ICartItem } from '../../state/cart';
 import styles from './cart.module.css';
-
-interface ICartTitles {
-  title: string;
-}
+import MovieDetails from '../Movies/MovieDetails/MovieDetails';
+import StyledMTableToolbar from '../Controls/StyledMTableToolbar/StyledMTableToolbar';
 
 const Cart: React.FC = () => {
   const cartItemsArray = cartItems.use();
+  const [selectedMovieIMDBId, setSelectedMovieIMDBId] = useState('');
 
-  const onDeleteClicked = (data: ICartTitles | ICartTitles[]) => {
+  const onDeleteClicked = (data: ICartItem | ICartItem[]) => {
     console.log(data);
   };
 
   const handleClickTitle = (imdbID: string): void => {
-    console.log(imdbID);
+    setSelectedMovieIMDBId(imdbID);
   };
 
-  const getColumns = (): Column<ICartTitles>[] => {
+  const getColumns = (): Column<ICartItem>[] => {
     return [
       {
         title: 'Title',
         field: 'title',
-        render: (rowData: ICartTitles) => {
+        render: (rowData: ICartItem) => {
           return (
             <button
               type="button"
               className={styles['link-button']}
-              onClick={() => handleClickTitle(rowData.title)}
+              onClick={() => handleClickTitle(rowData.imdbID)}
             >
               {rowData.title}
             </button>
@@ -41,30 +40,25 @@ const Cart: React.FC = () => {
     ];
   };
 
-  const getOptions = (): Options<ICartTitles> => {
+  const getOptions = (): Options<ICartItem> => {
     return {
       showTitle: false,
       search: false,
       paging: false,
       sorting: true,
       headerStyle: { fontSize: '1rem' },
-      rowStyle: (rowData: any) => ({
-        backgroundColor: rowData.tableData.checked
-          ? 'rgba(232, 210, 192, 0.5)'
-          : '#fff',
-      }),
-      selection: true,
+      selection: false,
     };
   };
 
   const getActions = ():
-    | (Action<ICartTitles> | ((rowData: ICartTitles) => Action<ICartTitles>))[]
+    | (Action<ICartItem> | ((rowData: ICartItem) => Action<ICartItem>))[]
     | undefined => {
     return [
       {
-        tooltip: 'Delete selected titles',
+        tooltip: 'Delete title',
         icon: () => <Delete />,
-        onClick: (_: any, data: ICartTitles | ICartTitles[]) =>
+        onClick: (_: any, data: ICartItem | ICartItem[]) =>
           onDeleteClicked(data),
       },
     ];
@@ -76,13 +70,22 @@ const Cart: React.FC = () => {
       {cartItemsArray.length > 0 ? (
         <MaterialTable
           columns={getColumns()}
-          data={cartItemsArray.map((item) => ({ title: item }))}
+          data={cartItemsArray}
           options={getOptions()}
           actions={getActions()}
           icons={TableIcons}
+          components={{
+            Toolbar: (props) => <StyledMTableToolbar {...props} hidden />,
+          }}
         />
       ) : (
         <p>No titles have been added to the cart.</p>
+      )}
+      {selectedMovieIMDBId && (
+        <MovieDetails
+          selectedMovieIMDBId={selectedMovieIMDBId}
+          closeDrawer={() => setSelectedMovieIMDBId('')}
+        />
       )}
     </>
   );

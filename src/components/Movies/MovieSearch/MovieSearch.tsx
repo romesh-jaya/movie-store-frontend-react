@@ -32,18 +32,12 @@ const MovieSearch: React.FC = () => {
   const [inputQueryTrimmed, setInputQueryTrimmed] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [openDrawerValue, setOpenDrawerValue] = useState(false);
   const settings = useContext(SettingsContext);
   const apiKeySetting = settings.find((setting) => setting.name === 'apiKey');
   const apiKey = (apiKeySetting && apiKeySetting.value) || '';
 
-  const handleDrawerCloseFromDrawer = (): void => {
-    setOpenDrawerValue(false);
-  };
-
   const setSelectedMovieIMDBInternal = (value: string): void => {
     setSelectedMovieIMDBId(value);
-    setOpenDrawerValue(!!value);
   };
 
   const loadMovies = useCallback(
@@ -220,10 +214,10 @@ const MovieSearch: React.FC = () => {
           />
         )}
         {renderMovies()}
-        {openDrawerValue && (
+        {selectedMovieIMDBId && (
           <MovieDetails
             selectedMovieIMDBId={selectedMovieIMDBId}
-            closeDrawer={handleDrawerCloseFromDrawer}
+            closeDrawer={() => setSelectedMovieIMDBId('')}
           />
         )}
         <section>

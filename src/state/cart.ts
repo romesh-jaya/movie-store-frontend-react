@@ -1,15 +1,22 @@
 import { entity } from 'simpler-state';
 
-export const cartItems = entity<string[]>([]);
+export interface ICartItem {
+  title: string;
+  imdbID: string;
+}
+
+export const cartItems = entity<ICartItem[]>([]);
 
 export const reset = () => {
   cartItems.set([]);
 };
 
-export const addItem = (item: string) => {
+export const addItem = (item: ICartItem) => {
   cartItems.set((value) => [...value, item]);
 };
 
-export const removeItem = (item: string) => {
-  cartItems.set((value) => value.filter((itemOne) => itemOne !== item));
+export const removeItem = (imdbID: string) => {
+  cartItems.set((value) =>
+    value.filter((itemOne) => itemOne.imdbID !== imdbID)
+  );
 };

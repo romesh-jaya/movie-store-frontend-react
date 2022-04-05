@@ -1,11 +1,6 @@
 import React from 'react';
-import MaterialTable, {
-  Action,
-  Column,
-  MTableToolbar,
-  Options,
-} from '@material-table/core';
-import { Chip, styled, TablePagination, useMediaQuery } from '@mui/material';
+import MaterialTable, { Action, Column, Options } from '@material-table/core';
+import { Chip, TablePagination, useMediaQuery } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 
 import { useAuth0 } from '@auth0/auth0-react';
@@ -16,6 +11,7 @@ import styles from './movieTable.module.css';
 import IMovieLibrary from '../../../interfaces/IMovieLibrary';
 import globStyles from '../../../index.module.scss';
 import { DESKTOP_WIDTH_MEDIA_QUERY } from '../../../constants/Constants';
+import StyledMTableToolbar from '../../Controls/StyledMTableToolbar/StyledMTableToolbar';
 
 interface IProps {
   lastSearchMovieCount: number;
@@ -30,16 +26,6 @@ interface IProps {
   ) => void;
   handleChangeRowsPerPage: (pageSizeVal: number) => void;
 }
-
-interface StyledMTableToolbarProps {
-  hidden?: boolean;
-}
-
-const StyledMTableToolbar = styled((props: StyledMTableToolbarProps) => (
-  <MTableToolbar {...props} />
-))(({ hidden }) => ({
-  display: hidden ? 'none !important' : '',
-}));
 
 const MovieTable: React.FC<IProps> = (props: IProps) => {
   const {

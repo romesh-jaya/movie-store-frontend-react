@@ -25,7 +25,6 @@ const MyLibrary: React.FC = () => {
   const [lastSearchMovieCount, setLastSearchMovieCount] = useState<number>(0);
   const [movToDelete, setMovToDelete] = useState<IMovieLibrary[] | undefined>();
   const [selectedMovieIMDBId, setSelectedMovieIMDBId] = useState('');
-  const [openDrawerValue, setOpenDrawerValue] = useState(false);
   const [pageSize, setPageSize] = React.useState(10);
 
   const queryMovies = useCallback(
@@ -136,13 +135,8 @@ const MyLibrary: React.FC = () => {
     return [];
   };
 
-  const handleDrawerCloseFromDrawer = (): void => {
-    setOpenDrawerValue(false);
-  };
-
   const handleClickTitle = (imdbID: string): void => {
     setSelectedMovieIMDBId(imdbID);
-    setOpenDrawerValue(true);
   };
 
   const handleChangePage = (
@@ -204,10 +198,10 @@ const MyLibrary: React.FC = () => {
               handleClickTitle={handleClickTitle}
               handleChangeRowsPerPage={handleChangeRowsPerPage}
             />
-            {openDrawerValue && (
+            {selectedMovieIMDBId && (
               <MovieDetails
                 selectedMovieIMDBId={selectedMovieIMDBId}
-                closeDrawer={handleDrawerCloseFromDrawer}
+                closeDrawer={() => setSelectedMovieIMDBId('')}
               />
             )}
           </>

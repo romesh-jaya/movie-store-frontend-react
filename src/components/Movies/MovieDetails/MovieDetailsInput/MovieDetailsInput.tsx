@@ -51,8 +51,8 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
   const { user } = useAuth0();
   const cartItemsArray = cartItems.use();
 
-  const itemExists = (item: string): boolean => {
-    return !!cartItemsArray.find((itemOne) => itemOne === item);
+  const itemExists = (imdbID: string): boolean => {
+    return !!cartItemsArray.find((itemOne) => itemOne.imdbID === imdbID);
   };
 
   const onReset = (): void => {
@@ -251,20 +251,20 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
           </a>
           {!isAdmin(user) && (
             <>
-              {!itemExists(title) && (
+              {!itemExists(imdbID) && (
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => addItem(title)}
+                  onClick={() => addItem({ title, imdbID })}
                 >
                   Add to Cart
                 </Button>
               )}
-              {itemExists(title) && (
+              {itemExists(imdbID) && (
                 <Button
                   variant="contained"
                   color="secondary"
-                  onClick={() => removeItem(title)}
+                  onClick={() => removeItem(imdbID)}
                 >
                   Remove from Cart
                 </Button>
