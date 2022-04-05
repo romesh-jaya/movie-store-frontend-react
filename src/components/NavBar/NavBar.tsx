@@ -36,7 +36,6 @@ const StyledTab = styled((props: StyledTabProps) => (
 const NavBar: React.FC<IProps> = (props: IProps) => {
   const { tabIndex, setTabIndex } = props;
   const { logout, user } = useAuth0();
-  const tabIsHidden = !isAdmin(user);
 
   const onLogoutClicked = (): void => {
     logout({ returnTo: `${window.location.origin}/login` });
@@ -49,22 +48,31 @@ const NavBar: React.FC<IProps> = (props: IProps) => {
     setTabIndex(newTabIndex);
   };
 
+  // Note: the tabs must always be present in the DOM, in order to find the correct tabIndex
+  // So we use a strategy of hiding the unneccessary ones
   return (
     <AppBar position="static">
       <div className={styles['tab-container']}>
         <div className={styles['tabs-div']}>
-          {isAdmin(user) && (
-            <Tabs
-              value={tabIndex}
-              onChange={handleTabChange}
-              indicatorColor="secondary"
-            >
-              <StyledTab label="My Library" id="tab0" hidden={tabIsHidden} />
-              <StyledTab label="Movie Search - OMDB" id="tab1" />
-              <StyledTab label="Movie Search Analysis" id="tab2" />
-              <StyledTab label="Settings" id="tab3" />
-            </Tabs>
-          )}
+          <Tabs
+            value={tabIndex}
+            onChange={handleTabChange}
+            indicatorColor="secondary"
+          >
+            <StyledTab label="Movie Library" id="tab0" />
+            <StyledTab
+              label="Movie Search - OMDB"
+              id="tab1"
+              hidden={!isAdmin(user)}
+            />
+            <StyledTab
+              label="Movie Search Analysis"
+              id="tab2"
+              hidden={!isAdmin(user)}
+            />
+            <StyledTab label="Settings" id="tab3" hidden={!isAdmin(user)} />
+            <StyledTab label="Cart" id="tab4" hidden={isAdmin(user)} />
+          </Tabs>
         </div>
         <div className={styles['logout-button']}>
           <small className={globStyles['margin-r-10']}>

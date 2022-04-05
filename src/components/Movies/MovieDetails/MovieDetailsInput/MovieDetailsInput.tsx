@@ -19,7 +19,7 @@ import SettingsContext from '../../../../context/SettingsContext';
 import { ICheckboxValue } from '../../../../interfaces/ICheckboxValue';
 import { TextConstants } from '../../../../constants/TextConstants';
 import { isAdmin } from '../../../../utils/AuthUtil';
-import { addItem, removeItem, itemExists } from '../../../../state/cart';
+import { addItem, removeItem, cartItems } from '../../../../state/cart';
 
 interface IProps {
   languagesInitial: string[];
@@ -49,6 +49,11 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
   const prevLanguagesInitial = useRef('');
   const prevMovieValuesChanged = useRef(false);
   const { user } = useAuth0();
+  const cartItemsArray = cartItems.use();
+
+  const itemExists = (item: string): boolean => {
+    return !!cartItemsArray.find((itemOne) => itemOne === item);
+  };
 
   const onReset = (): void => {
     setMovieValuesChanged(false);

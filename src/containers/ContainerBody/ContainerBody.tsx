@@ -23,6 +23,7 @@ const MovieAnalysis = React.lazy(
   () => import('../../components/MovieAnalysis/MovieAnalysis')
 );
 const Settings = React.lazy(() => import('../../components/Settings/Settings'));
+const Cart = React.lazy(() => import('../../components/Cart/Cart'));
 
 const ContainerBody: React.FC<IProps> = (props: IProps) => {
   const { tabIndex } = props;
@@ -123,6 +124,11 @@ const ContainerBody: React.FC<IProps> = (props: IProps) => {
               {<Settings updateContext={updateContext} />}
             </TabPanel>
           </>
+        )}
+        {!isAdmin(user) && (
+          <TabPanel value={tabIndex} index={4}>
+            <Cart />
+          </TabPanel>
         )}
       </>
     );
