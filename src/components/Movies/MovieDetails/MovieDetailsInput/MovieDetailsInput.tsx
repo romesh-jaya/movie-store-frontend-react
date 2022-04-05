@@ -19,11 +19,13 @@ import SettingsContext from '../../../../context/SettingsContext';
 import { ICheckboxValue } from '../../../../interfaces/ICheckboxValue';
 import { TextConstants } from '../../../../constants/TextConstants';
 import { isAdmin } from '../../../../utils/AuthUtil';
+import { addItem, removeItem, itemExists } from '../../../../state/cart';
 
 interface IProps {
   languagesInitial: string[];
   movieTotalInitial: number;
   imdbID: string;
+  title: string;
   onSaveClicked: (
     selectedLanguages: string[],
     movieTotal: number
@@ -31,7 +33,8 @@ interface IProps {
 }
 
 const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
-  const { languagesInitial, movieTotalInitial, imdbID, onSaveClicked } = props;
+  const { languagesInitial, movieTotalInitial, imdbID, title, onSaveClicked } =
+    props;
   const [movieTotal, setMovieTotal] = useState(0);
   const [movieValuesChanged, setMovieValuesChanged] = useState(false);
   const [checkboxValues, setCheckboxValues] = useState<ICheckboxValue[]>([]);
@@ -242,13 +245,26 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
             View in IMDB
           </a>
           {!isAdmin(user) && (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={onSaveClickedInternal}
-            >
-              Add to Cart
-            </Button>
+            <>
+              {!itemExists(title) && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => addItem(title)}
+                >
+                  Add to Cart
+                </Button>
+              )}
+              {itemExists(title) && (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => removeItem(title)}
+                >
+                  Remove from Cart
+                </Button>
+              )}
+            </>
           )}
         </div>
       </>
