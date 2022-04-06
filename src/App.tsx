@@ -2,6 +2,7 @@ import React, { Suspense, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Route, Routes } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
+import { SnackbarProvider } from 'notistack';
 
 import styles from './app.module.scss';
 import axios from './axios';
@@ -65,10 +66,16 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className={styles.container}>
-        <ContainerHeader tabIndex={tabIndex} setTabIndex={setTabIndex} />
-        {renderContent()}
-      </div>
+      <SnackbarProvider
+        maxSnack={1}
+        autoHideDuration={4000}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <div className={styles.container}>
+          <ContainerHeader tabIndex={tabIndex} setTabIndex={setTabIndex} />
+          {renderContent()}
+        </div>
+      </SnackbarProvider>
     </ThemeProvider>
   );
 };

@@ -11,6 +11,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { useSnackbar } from 'notistack';
 
 import { useAuth0 } from '@auth0/auth0-react';
 import styles from './movieDetailsInput.module.css';
@@ -30,11 +31,18 @@ interface IProps {
     selectedLanguages: string[],
     movieTotal: number
   ) => Promise<boolean>;
+  handleDrawerClose: () => void;
 }
 
 const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
-  const { languagesInitial, movieTotalInitial, imdbID, title, onSaveClicked } =
-    props;
+  const {
+    languagesInitial,
+    movieTotalInitial,
+    imdbID,
+    title,
+    onSaveClicked,
+    handleDrawerClose,
+  } = props;
   const [movieTotal, setMovieTotal] = useState(0);
   const [movieValuesChanged, setMovieValuesChanged] = useState(false);
   const [checkboxValues, setCheckboxValues] = useState<ICheckboxValue[]>([]);
@@ -50,6 +58,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
   const prevMovieValuesChanged = useRef(false);
   const { user } = useAuth0();
   const cartItemsArray = cartItems.use();
+  const { enqueueSnackbar } = useSnackbar();
 
   const itemExists = (imdbID: string): boolean => {
     return !!cartItemsArray.find((itemOne) => itemOne.imdbID === imdbID);
@@ -154,6 +163,18 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
     }
   };
 
+  const onAddRemoveFromCart = (isAdd: boolean) => {
+    if (isAdd) {
+      addItem({ title, imdbID });
+      enqueueSnackbar('Title added to cart', { variant: 'success' });
+    } else {
+      removeItem(imdbID);
+      enqueueSnackbar('Title removed from cart');
+    }
+
+    handleDrawerClose();
+  };
+
   const renderLanguages = (): ReactElement => {
     return (
       <div className={globStyles['margin-b-20']}>
@@ -255,7 +276,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => addItem({ title, imdbID })}
+                  onClick={() => onAddRemoveFromCart(true)}
                 >
                   Add to Cart
                 </Button>
@@ -264,7 +285,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
                 <Button
                   variant="contained"
                   color="secondary"
-                  onClick={() => removeItem(imdbID)}
+                  onClick={() => onAddRemoveFromCart(false)}
                 >
                   Remove from Cart
                 </Button>

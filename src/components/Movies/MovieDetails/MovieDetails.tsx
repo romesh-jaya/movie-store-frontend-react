@@ -48,7 +48,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
     (languagesSetting && languagesSetting.value.split(',')) || [];
   const prevSelIMDBId = useRef('');
 
-  const handleDrawerToggle = (): void => {
+  const handleDrawerClose = (): void => {
     closeDrawer();
   };
 
@@ -211,6 +211,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
             onSaveClicked={onSaveClicked}
             imdbID={selectedMovie.imdbID}
             title={selectedMovie.title}
+            handleDrawerClose={handleDrawerClose}
           />
         </div>
       </div>
@@ -221,7 +222,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
     <Drawer
       anchor="right"
       open
-      onClose={handleDrawerToggle}
+      onClose={handleDrawerClose}
       onKeyDown={handleDrawerToggleKeyDown}
       classes={{
         paper: styles.drawer,
