@@ -65,10 +65,14 @@
 }
 
 .card-style {
-  max-width: 450px;
-  min-width: 300px;
+  width: 90%;
+  max-width: 350px;
   margin: auto;
   padding: 5px;
+
+  @media #{$md} {
+    max-width: 450px;
+  }
 }
 
 .card-title {

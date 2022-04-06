@@ -1,3 +1,6 @@
 // Taken from https://tailwindcss.com/docs/responsive-design
-$sm: '(max-width: 640px)';
-$md: '(min-width: 641px)';
+$sm: '(max-width: 768px)';
+$md: '(min-width: 769px)';
+
+$md-screen: 768px;
+$xl-screen: 1280px;

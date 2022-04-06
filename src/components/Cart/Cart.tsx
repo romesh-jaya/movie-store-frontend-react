@@ -4,7 +4,7 @@ import Delete from '@mui/icons-material/Delete';
 
 import TableIcons from '../../constants/TableIcons';
 import { cartItems, ICartItem } from '../../state/cart';
-import styles from './cart.module.css';
+import styles from './cart.module.scss';
 import MovieDetails from '../Movies/MovieDetails/MovieDetails';
 import StyledMTableToolbar from '../Controls/StyledMTableToolbar/StyledMTableToolbar';
 
@@ -47,7 +47,7 @@ const Cart: React.FC = () => {
       paging: false,
       sorting: true,
       headerStyle: { fontSize: '1rem' },
-      selection: false,
+      selection: true,
     };
   };
 
@@ -65,7 +65,7 @@ const Cart: React.FC = () => {
   };
 
   return (
-    <>
+    <div className={styles.table}>
       <h2>My Cart</h2>
       {cartItemsArray.length > 0 ? (
         <MaterialTable
@@ -75,7 +75,7 @@ const Cart: React.FC = () => {
           actions={getActions()}
           icons={TableIcons}
           components={{
-            Toolbar: (props) => <StyledMTableToolbar {...props} hidden />,
+            Toolbar: (props) => <StyledMTableToolbar {...props} />,
           }}
         />
       ) : (
@@ -87,7 +87,7 @@ const Cart: React.FC = () => {
           closeDrawer={() => setSelectedMovieIMDBId('')}
         />
       )}
-    </>
+    </div>
   );
 };
 

@@ -7,7 +7,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { isAdmin } from '../../../utils/AuthUtil';
 import { MovieType } from '../../../enums/MovieType';
 import TableIcons from '../../../constants/TableIcons';
-import styles from './movieTable.module.css';
+import styles from './movieTable.module.scss';
 import IMovieLibrary from '../../../interfaces/IMovieLibrary';
 import globStyles from '../../../index.module.scss';
 import { DESKTOP_WIDTH_MEDIA_QUERY } from '../../../constants/Constants';

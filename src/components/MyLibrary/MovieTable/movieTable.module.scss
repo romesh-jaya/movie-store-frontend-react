@@ -1,9 +1,13 @@
+@import '../../../styles/globalTheme.module.scss';
+
 .responsive-content {
   padding: 0;
 }
 
 .table-style {
-  max-width: '100%';
+  margin: auto;
+  width: 90%;
+  max-width: $xl-screen;
   margin-top: 10px;
 }
 
