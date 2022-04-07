@@ -26,4 +26,5 @@
 
 .welcome-message {
   font-size: 12px !important;
+  min-height: unset !important;
 }

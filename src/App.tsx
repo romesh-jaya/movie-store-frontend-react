@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Route, Routes } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -13,6 +13,7 @@ import Login from './components/Pages/Login';
 import ErrorPage from './components/Pages/Error';
 import PrivateRoute from './components/PrivateRoute';
 import Spinner from './components/UI/Spinner/Spinner';
+import { manageUserSession } from './utils/UserSession';
 
 const SERVER_PATH = import.meta.env.VITE_NODE_SERVER || '';
 
@@ -41,6 +42,10 @@ const App: React.FC = () => {
     }
     return req;
   });
+
+  useEffect(() => {
+    manageUserSession();
+  }, []);
 
   const renderContent = () => {
     if (isLoading) {
