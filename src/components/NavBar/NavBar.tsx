@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -8,6 +8,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { isAdmin } from '../../utils/AuthUtil';
 import styles from './navbar.module.css';
 import globStyles from '../../index.module.scss';
+import { cartItems } from '../../state/cart';
 
 interface IProps {
   tabIndex: number;
@@ -15,7 +16,7 @@ interface IProps {
 }
 
 interface StyledTabProps {
-  label: string;
+  label: ReactNode;
   id: string;
   hidden?: boolean;
 }
@@ -36,6 +37,7 @@ const StyledTab = styled((props: StyledTabProps) => (
 const NavBar: React.FC<IProps> = (props: IProps) => {
   const { tabIndex, setTabIndex } = props;
   const { logout, user } = useAuth0();
+  const cartItemsLength = cartItems.use().length;
 
   const onLogoutClicked = (): void => {
     logout({ returnTo: `${window.location.origin}/login` });
@@ -71,7 +73,20 @@ const NavBar: React.FC<IProps> = (props: IProps) => {
               hidden={!isAdmin(user)}
             />
             <StyledTab label="Settings" id="tab3" hidden={!isAdmin(user)} />
-            <StyledTab label="Cart" id="tab4" hidden={isAdmin(user)} />
+            <StyledTab
+              label={
+                <div>
+                  Cart
+                  {cartItemsLength > 0 && (
+                    <span className={styles['number-items']}>
+                      {cartItemsLength}
+                    </span>
+                  )}
+                </div>
+              }
+              id="tab4"
+              hidden={isAdmin(user)}
+            />
           </Tabs>
         </div>
         <div className={styles['logout-button']}>

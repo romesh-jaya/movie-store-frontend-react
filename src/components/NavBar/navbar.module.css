@@ -13,3 +13,13 @@
 .logout-button {
   float: right;
 }
+
+.number-items {
+  height: 18px;
+  width: 18px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 5px;
+}
