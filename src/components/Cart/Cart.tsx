@@ -3,17 +3,23 @@ import React, { useState } from 'react';
 import Delete from '@mui/icons-material/Delete';
 
 import TableIcons from '../../constants/TableIcons';
-import { cartItems, ICartItem } from '../../state/cart';
+import { cartItems, ICartItem, removeItem } from '../../state/cart';
 import styles from './cart.module.scss';
 import MovieDetails from '../Movies/MovieDetails/MovieDetails';
 import StyledMTableToolbar from '../Controls/StyledMTableToolbar/StyledMTableToolbar';
+import isArray from 'lodash/isArray';
 
 const Cart: React.FC = () => {
   const cartItemsArray = cartItems.use();
   const [selectedMovieIMDBId, setSelectedMovieIMDBId] = useState('');
 
   const onDeleteClicked = (data: ICartItem | ICartItem[]) => {
-    console.log(data);
+    if (isArray(data)) {
+      data.forEach((dataOne) => removeItem(dataOne.imdbID));
+      return;
+    }
+
+    removeItem(data.imdbID);
   };
 
   const handleClickTitle = (imdbID: string): void => {

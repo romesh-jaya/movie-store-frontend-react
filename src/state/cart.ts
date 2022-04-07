@@ -1,6 +1,7 @@
 import { entity } from 'simpler-state';
 
 export interface ICartItem {
+  id: string;
   title: string;
   imdbID: string;
 }
