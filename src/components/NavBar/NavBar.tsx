@@ -1,13 +1,15 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { Button, styled } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 import { isAdmin } from '../../utils/AuthUtil';
 import styles from './navbar.module.css';
-import globStyles from '../../index.module.scss';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { cartItems } from '../../state/cart';
 
 interface IProps {
@@ -36,6 +38,17 @@ const StyledTab = styled((props: StyledTabProps) => (
 
 const NavBar: React.FC<IProps> = (props: IProps) => {
   const { tabIndex, setTabIndex } = props;
+  const [anchorElMenu, setAnchorElMenu] = useState<null | HTMLElement>(null);
+  const menuOpen = Boolean(anchorElMenu);
+
+  const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorElMenu(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorElMenu(null);
+  };
+
   const { logout, user } = useAuth0();
   const cartItemsLength = cartItems.use().length;
 
@@ -90,17 +103,24 @@ const NavBar: React.FC<IProps> = (props: IProps) => {
           </Tabs>
         </div>
         <div className={styles['logout-button']}>
-          <small className={globStyles['margin-r-10']}>
-            Welcome, {user && user?.name && user.name.split(' ')[0]}
-          </small>
-          <Button
-            id="logout-button"
-            variant="outlined"
-            color="secondary"
-            onClick={onLogoutClicked}
-          >
-            Logout
+          <Button color="secondary" onClick={openMenu}>
+            <SettingsIcon />
           </Button>
+          <Menu
+            anchorEl={anchorElMenu}
+            open={menuOpen}
+            onClose={handleCloseMenu}
+          >
+            <MenuItem
+              disabled
+              classes={{
+                root: styles['welcome-message'],
+              }}
+            >
+              Welcome, {user && user?.name && user.name.split(' ')[0]}
+            </MenuItem>
+            <MenuItem onClick={onLogoutClicked}>Logout</MenuItem>
+          </Menu>
         </div>
       </div>
     </AppBar>

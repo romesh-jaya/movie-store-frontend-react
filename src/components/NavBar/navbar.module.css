@@ -23,3 +23,7 @@
   display: inline-block;
   margin-left: 5px;
 }
+
+.welcome-message {
+  font-size: 12px !important;
+}

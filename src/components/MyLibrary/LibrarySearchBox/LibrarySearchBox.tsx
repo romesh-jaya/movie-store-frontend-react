@@ -1,5 +1,5 @@
-import React, { useState, useCallback, ReactElement, useEffect } from 'react';
-import { Button, Typography, useMediaQuery } from '@mui/material';
+import React, { useState, useCallback, ReactElement } from 'react';
+import { Button, Typography } from '@mui/material';
 import Card from '@mui/material/Card';
 import { ExportToCsv } from 'export-to-csv';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -16,7 +16,6 @@ import IMovieLibrary from '../../../interfaces/IMovieLibrary';
 import { isAdmin } from '../../../utils/AuthUtil';
 import { formatExportData } from '../../../utils/ExportUtil';
 import SearchControls from './SearchControls/SearchControls';
-import { DESKTOP_WIDTH_MEDIA_QUERY } from '../../../constants/Constants';
 
 const exportFileName = 'Export.csv';
 
@@ -44,8 +43,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   const [searchGenres, setSearchGenres] = useState<string[]>([]);
   const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
   const { user } = useAuth0();
-  const isDesktopWidth = useMediaQuery(DESKTOP_WIDTH_MEDIA_QUERY);
-  const [isBoxExpanded, setIsBoxExpanded] = useState(false);
+  const [isBoxExpanded, setIsBoxExpanded] = useState(true);
 
   const { enableExportButton, setLastSearchInfo, exportMovies } = props;
 
@@ -68,10 +66,6 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     searchYearFrom,
     searchYearTo,
   ]);
-
-  useEffect(() => {
-    setIsBoxExpanded(isDesktopWidth);
-  }, [isDesktopWidth]);
 
   const newSearch = useCallback((): void => {
     if (isSearchTextValid()) {
