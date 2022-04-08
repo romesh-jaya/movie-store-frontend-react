@@ -1,13 +1,18 @@
 import MaterialTable, { Action, Column, Options } from '@material-table/core';
 import React, { useState } from 'react';
 import Delete from '@mui/icons-material/Delete';
+import isArray from 'lodash/isArray';
+import Button from '@mui/material/Button';
 
 import TableIcons from '../../constants/TableIcons';
 import { cartItems, ICartItem, removeItem } from '../../state/cart';
 import styles from './cart.module.scss';
 import MovieDetails from '../Movies/MovieDetails/MovieDetails';
 import StyledMTableToolbar from '../Controls/StyledMTableToolbar/StyledMTableToolbar';
-import isArray from 'lodash/isArray';
+
+import globStyles from '../../index.module.scss';
+
+const pricePerTitleUSD = 2; // TODO: Hard coded for now
 
 const Cart: React.FC = () => {
   const cartItemsArray = cartItems.use();
@@ -31,6 +36,7 @@ const Cart: React.FC = () => {
       {
         title: 'Title',
         field: 'title',
+        width: '85%',
         render: (rowData: ICartItem) => {
           return (
             <button
@@ -42,6 +48,12 @@ const Cart: React.FC = () => {
             </button>
           );
         },
+      },
+      {
+        title: 'Amount (USD)',
+        field: 'amount',
+        width: '15%',
+        render: () => <p>{pricePerTitleUSD.toFixed(2)}</p>,
       },
     ];
   };
@@ -70,20 +82,58 @@ const Cart: React.FC = () => {
     ];
   };
 
+  const getSummaryValue = (
+    column: Column<ICartItem>,
+    data: ICartItem[]
+  ): string | undefined => {
+    switch (column.field) {
+      case 'title':
+        return 'Total: ';
+      case 'amount':
+        return data.reduce((agg) => agg + 1 * pricePerTitleUSD, 0).toFixed(2);
+      default:
+        return undefined;
+    }
+  };
+
   return (
     <div className={styles.table}>
       <h2>My Cart</h2>
       {cartItemsArray.length > 0 ? (
-        <MaterialTable
-          columns={getColumns()}
-          data={cartItemsArray}
-          options={getOptions()}
-          actions={getActions()}
-          icons={TableIcons}
-          components={{
-            Toolbar: (props) => <StyledMTableToolbar {...props} />,
-          }}
-        />
+        <>
+          <MaterialTable
+            columns={getColumns()}
+            data={cartItemsArray}
+            options={getOptions()}
+            actions={getActions()}
+            icons={TableIcons}
+            components={{
+              Toolbar: (props) => <StyledMTableToolbar {...props} />,
+            }}
+            renderSummaryRow={({ column, data }) => {
+              return {
+                value: getSummaryValue(column, data),
+                style: {
+                  fontWeight: 'bold',
+                  fontSize: '16px',
+                  lineHeight: '3',
+                },
+              };
+            }}
+          />
+          <div className={styles['button-div']}>
+            <span className={globStyles['right-spacer']}>
+              <Button
+                id="pay-button"
+                color="primary"
+                variant="contained"
+                autoFocus
+              >
+                Proceed to Rent
+              </Button>
+            </span>
+          </div>
+        </>
       ) : (
         <p>No titles have been added to the cart.</p>
       )}
