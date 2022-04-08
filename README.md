@@ -33,6 +33,7 @@ Tech Stack used:
 - useMediaQuery hook
 - chart-js
 - Side-drawer
+- notistack
 - Cypress e2e testing
 - MERN
 
