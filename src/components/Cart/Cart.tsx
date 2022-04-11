@@ -11,12 +11,14 @@ import MovieDetails from '../Movies/MovieDetails/MovieDetails';
 import StyledMTableToolbar from '../Controls/StyledMTableToolbar/StyledMTableToolbar';
 
 import globStyles from '../../index.module.scss';
+import axios from '../../axios';
 
 const pricePerTitleUSD = 2; // TODO: Hard coded for now
 
 const Cart: React.FC = () => {
   const cartItemsArray = cartItems.use();
   const [selectedMovieIMDBId, setSelectedMovieIMDBId] = useState('');
+  const [error, setError] = useState('');
 
   const onDeleteClicked = (data: ICartItem | ICartItem[]) => {
     if (isArray(data)) {
@@ -96,6 +98,24 @@ const Cart: React.FC = () => {
     }
   };
 
+  const proceedToRent = async () => {
+    const titlesRented = cartItemsArray.map((item) => item.title);
+
+    setError('');
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_NODE_SERVER}/payments/create-checkout-session`,
+        { titlesRented }
+      );
+      const newURL = response.data.url;
+      console.info('Redirecting to : ', newURL);
+      window.location.href = newURL;
+    } catch (error) {
+      setError(`Error while submitting payment: ${error}`);
+    }
+  };
+
   return (
     <div className={styles.table}>
       <h2>My Cart</h2>
@@ -128,11 +148,13 @@ const Cart: React.FC = () => {
                 color="primary"
                 variant="contained"
                 autoFocus
+                onClick={proceedToRent}
               >
                 Proceed to Rent
               </Button>
             </span>
           </div>
+          {error && <p className={globStyles['error-text']}>{error}</p>}
         </>
       ) : (
         <p>No titles have been added to the cart.</p>
