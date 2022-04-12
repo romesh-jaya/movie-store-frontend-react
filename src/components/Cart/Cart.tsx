@@ -15,6 +15,9 @@ import axios from '../../axios';
 
 const pricePerTitleUSD = 2; // TODO: Hard coded for now
 
+const redirectFromCheckoutURLCancelled = window.location.origin.toString();
+const redirectFromCheckoutURLSuccess = `${window.location.origin.toString()}/transaction-result`;
+
 const Cart: React.FC = () => {
   const cartItemsArray = cartItems.use();
   const [selectedMovieIMDBId, setSelectedMovieIMDBId] = useState('');
@@ -106,7 +109,11 @@ const Cart: React.FC = () => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_NODE_SERVER}/payments/create-checkout-session`,
-        { titlesRented }
+        {
+          titlesRented,
+          redirectFromCheckoutURLCancelled,
+          redirectFromCheckoutURLSuccess,
+        }
       );
       const newURL = response.data.url;
       console.info('Redirecting to : ', newURL);

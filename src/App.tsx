@@ -4,16 +4,23 @@ import { Route, Routes } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { SnackbarProvider } from 'notistack';
 
+import globStyles from './index.module.scss';
 import styles from './app.module.scss';
 import axios from './axios';
-import ContainerBody from './containers/ContainerBody/ContainerBody';
 import { MAIN_COLOUR, SEC_COLOUR_TEXT, SEC_COLOUR } from './constants/Colours';
 import ContainerHeader from './containers/ContainerHeader/ContainerHeader';
-import Login from './components/Pages/Login';
-import ErrorPage from './components/Pages/Error';
-import PrivateRoute from './components/PrivateRoute';
 import Spinner from './components/UI/Spinner/Spinner';
 import { manageUserSession } from './utils/UserSession';
+
+const Login = React.lazy(() => import('./components/Pages/Login/Login'));
+const TransactionResult = React.lazy(
+  () => import('./components/Pages/TransactionResult/TransactionResult')
+);
+const ContainerBody = React.lazy(
+  () => import('./containers/ContainerBody/ContainerBody')
+);
+const PrivateRoute = React.lazy(() => import('./components/PrivateRoute'));
+const ErrorPage = React.lazy(() => import('./components/Pages/Error/Error'));
 
 const SERVER_PATH = import.meta.env.VITE_NODE_SERVER || '';
 
@@ -50,7 +57,7 @@ const App: React.FC = () => {
   const renderContent = () => {
     if (isLoading) {
       return (
-        <div className={styles['spinner-full-page']}>
+        <div className={globStyles['spinner-full-page']}>
           <Spinner />
         </div>
       );
@@ -62,6 +69,7 @@ const App: React.FC = () => {
           <Route path="/login-admin" element={<Login />} />
           <Route path="/" element={<PrivateRoute />}>
             <Route path="/" element={<ContainerBody tabIndex={tabIndex} />} />
+            <Route path="/transaction-result" element={<TransactionResult />} />
           </Route>
           <Route element={<ErrorPage />} />
         </Routes>

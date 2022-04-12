@@ -8,6 +8,11 @@ export interface ICartItem {
 
 export const cartItems = entity<ICartItem[]>([]);
 
+export const clearCart = () => {
+  cartItems.set([]);
+  saveToLocalStorage();
+};
+
 export const initItems = (items: ICartItem[]) => {
   cartItems.set(items);
 };

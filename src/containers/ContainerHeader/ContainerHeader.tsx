@@ -1,5 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import React from 'react';
+import { useLocation } from 'react-router';
 
 import logo from '../../assets/img/movie.png';
 import NavBar from '../../components/NavBar/NavBar';
@@ -13,6 +14,8 @@ interface IProps {
 const ContainerHeader: React.FC<IProps> = (props: IProps) => {
   const { tabIndex, setTabIndex } = props;
   const { user } = useAuth0();
+  const location = useLocation();
+  const dontShowNavBar = location.pathname.includes('transaction-result');
 
   return (
     <>
@@ -31,7 +34,9 @@ const ContainerHeader: React.FC<IProps> = (props: IProps) => {
           </h1>
         </div>
       </div>
-      {!!user && <NavBar tabIndex={tabIndex} setTabIndex={setTabIndex} />}
+      {!!user && !dontShowNavBar && (
+        <NavBar tabIndex={tabIndex} setTabIndex={setTabIndex} />
+      )}
     </>
   );
 };
