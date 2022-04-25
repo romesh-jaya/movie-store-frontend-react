@@ -6,7 +6,8 @@ import React, {
   useRef,
   useCallback,
 } from 'react';
-import { Button, Drawer } from '@mui/material';
+import Button from '@mui/material/Button';
+import Drawer from '@mui/material/Drawer';
 import ClearIcon from '@mui/icons-material/Clear';
 
 import axios from '../../../axios';

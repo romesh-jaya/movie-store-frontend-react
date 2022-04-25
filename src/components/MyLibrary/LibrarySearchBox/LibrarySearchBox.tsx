@@ -1,5 +1,6 @@
 import React, { useState, useCallback, ReactElement } from 'react';
-import { Button, Typography } from '@mui/material';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import { ExportToCsv } from 'export-to-csv';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';

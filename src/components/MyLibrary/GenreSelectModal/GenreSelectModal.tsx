@@ -8,7 +8,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
-import { useMediaQuery } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import styles from './genreSelectModal.module.css';
 import { Genres, IGenre } from '../../../constants/Genres';
 import { ICheckboxValue } from '../../../interfaces/ICheckboxValue';

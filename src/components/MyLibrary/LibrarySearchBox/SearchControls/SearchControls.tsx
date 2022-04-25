@@ -1,5 +1,9 @@
 import React, { ReactElement, useContext } from 'react';
-import { Button, FormControl, MenuItem, Popover, Select } from '@mui/material';
+import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import MenuItem from '@mui/material/MenuItem';
+import Popover from '@mui/material/Popover';
+import Select from '@mui/material/Select';
 import HelpIcon from '@mui/icons-material/Help';
 
 import SettingsContext from '../../../../context/SettingsContext';
