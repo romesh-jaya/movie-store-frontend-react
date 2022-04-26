@@ -1,5 +1,5 @@
 import MaterialTable, { Action, Column, Options } from '@material-table/core';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Delete from '@mui/icons-material/Delete';
 import isArray from 'lodash/isArray';
 import Button from '@mui/material/Button';
@@ -12,16 +12,20 @@ import StyledMTableToolbar from '../Controls/StyledMTableToolbar/StyledMTableToo
 
 import globStyles from '../../index.module.scss';
 import axios from '../../axios';
-
-const pricePerTitleUSD = 2; // TODO: Hard coded for now
+import { initPrices, prices, titlePriceId } from '../../state/price';
 
 const redirectFromCheckoutURLCancelled = window.location.origin.toString();
 const redirectFromCheckoutURLSuccess = `${window.location.origin.toString()}/transaction-result`;
 
 const Cart: React.FC = () => {
   const cartItemsArray = cartItems.use();
+  const pricesArray = prices.use();
   const [selectedMovieIMDBId, setSelectedMovieIMDBId] = useState('');
   const [error, setError] = useState('');
+  const pricePerTitle =
+    pricesArray.find((price) => price.id === titlePriceId)?.price || 0;
+  const priceCurrency =
+    pricesArray.find((price) => price.id === titlePriceId)?.currency || '';
 
   const onDeleteClicked = (data: ICartItem | ICartItem[]) => {
     if (isArray(data)) {
@@ -35,6 +39,12 @@ const Cart: React.FC = () => {
   const handleClickTitle = (imdbID: string): void => {
     setSelectedMovieIMDBId(imdbID);
   };
+
+  useEffect(() => {
+    if (pricesArray.length === 0) {
+      getPrices();
+    }
+  }, []);
 
   const getColumns = (): Column<ICartItem>[] => {
     return [
@@ -55,10 +65,10 @@ const Cart: React.FC = () => {
         },
       },
       {
-        title: 'Amount (USD)',
+        title: `Amount (${priceCurrency.toUpperCase()})`,
         field: 'amount',
         width: '15%',
-        render: () => <p>{pricePerTitleUSD.toFixed(2)}</p>,
+        render: () => <p>{pricePerTitle.toFixed(2)}</p>,
       },
     ];
   };
@@ -95,7 +105,7 @@ const Cart: React.FC = () => {
       case 'title':
         return 'Total: ';
       case 'amount':
-        return data.reduce((agg) => agg + 1 * pricePerTitleUSD, 0).toFixed(2);
+        return data.reduce((agg) => agg + 1 * pricePerTitle, 0).toFixed(2);
       default:
         return undefined;
     }
@@ -120,6 +130,26 @@ const Cart: React.FC = () => {
       window.location.href = newURL;
     } catch (error) {
       setError(`Error while submitting payment: ${error}`);
+    }
+  };
+
+  const getPrices = async () => {
+    setError('');
+
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_NODE_SERVER}/payments/title-price`
+      );
+      const { price, currency } = response.data;
+      initPrices([
+        {
+          id: titlePriceId,
+          currency,
+          price,
+        },
+      ]);
+    } catch (error) {
+      setError(`Error while fetching prices: ${error}`);
     }
   };
 
