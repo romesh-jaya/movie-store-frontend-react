@@ -1,0 +1,12 @@
+@import '../../styles/globalTheme.module.scss';
+
+.container {
+  margin: auto;
+  width: 90%;
+  max-width: $xl-screen;
+  margin-top: 20px;
+}
+
+.button-div {
+  margin-top: 20px;
+}

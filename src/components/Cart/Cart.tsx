@@ -13,6 +13,7 @@ import StyledMTableToolbar from '../Controls/StyledMTableToolbar/StyledMTableToo
 import globStyles from '../../index.module.scss';
 import axios from '../../axios';
 import { initPrices, prices, titlePriceId } from '../../state/price';
+import { useNavigate } from 'react-router-dom';
 
 const redirectFromCheckoutURLCancelled = window.location.origin.toString();
 const redirectFromCheckoutURLSuccess = `${window.location.origin.toString()}/transaction-result`;
@@ -20,6 +21,7 @@ const redirectFromCheckoutURLSuccess = `${window.location.origin.toString()}/tra
 const Cart: React.FC = () => {
   const cartItemsArray = cartItems.use();
   const pricesArray = prices.use();
+  const navigate = useNavigate();
   const [selectedMovieIMDBId, setSelectedMovieIMDBId] = useState('');
   const [error, setError] = useState('');
   const pricePerTitle =
@@ -113,6 +115,11 @@ const Cart: React.FC = () => {
 
   const proceedToRent = async () => {
     const titlesRented = cartItemsArray.map((item) => item.title);
+
+    if (import.meta.env.VITE_REDIRECT_TO_STRIPE !== 'TRUE') {
+      navigate('/checkout');
+      return;
+    }
 
     setError('');
 

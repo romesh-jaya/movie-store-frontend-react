@@ -15,7 +15,9 @@ const ContainerHeader: React.FC<IProps> = (props: IProps) => {
   const { tabIndex, setTabIndex } = props;
   const { user } = useAuth0();
   const location = useLocation();
-  const dontShowNavBar = location.pathname.includes('transaction-result');
+  const dontShowNavBar =
+    location.pathname.includes('transaction-result') ||
+    location.pathname.includes('checkout');
 
   return (
     <>

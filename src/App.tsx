@@ -21,6 +21,7 @@ const ContainerBody = React.lazy(
 );
 const PrivateRoute = React.lazy(() => import('./components/PrivateRoute'));
 const ErrorPage = React.lazy(() => import('./components/Pages/Error/Error'));
+const Checkout = React.lazy(() => import('./components/Checkout/Checkout'));
 
 const SERVER_PATH = import.meta.env.VITE_NODE_SERVER || '';
 
@@ -69,6 +70,7 @@ const App: React.FC = () => {
           <Route path="/login-admin" element={<Login />} />
           <Route path="/" element={<PrivateRoute />}>
             <Route path="/" element={<ContainerBody tabIndex={tabIndex} />} />
+            <Route path="/checkout" element={<Checkout />} />
             <Route path="/transaction-result" element={<TransactionResult />} />
           </Route>
           <Route element={<ErrorPage />} />

@@ -14,6 +14,8 @@ interface ImportMetaEnv {
   readonly VITE_AUTH0_CLIENT_ID: string;
   readonly VITE_AUTH0_AUDIENCE: string;
   readonly VITE_AUTH0_ADMIN_USER: string;
+  readonly VITE_REDIRECT_TO_STRIPE: string;
+  readonly VITE_STRIPE_PK_TEST: string;
   // more env variables...
 }
 
