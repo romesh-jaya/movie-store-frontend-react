@@ -24,6 +24,7 @@ const appearance: Appearance = {
 
 export default function Checkout() {
   const [clientSecret, setClientSecret] = useState('');
+  const [orderId, setOrderId] = useState('');
   const [error, setError] = useState('');
   const cartItemsArray = cartItems.use();
   const navigate = useNavigate();
@@ -40,9 +41,9 @@ export default function Checkout() {
         }
       );
       setClientSecret(response.data.clientSecret);
-      console.info('response.data.clientSecret : ', response.data.clientSecret);
+      setOrderId(response.data.orderId);
     } catch (error) {
-      setError(`Error while submitting payment: ${error}`);
+      setError(`Error while creating payment intent: ${error}`);
     }
   };
 
@@ -62,7 +63,7 @@ export default function Checkout() {
     <div className={styles['container']}>
       {clientSecret && (
         <Elements options={options} stripe={stripePromise}>
-          <CheckoutForm />
+          <CheckoutForm orderId={orderId} />
         </Elements>
       )}
       {error && (

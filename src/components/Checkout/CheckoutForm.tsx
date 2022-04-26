@@ -6,8 +6,14 @@ import {
 } from '@stripe/react-stripe-js';
 
 import styles from './checkoutForm.module.scss';
+import { redirectFromCheckoutURLSuccess } from '../../constants/Constants';
 
-export default function CheckoutForm() {
+interface IProps {
+  orderId?: string;
+}
+
+export default function CheckoutForm(props: IProps) {
+  const { orderId } = props;
   const stripe = useStripe();
   const elements = useElements();
 
@@ -61,8 +67,7 @@ export default function CheckoutForm() {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        // Make sure to change this to your payment completion page
-        return_url: 'http://localhost:3000',
+        return_url: `${redirectFromCheckoutURLSuccess}?orderId=${orderId}`,
       },
     });
 
@@ -95,7 +100,6 @@ export default function CheckoutForm() {
           {isLoading ? <div className="spinner" id="spinner"></div> : 'Pay now'}
         </span>
       </button>
-      {/* Show any error or success messages */}
       {message && (
         <div id="payment-message" className={styles['payment-message']}>
           {message}

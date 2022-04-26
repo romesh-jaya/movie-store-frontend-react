@@ -14,9 +14,10 @@ import globStyles from '../../index.module.scss';
 import axios from '../../axios';
 import { initPrices, prices, titlePriceId } from '../../state/price';
 import { useNavigate } from 'react-router-dom';
-
-const redirectFromCheckoutURLCancelled = window.location.origin.toString();
-const redirectFromCheckoutURLSuccess = `${window.location.origin.toString()}/transaction-result`;
+import {
+  redirectFromCheckoutURLCancelled,
+  redirectFromCheckoutURLSuccess,
+} from '../../constants/Constants';
 
 const Cart: React.FC = () => {
   const cartItemsArray = cartItems.use();
@@ -163,46 +164,51 @@ const Cart: React.FC = () => {
   return (
     <div className={styles.table}>
       <h2>My Cart</h2>
-      {cartItemsArray.length > 0 ? (
+
+      {!error && (
         <>
-          <MaterialTable
-            columns={getColumns()}
-            data={cartItemsArray}
-            options={getOptions()}
-            actions={getActions()}
-            icons={TableIcons}
-            components={{
-              Toolbar: (props) => <StyledMTableToolbar {...props} />,
-            }}
-            renderSummaryRow={({ column, data }) => {
-              return {
-                value: getSummaryValue(column, data),
-                style: {
-                  fontWeight: 'bold',
-                  fontSize: '16px',
-                  lineHeight: '3',
-                },
-              };
-            }}
-          />
-          <div className={styles['button-div']}>
-            <span className={globStyles['right-spacer']}>
-              <Button
-                id="pay-button"
-                color="primary"
-                variant="contained"
-                autoFocus
-                onClick={proceedToRent}
-              >
-                Proceed to Rent
-              </Button>
-            </span>
-          </div>
-          {error && <p className={globStyles['error-text']}>{error}</p>}
+          {cartItemsArray.length > 0 ? (
+            <>
+              <MaterialTable
+                columns={getColumns()}
+                data={cartItemsArray}
+                options={getOptions()}
+                actions={getActions()}
+                icons={TableIcons}
+                components={{
+                  Toolbar: (props) => <StyledMTableToolbar {...props} />,
+                }}
+                renderSummaryRow={({ column, data }) => {
+                  return {
+                    value: getSummaryValue(column, data),
+                    style: {
+                      fontWeight: 'bold',
+                      fontSize: '16px',
+                      lineHeight: '3',
+                    },
+                  };
+                }}
+              />
+              <div className={styles['button-div']}>
+                <span className={globStyles['right-spacer']}>
+                  <Button
+                    id="pay-button"
+                    color="primary"
+                    variant="contained"
+                    autoFocus
+                    onClick={proceedToRent}
+                  >
+                    Proceed to Rent
+                  </Button>
+                </span>
+              </div>
+            </>
+          ) : (
+            <p>No titles have been added to the cart.</p>
+          )}
         </>
-      ) : (
-        <p>No titles have been added to the cart.</p>
       )}
+      {error && <p className={globStyles['error-text']}>{error}</p>}
       {selectedMovieIMDBId && (
         <MovieDetails
           selectedMovieIMDBId={selectedMovieIMDBId}
