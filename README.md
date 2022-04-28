@@ -36,6 +36,7 @@ Tech Stack used:
 - notistack
 - Cypress e2e testing
 - MERN
+- Stripe payments
 
 This project uses OMDB API to search for movie data. The latter has a 1,000 daily API call limit. Another free alternative might be TMDB: https://developers.themoviedb.org/3/getting-started
 
@@ -45,6 +46,10 @@ To deploy to Firebase, first perform a build, then run the following command fro
 firebase deploy --only hosting
 
 Note: MongoDB automatically goes to inactive state after a period of inactivity, and needs restarting manually.
+
+## Stripe payments
+
+There is an environment variable, namely VITE_REDIRECT_TO_STRIPE, via which we can choose either Stripe's builtin checkout page, or our own Checkout page. For more info, https://stripe.com/docs/checkout/quickstart.
 
 ## Available Scripts
 

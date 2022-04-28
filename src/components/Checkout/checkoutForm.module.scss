@@ -1,3 +1,5 @@
+@import '../../styles/globalTheme.module.scss';
+
 .payment-form {
   margin: auto;
   width: 30vw;
@@ -7,6 +9,11 @@
     0px 2px 5px 0px rgba(50, 50, 93, 0.1), 0px 1px 1.5px 0px rgba(0, 0, 0, 0.07);
   border-radius: 7px;
   padding: 40px;
+
+  @media #{$xs} {
+    width: 100%;
+    min-width: initial;
+  }
 }
 
 .payment-message {
@@ -21,8 +28,7 @@
   margin-bottom: 24px;
 }
 
-/* Buttons and links 
-button {
+.submit {
   background: #5469d4;
   font-family: Arial, sans-serif;
   color: #ffffff;
@@ -38,17 +44,15 @@ button {
   width: 100%;
 }
 
-button:hover {
+.submit:hover {
   filter: contrast(115%);
 }
 
-button:disabled {
+.submit:disabled {
   opacity: 0.5;
   cursor: default;
 }
-*/
 
-/* spinner/processing state, errors 
 .spinner,
 .spinner:before,
 .spinner:after {
@@ -109,13 +113,5 @@ button:disabled {
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
-  }
-}
-*/
-
-@media only screen and (max-width: 600px) {
-  form {
-    width: 80vw;
-    min-width: initial;
   }
 }

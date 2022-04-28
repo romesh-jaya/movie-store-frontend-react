@@ -95,9 +95,17 @@ export default function CheckoutForm(props: IProps) {
         id="payment-element"
         className={styles['payment-element']}
       />
-      <button disabled={isLoading || !stripe || !elements} id="submit">
+      <button
+        disabled={isLoading || !stripe || !elements}
+        id="submit"
+        className={styles['submit']}
+      >
         <span id="button-text">
-          {isLoading ? <div className="spinner" id="spinner"></div> : 'Pay now'}
+          {isLoading ? (
+            <div className={styles['spinner']} id="spinner"></div>
+          ) : (
+            'Pay now'
+          )}
         </span>
       </button>
       {message && (

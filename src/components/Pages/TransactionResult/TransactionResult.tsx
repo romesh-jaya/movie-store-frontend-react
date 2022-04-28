@@ -20,6 +20,11 @@ const TransactionResult: React.FC = () => {
     const completePayment = async () => {
       const orderId = searchParams.get('orderId');
 
+      if (!orderId) {
+        setError('OrderId param is missing in URL');
+        return;
+      }
+
       setError('');
 
       try {
