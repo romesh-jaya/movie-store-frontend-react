@@ -3,7 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import Button from '@mui/material/Button';
 import { Navigate, useLocation } from 'react-router';
 
-import globStyles from '../../../index.module.scss';
+import globStyles from '../../index.module.scss';
 import styles from './login.module.css';
 
 // Note: the Auth0 hosted Universal classic login screen has been customized in order to pass a custom

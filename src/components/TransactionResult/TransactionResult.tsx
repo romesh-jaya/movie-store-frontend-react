@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
 import styles from './transactionResult.module.scss';
-import globStyles from '../../../index.module.scss';
+import globStyles from '../../index.module.scss';
 import Button from '@mui/material/Button';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import axios from '../../../axios';
-import Spinner from '../../UI/Spinner/Spinner';
-import { clearCart } from '../../../state/cart';
+import axios from '../../axios';
+import Spinner from '../UI/Spinner/Spinner';
+import { clearCart } from '../../state/cart';
 
 const TransactionResult: React.FC = () => {
   const [searchParams] = useSearchParams();

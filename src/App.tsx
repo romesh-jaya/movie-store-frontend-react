@@ -12,16 +12,19 @@ import ContainerHeader from './containers/ContainerHeader/ContainerHeader';
 import Spinner from './components/UI/Spinner/Spinner';
 import { manageUserSession } from './utils/UserSession';
 
-const Login = React.lazy(() => import('./components/Pages/Login/Login'));
+const Login = React.lazy(() => import('./components/Login/Login'));
 const TransactionResult = React.lazy(
-  () => import('./components/Pages/TransactionResult/TransactionResult')
+  () => import('./components/TransactionResult/TransactionResult')
 );
 const ContainerBody = React.lazy(
   () => import('./containers/ContainerBody/ContainerBody')
 );
 const PrivateRoute = React.lazy(() => import('./components/PrivateRoute'));
-const ErrorPage = React.lazy(() => import('./components/Pages/Error/Error'));
+const ErrorPage = React.lazy(() => import('./components/Error/Error'));
 const Checkout = React.lazy(() => import('./components/Checkout/Checkout'));
+const MySubscriptions = React.lazy(
+  () => import('./components/MySubscriptions/MySubscriptions')
+);
 
 const SERVER_PATH = import.meta.env.VITE_NODE_SERVER || '';
 
@@ -71,6 +74,7 @@ const App: React.FC = () => {
           <Route path="/" element={<PrivateRoute />}>
             <Route path="/" element={<ContainerBody tabIndex={tabIndex} />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/my-subscriptions" element={<MySubscriptions />} />
             <Route path="/transaction-result" element={<TransactionResult />} />
           </Route>
           <Route element={<ErrorPage />} />

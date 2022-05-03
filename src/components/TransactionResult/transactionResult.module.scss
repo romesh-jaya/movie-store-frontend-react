@@ -1,0 +1,11 @@
+@import '../../styles/globalTheme.module.scss';
+
+.table {
+  margin: auto;
+  width: 90%;
+  max-width: $md-screen;
+}
+
+.button-div {
+  margin-top: 30px;
+}

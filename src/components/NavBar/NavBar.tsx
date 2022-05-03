@@ -12,6 +12,7 @@ import { isAdmin } from '../../utils/AuthUtil';
 import styles from './navbar.module.css';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { cartItems } from '../../state/cart';
+import { useNavigate } from 'react-router-dom';
 
 interface IProps {
   tabIndex: number;
@@ -40,6 +41,7 @@ const StyledTab = styled((props: StyledTabProps) => (
 const NavBar: React.FC<IProps> = (props: IProps) => {
   const { tabIndex, setTabIndex } = props;
   const [anchorElMenu, setAnchorElMenu] = useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
   const menuOpen = Boolean(anchorElMenu);
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -103,7 +105,7 @@ const NavBar: React.FC<IProps> = (props: IProps) => {
             />
           </Tabs>
         </div>
-        <div className={styles['logout-button']}>
+        <div className={styles['cog-wheel']}>
           <Button color="secondary" onClick={openMenu}>
             <SettingsIcon />
           </Button>
@@ -119,6 +121,9 @@ const NavBar: React.FC<IProps> = (props: IProps) => {
               }}
             >
               Welcome, {user && user?.name && user.name.split(' ')[0]}
+            </MenuItem>
+            <MenuItem onClick={() => navigate('/my-subscriptions')}>
+              My subscriptions
             </MenuItem>
             <MenuItem onClick={onLogoutClicked}>Logout</MenuItem>
           </Menu>
