@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import styles from './mySubscriptions.module.scss';
 import globStyles from '../../index.module.scss';
@@ -9,12 +9,30 @@ import {
   redirectFromCheckoutURLCancelledSubscription,
   redirectFromCheckoutURLSuccessSubscription,
 } from '../../constants/Constants';
+import { getSubscriptionTypeValue } from '../../constants/SubscriptionTypes';
 
 const lookupKey = 'annualSubscription';
+
+interface ISubscriptionInfo {
+  lookupKey?: string;
+  cancelAt?: Date | null;
+}
 
 const MySubscriptions: React.FC = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [subscriptionInfo, setSubscriptionInfo] = useState<ISubscriptionInfo>(
+    {}
+  );
+  const subscriptionText = subscriptionInfo.lookupKey
+    ? `The following subscription is currently active: <strong>${getSubscriptionTypeValue(
+        subscriptionInfo.lookupKey
+      )}</strong>${
+        subscriptionInfo.cancelAt
+          ? ', expiring on ' + subscriptionInfo.cancelAt.toLocaleDateString()
+          : ''
+      }.`
+    : '';
 
   const proceedToSubscribe = async () => {
     setError('');
@@ -42,6 +60,30 @@ const MySubscriptions: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    const retrieveSubscriptionInfo = async () => {
+      setError('');
+
+      try {
+        setIsLoading(true);
+        const response = await axios.get(
+          `${import.meta.env.VITE_NODE_SERVER}/payments/get-user-subscription`
+        );
+        setSubscriptionInfo({
+          lookupKey: response.data.lookupKey,
+          cancelAt: response.data.cancelAtDate
+            ? new Date(response.data.cancelAtDate)
+            : null,
+        });
+      } catch (error) {
+        setError(`Error while retrieving subscription info: ${error}`);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    retrieveSubscriptionInfo();
+  }, []);
+
   if (isLoading) {
     return (
       <div className={globStyles['spinner-full-page']}>
@@ -54,22 +96,43 @@ const MySubscriptions: React.FC = () => {
     <div className={styles.table}>
       <h2>My subscriptions</h2>
       {!error && (
-        <p>
-          Sign up today and get a limited time offer on annual and half-yearly
-          subscriptions!
-        </p>
+        <>
+          {!subscriptionInfo.lookupKey && (
+            <>
+              <p>
+                Sign up today and get a limited time offer on annual and
+                half-yearly subscriptions!
+              </p>
+              <div className={styles['button-div']}>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  autoFocus
+                  onClick={proceedToSubscribe}
+                >
+                  Subscribe
+                </Button>
+              </div>
+            </>
+          )}
+          {subscriptionInfo.lookupKey && (
+            <>
+              <p dangerouslySetInnerHTML={{ __html: subscriptionText }} />
+              <div className={styles['button-div']}>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  autoFocus
+                  onClick={proceedToSubscribe}
+                >
+                  Manage Subscription
+                </Button>
+              </div>
+            </>
+          )}
+        </>
       )}
       {error && <p className={globStyles['error-text']}>{error}</p>}
-      <div className={styles['button-div']}>
-        <Button
-          color="primary"
-          variant="contained"
-          autoFocus
-          onClick={proceedToSubscribe}
-        >
-          Subscribe
-        </Button>
-      </div>
     </div>
   );
 };
