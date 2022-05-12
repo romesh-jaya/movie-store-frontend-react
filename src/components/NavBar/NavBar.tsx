@@ -59,6 +59,11 @@ const NavBar: React.FC<IProps> = (props: IProps) => {
     logout({ returnTo: `${window.location.origin}/login` });
   };
 
+  const onMySubscriptionsClicked = (): void => {
+    handleCloseMenu();
+    navigate('/my-subscriptions');
+  };
+
   const handleTabChange = (
     _: React.ChangeEvent<{}>,
     newTabIndex: number
@@ -122,7 +127,7 @@ const NavBar: React.FC<IProps> = (props: IProps) => {
             >
               Welcome, {user && user?.name && user.name.split(' ')[0]}
             </MenuItem>
-            <MenuItem onClick={() => navigate('/my-subscriptions')}>
+            <MenuItem onClick={onMySubscriptionsClicked}>
               My subscriptions
             </MenuItem>
             <MenuItem onClick={onLogoutClicked}>Logout</MenuItem>
