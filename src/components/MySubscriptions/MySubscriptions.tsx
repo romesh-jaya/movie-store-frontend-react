@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
 
 import styles from './mySubscriptions.module.scss';
 import globStyles from '../../index.module.scss';
@@ -14,6 +18,7 @@ import {
   getSubscriptionTypeValue,
 } from '../../utils/SubscriptionUtil';
 import { useNavigate } from 'react-router-dom';
+import { subscriptionTypes } from '../../constants/SubscriptionTypes';
 
 const lookupKey = 'annualSubscription';
 
@@ -26,6 +31,7 @@ interface ISubscriptionInfo {
 const MySubscriptions: React.FC = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [chosenSubscription, setChosenSubscription] = useState('');
   const navigate = useNavigate();
   const [subscriptionInfo, setSubscriptionInfo] = useState<ISubscriptionInfo>({
     currentPeriodEnd: new Date(),
@@ -42,6 +48,14 @@ const MySubscriptions: React.FC = () => {
             subscriptionInfo.currentPeriodEnd.toLocaleDateString()
       }.`
     : '';
+
+  console.log('chosenSubscription', chosenSubscription);
+
+  const handleChangeSubscriptionType = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setChosenSubscription((event.target as HTMLInputElement).value);
+  };
 
   const proceedToSubscribe = async () => {
     setError('');
@@ -109,16 +123,34 @@ const MySubscriptions: React.FC = () => {
         <>
           {!subscriptionInfo.lookupKey && (
             <>
-              <p>
-                Sign up today and get a limited time offer on annual and
-                half-yearly subscriptions!
+              <p className={styles.intro}>
+                Sign up today and get a <strong>limited time offer</strong> on
+                annual and half-yearly subscriptions!
               </p>
+              <FormControl>
+                <RadioGroup
+                  onChange={handleChangeSubscriptionType}
+                  classes={{
+                    root: styles['radio-group'],
+                  }}
+                >
+                  {subscriptionTypes.map((type) => (
+                    <FormControlLabel
+                      value={type.name}
+                      key={type.name}
+                      control={<Radio />}
+                      label={`${type.value} (${type.description})`}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
               <div className={styles['button-div']}>
                 <Button
                   color="primary"
                   variant="contained"
                   autoFocus
                   onClick={proceedToSubscribe}
+                  disabled={!chosenSubscription}
                 >
                   Subscribe
                 </Button>
