@@ -17,7 +17,8 @@ const ContainerHeader: React.FC<IProps> = (props: IProps) => {
   const location = useLocation();
   const dontShowNavBar =
     location.pathname.includes('transaction-result') ||
-    location.pathname.includes('checkout');
+    location.pathname.includes('checkout') ||
+    location.pathname.includes('my-subscriptions');
 
   return (
     <>

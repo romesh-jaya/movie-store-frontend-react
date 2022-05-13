@@ -9,28 +9,37 @@ import {
   redirectFromCheckoutURLCancelledSubscription,
   redirectFromCheckoutURLSuccessSubscription,
 } from '../../constants/Constants';
-import { getSubscriptionTypeValue } from '../../constants/SubscriptionTypes';
+import {
+  getSubscriptionTypeDescription,
+  getSubscriptionTypeValue,
+} from '../../utils/SubscriptionUtil';
+import { useNavigate } from 'react-router-dom';
 
 const lookupKey = 'annualSubscription';
 
 interface ISubscriptionInfo {
   lookupKey?: string;
   cancelAt?: Date | null;
+  currentPeriodEnd: Date;
 }
 
 const MySubscriptions: React.FC = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [subscriptionInfo, setSubscriptionInfo] = useState<ISubscriptionInfo>(
-    {}
-  );
+  const navigate = useNavigate();
+  const [subscriptionInfo, setSubscriptionInfo] = useState<ISubscriptionInfo>({
+    currentPeriodEnd: new Date(),
+  });
   const subscriptionText = subscriptionInfo.lookupKey
     ? `The following subscription is currently active: <strong>${getSubscriptionTypeValue(
         subscriptionInfo.lookupKey
-      )}</strong>${
+      )}</strong> (${getSubscriptionTypeDescription(
+        subscriptionInfo.lookupKey
+      )})${
         subscriptionInfo.cancelAt
           ? ', expiring on ' + subscriptionInfo.cancelAt.toLocaleDateString()
-          : ''
+          : ', and will auto-renew on ' +
+            subscriptionInfo.currentPeriodEnd.toLocaleDateString()
       }.`
     : '';
 
@@ -74,6 +83,7 @@ const MySubscriptions: React.FC = () => {
           cancelAt: response.data.cancelAtDate
             ? new Date(response.data.cancelAtDate)
             : null,
+          currentPeriodEnd: new Date(response.data.currentPeriodEnd),
         });
       } catch (error) {
         setError(`Error while retrieving subscription info: ${error}`);
@@ -112,6 +122,13 @@ const MySubscriptions: React.FC = () => {
                 >
                   Subscribe
                 </Button>
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  onClick={() => navigate('/')}
+                >
+                  Back to Home
+                </Button>
               </div>
             </>
           )}
@@ -126,6 +143,13 @@ const MySubscriptions: React.FC = () => {
                   onClick={proceedToSubscribe}
                 >
                   Manage Subscription
+                </Button>
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  onClick={() => navigate('/')}
+                >
+                  Back to Home
                 </Button>
               </div>
             </>
