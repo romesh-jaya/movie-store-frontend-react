@@ -20,8 +20,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { subscriptionTypes } from '../../constants/SubscriptionTypes';
 
-const lookupKey = 'annualSubscription';
-
 interface ISubscriptionInfo {
   lookupKey?: string;
   cancelAt?: Date | null;
@@ -67,7 +65,7 @@ const MySubscriptions: React.FC = () => {
           import.meta.env.VITE_NODE_SERVER
         }/payments/create-checkout-session-subscription`,
         {
-          lookup_key: lookupKey,
+          lookup_key: chosenSubscription,
           redirectFromCheckoutURLCancelled:
             redirectFromCheckoutURLCancelledSubscription,
           redirectFromCheckoutURLSuccess:
