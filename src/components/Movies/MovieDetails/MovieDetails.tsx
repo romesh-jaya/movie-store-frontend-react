@@ -1,7 +1,6 @@
 import React, {
   useState,
   useEffect,
-  useContext,
   ReactElement,
   useRef,
   useCallback,
@@ -17,12 +16,12 @@ import { MovieType } from '../../../enums/MovieType';
 import IMovieLibrary from '../../../interfaces/IMovieLibrary';
 import { TextConstants } from '../../../constants/TextConstants';
 import { getMovieDetails } from '../../../utils/MovieUtil';
-import SettingsContext from '../../../context/SettingsContext';
 import IMovieSearch from '../../../interfaces/IMovieSearch';
 import Spinner from '../../UI/Spinner/Spinner';
 import { SEARCH_URL } from '../../../constants/Constants';
 import MovieDetailsInput from './MovieDetailsInput/MovieDetailsInput';
 import { isValidUrl } from '../../../utils/UrlUtil';
+import { getSettingValue } from '../../../state/settings';
 
 interface IProps {
   selectedMovieIMDBId: string;
@@ -39,14 +38,9 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
     IMovieSearch | undefined
   >();
   const [languagesInitial, setLanguagesInitial] = useState<string[]>([]);
-  const settings = useContext(SettingsContext);
-  const apiKeySetting = settings.find((setting) => setting.name === 'apiKey');
-  const apiKey = (apiKeySetting && apiKeySetting.value) || '';
-  const languagesSetting = settings.find(
-    (setting) => setting.name === 'languages'
-  );
-  const languages =
-    (languagesSetting && languagesSetting.value.split(',')) || [];
+  const apiKeySetting = getSettingValue('apiKey');
+  const languagesSetting = getSettingValue('languages');
+  const languages = (languagesSetting && languagesSetting.split(',')) || [];
   const prevSelIMDBId = useRef('');
 
   const handleDrawerClose = (): void => {
@@ -131,7 +125,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
         const movie = await getMovieDetails(
           selectedMovieIMDBId,
           SEARCH_URL,
-          apiKey
+          apiKeySetting
         );
         setSelectedMovie(movie);
         const response = await axios.get(
@@ -158,7 +152,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
       prevSelIMDBId.current = selectedMovieIMDBId;
       fetchData();
     }
-  }, [apiKey, retrieveLanguagesFromOMDB, selectedMovieIMDBId]);
+  }, [apiKeySetting, retrieveLanguagesFromOMDB, selectedMovieIMDBId]);
 
   const renderContent = (): ReactElement | null => {
     if (!selectedMovie) {

@@ -5,12 +5,12 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 import globStyles from '../../index.module.scss';
 import { TextConstants } from '../../constants/TextConstants';
-import SettingsContext from '../../context/SettingsContext';
 import MovieContainerSkeleton from '../MovieContainerSkeleton';
 import axios from '../../axios';
 import INameValue from '../../interfaces/INameValue';
 import { isAdmin } from '../../utils/AuthUtil';
 import MyLibrary from '../../components/MyLibrary/MyLibrary';
+import { initSettings, settings, getSettingValue } from '../../state/settings';
 
 interface IProps {
   tabIndex: number;
@@ -27,16 +27,11 @@ const Cart = React.lazy(() => import('../../components/Cart/Cart'));
 
 const ContainerBody: React.FC<IProps> = (props: IProps) => {
   const { tabIndex } = props;
-  const [isLoading, setIsLoading] = useState(true);
-  const [settings, setSettings] = useState<INameValue[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [settingsError, setSettingsError] = useState('');
-
-  const apiKeySetting = settings.find((setting) => setting.name === 'apiKey');
+  const settingsArray = settings.use();
+  const apiKeySetting = getSettingValue('apiKey');
   const { user } = useAuth0();
-
-  const updateContext = (context: INameValue[]): void => {
-    setSettings(context);
-  };
 
   const TabPanel = (tPanelProps: any): React.ReactElement => {
     const { children, value: tPanelValue, index } = tPanelProps;
@@ -55,6 +50,7 @@ const ContainerBody: React.FC<IProps> = (props: IProps) => {
 
   useEffect(() => {
     async function loadSettings(): Promise<void> {
+      setIsLoading(true);
       try {
         const responseApiKey = await axios.get(
           `${import.meta.env.VITE_NODE_SERVER}/settings/apiKey`
@@ -79,7 +75,7 @@ const ContainerBody: React.FC<IProps> = (props: IProps) => {
             value: responseLang.data.value,
           },
         ];
-        setSettings(settings);
+        initSettings(settings);
       } catch {
         setSettingsError(TextConstants.CANNOTCONNECTSERVER);
       } finally {
@@ -87,7 +83,9 @@ const ContainerBody: React.FC<IProps> = (props: IProps) => {
       }
     }
 
-    loadSettings();
+    if (settingsArray.length === 0) {
+      loadSettings();
+    }
   }, []);
 
   const renderNoApiKey = (): ReactElement => {
@@ -102,26 +100,18 @@ const ContainerBody: React.FC<IProps> = (props: IProps) => {
     return (
       <>
         <TabPanel value={tabIndex} index={0}>
-          {apiKeySetting && apiKeySetting.value ? (
-            <MyLibrary />
-          ) : (
-            renderNoApiKey()
-          )}
+          {apiKeySetting ? <MyLibrary /> : renderNoApiKey()}
         </TabPanel>
         {isAdmin(user) && (
           <>
             <TabPanel value={tabIndex} index={1}>
-              {apiKeySetting && apiKeySetting.value ? (
-                <MovieSearch />
-              ) : (
-                renderNoApiKey()
-              )}
+              {apiKeySetting ? <MovieSearch /> : renderNoApiKey()}
             </TabPanel>
             <TabPanel value={tabIndex} index={2}>
               {<MovieAnalysis />}
             </TabPanel>
             <TabPanel value={tabIndex} index={3}>
-              {<Settings updateContext={updateContext} />}
+              {<Settings />}
             </TabPanel>
           </>
         )}
@@ -135,13 +125,13 @@ const ContainerBody: React.FC<IProps> = (props: IProps) => {
   };
 
   return (
-    <SettingsContext.Provider value={settings}>
+    <>
       {isLoading && <MovieContainerSkeleton />}
       {renderContent()}
       {!isLoading && settingsError && (
         <p className={globStyles['error-text']}>{settingsError}</p>
       )}
-    </SettingsContext.Provider>
+    </>
   );
 };
 

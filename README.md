@@ -27,7 +27,6 @@ Tech Stack used:
 - Material UI
 - React material-table (@material-table/core had to be used with Vite)
 - Pagination
-- React Context
 - Auth0 Authentication
 - Export to CSV
 - useMediaQuery hook

@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext } from 'react';
+import React, { ReactElement } from 'react';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
@@ -6,11 +6,11 @@ import Popover from '@mui/material/Popover';
 import Select from '@mui/material/Select';
 import HelpIcon from '@mui/icons-material/Help';
 
-import SettingsContext from '../../../../context/SettingsContext';
 import NumberRangeInput from '../../../Controls/Input/NumberRangeInput/NumberRangeInput';
 import styles from '../librarySearchBox.module.scss';
 import globStyles from '../../../../index.module.scss';
 import { MovieType } from '../../../../enums/MovieType';
+import { getSettingValue } from '../../../../state/settings';
 
 interface IProps {
   anchorEl: Element | null;
@@ -53,12 +53,8 @@ const SearchControls: React.FC<IProps> = (props) => {
     handleChangeSearchYear,
     onGenresClicked,
   } = props;
-  const settings = useContext(SettingsContext);
-  const languagesSetting = settings.find(
-    (setting) => setting.name === 'languages'
-  );
-  const languages =
-    (languagesSetting && languagesSetting.value.split(',')) || [];
+  const languagesSetting = getSettingValue('languages');
+  const languages = (languagesSetting && languagesSetting.split(',')) || [];
 
   const handleClickHelpIcon = (
     event: React.MouseEvent<SVGSVGElement, MouseEvent>

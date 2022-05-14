@@ -47,8 +47,6 @@ const MySubscriptions: React.FC = () => {
       }.`
     : '';
 
-  console.log('chosenSubscription', chosenSubscription);
-
   const handleChangeSubscriptionType = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {

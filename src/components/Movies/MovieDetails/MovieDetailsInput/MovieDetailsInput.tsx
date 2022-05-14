@@ -2,7 +2,6 @@
 import React, {
   useState,
   useEffect,
-  useContext,
   ReactElement,
   useCallback,
   useRef,
@@ -16,11 +15,11 @@ import { useSnackbar } from 'notistack';
 import { useAuth0 } from '@auth0/auth0-react';
 import styles from './movieDetailsInput.module.css';
 import globStyles from '../../../../index.module.scss';
-import SettingsContext from '../../../../context/SettingsContext';
 import { ICheckboxValue } from '../../../../interfaces/ICheckboxValue';
 import { TextConstants } from '../../../../constants/TextConstants';
 import { isAdmin } from '../../../../utils/AuthUtil';
 import { addItem, removeItem, cartItems } from '../../../../state/cart';
+import { getSettingValue } from '../../../../state/settings';
 
 interface IProps {
   languagesInitial: string[];
@@ -48,12 +47,8 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
   const [checkboxValues, setCheckboxValues] = useState<ICheckboxValue[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [errorTextLanguages, setErrorTextLanguages] = useState('');
-  const settings = useContext(SettingsContext);
-  const languagesSetting = settings.find(
-    (setting) => setting.name === 'languages'
-  );
-  const languages =
-    (languagesSetting && languagesSetting.value.split(',')) || [];
+  const languagesSetting = getSettingValue('languages');
+  const languages = (languagesSetting && languagesSetting.split(',')) || [];
   const prevLanguagesInitial = useRef('');
   const prevMovieValuesChanged = useRef(false);
   const { user } = useAuth0();

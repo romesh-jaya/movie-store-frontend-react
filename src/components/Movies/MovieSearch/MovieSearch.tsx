@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useContext,
-  ReactElement,
-} from 'react';
+import React, { useState, useEffect, useCallback, ReactElement } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Pagination from '@mui/material/Pagination';
@@ -16,11 +10,11 @@ import globStyles from '../../../index.module.scss';
 import IMovieSearch from '../../../interfaces/IMovieSearch';
 import MovieDetails from '../MovieDetails/MovieDetails';
 import MovieLoadingSkeleton from '../MovieLoadingSkeleton';
-import SettingsContext from '../../../context/SettingsContext';
 import { TextConstants } from '../../../constants/TextConstants';
 import { getMovieDetails } from '../../../utils/MovieUtil';
 import { SEARCH_URL } from '../../../constants/Constants';
 import { isErrorResponse } from '../../../types/ErrorResponse';
+import { getSettingValue } from '../../../state/settings';
 
 const MovieSearch: React.FC = () => {
   const [movies, setMovies] = useState<IMovieSearch[]>([]);
@@ -32,9 +26,7 @@ const MovieSearch: React.FC = () => {
   const [inputQueryTrimmed, setInputQueryTrimmed] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const settings = useContext(SettingsContext);
-  const apiKeySetting = settings.find((setting) => setting.name === 'apiKey');
-  const apiKey = (apiKeySetting && apiKeySetting.value) || '';
+  const apiKeySetting = getSettingValue('apiKey');
 
   const setSelectedMovieIMDBInternal = (value: string): void => {
     setSelectedMovieIMDBId(value);
@@ -48,7 +40,7 @@ const MovieSearch: React.FC = () => {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          `${SEARCH_URL}?apikey=${apiKey}&s=${inputQueryTrimmed}${page}`
+          `${SEARCH_URL}?apikey=${apiKeySetting}&s=${inputQueryTrimmed}${page}`
         );
         if (!response.data || response.data.Response === 'False') {
           setSelectedMovieIMDBId('');
@@ -84,7 +76,7 @@ const MovieSearch: React.FC = () => {
         const getData = async (): Promise<IMovieSearch[]> => {
           return Promise.all(
             filteredMoviesIMDBIds.map((movie) =>
-              getMovieDetails(movie, SEARCH_URL, apiKey)
+              getMovieDetails(movie, SEARCH_URL, apiKeySetting)
             )
           );
         };
@@ -121,7 +113,7 @@ const MovieSearch: React.FC = () => {
         }
       }
     },
-    [apiKey, inputQueryTrimmed]
+    [apiKeySetting, inputQueryTrimmed]
   );
 
   // Enter key behaviour for Search - for the entire form. Binding to TextField control didn't work as it is a container

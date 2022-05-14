@@ -1,30 +1,24 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
 import styles from './settings.module.css';
 import globStyles from '../../index.module.scss';
-import SettingsContext from '../../context/SettingsContext';
 import axios from '../../axios';
 import { TextConstants } from '../../constants/TextConstants';
 import Spinner from '../UI/Spinner/Spinner';
 import INameValue from '../../interfaces/INameValue';
+import { getSettingValue, initSettings } from '../../state/settings';
 
-interface IProps {
-  updateContext: (context: INameValue[]) => void;
-}
-
-const Settings: React.FC<IProps> = (props: IProps) => {
+const Settings: React.FC = () => {
   const [settingsError, setSettingsError] = useState('');
   const [omdbAPIKeyEntered, setOmdbAPIKeyEntered] = useState('');
   const [languagesEntered, setLanguagesEntered] = useState('');
   const [languagesEnteredError, setLanguagesEnteredError] = useState('');
   const [settingsChanged, setSettingsChanged] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { updateContext } = props;
   const isMountedRef = useRef(false);
-  const settings = useContext(SettingsContext);
-  const apiKeySetting = settings.find((setting) => setting.name === 'apiKey');
+  const apiKeySetting = getSettingValue('apiKey');
 
   const omdbAPIKeyEnteredOnChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
@@ -84,7 +78,7 @@ const Settings: React.FC<IProps> = (props: IProps) => {
       await axios.patch(`${import.meta.env.VITE_NODE_SERVER}/settings`, {
         data: dataSave,
       });
-      updateContext(dataSave);
+      initSettings(dataSave);
       // this var is to avoid the warning 'can't perform a react state update on an unmounted component.'
       if (isMountedRef.current) {
         setSettingsChanged(false);
@@ -101,7 +95,7 @@ const Settings: React.FC<IProps> = (props: IProps) => {
   useEffect(() => {
     isMountedRef.current = true;
     if (apiKeySetting) {
-      setOmdbAPIKeyEntered(apiKeySetting.value);
+      setOmdbAPIKeyEntered(apiKeySetting);
     }
 
     async function loadLanguages(): Promise<void> {
