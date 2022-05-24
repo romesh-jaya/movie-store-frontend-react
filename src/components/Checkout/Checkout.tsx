@@ -13,6 +13,7 @@ import styles from './checkout.module.scss';
 import globStyles from '../../index.module.scss';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
+import { redirectFromCheckoutURLSuccessNoCheckout } from '../../constants/Constants';
 
 // Make sure to call loadStripe outside of a component’s render to avoid
 // recreating the Stripe object on every render.
@@ -40,8 +41,15 @@ export default function Checkout() {
           titlesRented,
         }
       );
-      setClientSecret(response.data.clientSecret);
-      setOrderId(response.data.orderId);
+      const { subscriptionActive, clientSecret, orderId } = response.data;
+      if (subscriptionActive) {
+        navigate(
+          `${redirectFromCheckoutURLSuccessNoCheckout}?orderId=${orderId}`
+        );
+        return;
+      }
+      setClientSecret(clientSecret);
+      setOrderId(orderId);
     } catch (error) {
       setError(`Error while creating payment intent: ${error}`);
     }
