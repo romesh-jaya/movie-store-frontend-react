@@ -14,6 +14,7 @@ import { initSettings, settings, getSettingValue } from '../../state/settings';
 
 interface IProps {
   tabIndex: number;
+  setTabIndex: (newTabIndex: number) => void;
 }
 
 const MovieSearch = React.lazy(
@@ -26,7 +27,7 @@ const Settings = React.lazy(() => import('../../components/Settings/Settings'));
 const Cart = React.lazy(() => import('../../components/Cart/Cart'));
 
 const ContainerBody: React.FC<IProps> = (props: IProps) => {
-  const { tabIndex } = props;
+  const { tabIndex, setTabIndex } = props;
   const [isLoading, setIsLoading] = useState(false);
   const [settingsError, setSettingsError] = useState('');
   const settingsArray = settings.use();
@@ -47,6 +48,11 @@ const ContainerBody: React.FC<IProps> = (props: IProps) => {
       </Typography>
     );
   };
+
+  useEffect(() => {
+    // reset tab index everytime this page is loaded for the first time
+    setTabIndex(0);
+  }, []);
 
   useEffect(() => {
     async function loadSettings(): Promise<void> {

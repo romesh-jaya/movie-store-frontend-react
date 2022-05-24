@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   redirectFromCheckoutURLCancelled,
   redirectFromCheckoutURLSuccess,
+  redirectFromCheckoutURLSuccessNoCheckout,
 } from '../../constants/Constants';
 import Spinner from '../UI/Spinner/Spinner';
 
@@ -134,11 +135,17 @@ const Cart: React.FC = () => {
           titlesRented,
           redirectFromCheckoutURLCancelled,
           redirectFromCheckoutURLSuccess,
+          redirectFromCheckoutURLSuccessNoCheckout,
         }
       );
-      const newURL = response.data.url;
-      console.info('Redirecting to : ', newURL);
-      window.location.href = newURL;
+      const { url, stripeURL } = response.data;
+      if (stripeURL) {
+        console.info('Redirecting to : ', stripeURL);
+        // assign stripeURL to window.location.href since it is an external URL
+        window.location.href = stripeURL;
+        return;
+      }
+      navigate(url);
     } catch (error) {
       setError(`Error while submitting payment: ${error}`);
       setIsLoading(false);
@@ -204,6 +211,11 @@ const Cart: React.FC = () => {
                   };
                 }}
               />
+              {pricePerTitle === 0 && (
+                <p className={styles['subscription-info']}>
+                  Your DVD subscription is currently <span>active</span>.
+                </p>
+              )}
               <div className={styles['button-div']}>
                 <span className={globStyles['right-spacer']}>
                   <Button

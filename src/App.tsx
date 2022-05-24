@@ -72,7 +72,12 @@ const App: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/login-admin" element={<Login />} />
           <Route path="/" element={<PrivateRoute />}>
-            <Route path="/" element={<ContainerBody tabIndex={tabIndex} />} />
+            <Route
+              path="/"
+              element={
+                <ContainerBody tabIndex={tabIndex} setTabIndex={setTabIndex} />
+              }
+            />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/my-subscriptions" element={<MySubscriptions />} />
             <Route path="/transaction-result" element={<TransactionResult />} />
