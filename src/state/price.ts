@@ -3,7 +3,7 @@ import { entity } from 'simpler-state';
 export const titlePriceId = 'TITLE_PRICE';
 
 export interface IPrice {
-  id: string;
+  lookupKey: string;
   price: number;
   currency: string;
 }

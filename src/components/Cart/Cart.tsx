@@ -20,6 +20,7 @@ import {
   redirectFromCheckoutURLSuccessNoCheckout,
 } from '../../constants/Constants';
 import Spinner from '../UI/Spinner/Spinner';
+import { getPrices } from '../../api/server/server';
 
 const Cart: React.FC = () => {
   const cartItemsArray = cartItems.use();
@@ -29,9 +30,10 @@ const Cart: React.FC = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const pricePerTitle =
-    pricesArray.find((price) => price.id === titlePriceId)?.price || 0;
+    pricesArray.find((price) => price.lookupKey === titlePriceId)?.price || 0;
   const priceCurrency =
-    pricesArray.find((price) => price.id === titlePriceId)?.currency || '';
+    pricesArray.find((price) => price.lookupKey === titlePriceId)?.currency ||
+    '';
 
   const onDeleteClicked = (data: ICartItem | ICartItem[]) => {
     if (isArray(data)) {
@@ -48,7 +50,7 @@ const Cart: React.FC = () => {
 
   useEffect(() => {
     if (pricesArray.length === 0) {
-      getPrices();
+      fetchPrices();
     }
   }, []);
 
@@ -152,22 +154,13 @@ const Cart: React.FC = () => {
     }
   };
 
-  const getPrices = async () => {
+  const fetchPrices = async () => {
     setError('');
 
     try {
       setIsLoading(true);
-      const response = await axios.get(
-        `${import.meta.env.VITE_NODE_SERVER}/payments/title-price`
-      );
-      const { price, currency } = response.data;
-      initPrices([
-        {
-          id: titlePriceId,
-          currency,
-          price,
-        },
-      ]);
+      const priceInfo = await getPrices();
+      initPrices(priceInfo);
     } catch (error) {
       setError(`Error while fetching prices: ${error}`);
     } finally {

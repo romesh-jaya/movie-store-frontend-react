@@ -19,6 +19,8 @@ import {
 } from '../../utils/SubscriptionUtil';
 import { useNavigate } from 'react-router-dom';
 import { subscriptionTypes } from '../../constants/SubscriptionTypes';
+import { initPrices, prices } from '../../state/price';
+import { getPrices } from '../../api/server/server';
 
 interface ISubscriptionInfo {
   lookupKey?: string;
@@ -28,8 +30,9 @@ interface ISubscriptionInfo {
 
 const MySubscriptions: React.FC = () => {
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [chosenSubscription, setChosenSubscription] = useState('');
+  const pricesArray = prices.use();
   const navigate = useNavigate();
   const [subscriptionInfo, setSubscriptionInfo] = useState<ISubscriptionInfo>({
     currentPeriodEnd: new Date(),
@@ -79,29 +82,53 @@ const MySubscriptions: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const retrieveSubscriptionInfo = async () => {
-      setError('');
+  const retrieveSubscriptionInfo = async () => {
+    setError('');
 
-      try {
-        setIsLoading(true);
-        const response = await axios.get(
-          `${import.meta.env.VITE_NODE_SERVER}/payments/get-user-subscription`
-        );
-        setSubscriptionInfo({
-          lookupKey: response.data.lookupKey,
-          cancelAt: response.data.cancelAtDate
-            ? new Date(response.data.cancelAtDate)
-            : null,
-          currentPeriodEnd: new Date(response.data.currentPeriodEnd),
-        });
-      } catch (error) {
-        setError(`Error while retrieving subscription info: ${error}`);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_NODE_SERVER}/payments/get-user-subscription`
+      );
+      setSubscriptionInfo({
+        lookupKey: response.data.lookupKey,
+        cancelAt: response.data.cancelAtDate
+          ? new Date(response.data.cancelAtDate)
+          : null,
+        currentPeriodEnd: new Date(response.data.currentPeriodEnd),
+      });
+    } catch (error) {
+      setError(`Error while retrieving subscription info: ${error}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchPrices = async () => {
+    setError('');
+
+    try {
+      setIsLoading(true);
+      const priceInfo = await getPrices();
+      initPrices(priceInfo);
+    } catch (error) {
+      setError(`Error while fetching prices: ${error}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getSubscriptionPrice = (lookupKey: string) => {
+    const priceObject = pricesArray.find(
+      (price) => price.lookupKey === lookupKey
+    );
+    return `${priceObject?.price} ${priceObject?.currency.toUpperCase()}`;
+  };
+
+  useEffect(() => {
     retrieveSubscriptionInfo();
+    if (pricesArray.length === 0) {
+      fetchPrices();
+    }
   }, []);
 
   if (isLoading) {
@@ -135,7 +162,9 @@ const MySubscriptions: React.FC = () => {
                       value={type.name}
                       key={type.name}
                       control={<Radio />}
-                      label={`${type.value} (${type.description})`}
+                      label={`${type.value} (${
+                        type.description
+                      }) - ${getSubscriptionPrice(type.name)}`}
                     />
                   ))}
                 </RadioGroup>
