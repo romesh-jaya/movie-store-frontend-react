@@ -35,7 +35,7 @@ Tech Stack used:
 - notistack
 - Cypress e2e testing
 - MERN
-- Stripe payments
+- Stripe payments with pre-built checkout page and Stripe React library
 
 This project uses OMDB API to search for movie data. The latter has a 1,000 daily API call limit. Another free alternative might be TMDB: https://developers.themoviedb.org/3/getting-started
 

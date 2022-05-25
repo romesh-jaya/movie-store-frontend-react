@@ -132,7 +132,9 @@ const Cart: React.FC = () => {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        `${import.meta.env.VITE_NODE_SERVER}/payments/create-checkout-session`,
+        `${
+          import.meta.env.VITE_NODE_SERVER
+        }/payments/stripe/products/create-checkout-session`,
         {
           titlesRented,
           redirectFromCheckoutURLCancelled,

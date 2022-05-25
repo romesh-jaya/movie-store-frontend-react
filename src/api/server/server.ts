@@ -3,7 +3,7 @@ import { IPrice } from '../../state/price';
 
 export const getPrices = async (): Promise<IPrice[]> => {
   const response = await axios.get(
-    `${import.meta.env.VITE_NODE_SERVER}/payments/prices`
+    `${import.meta.env.VITE_NODE_SERVER}/payments/stripe/prices`
   );
   return response.data.priceInfo;
 };

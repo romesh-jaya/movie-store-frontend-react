@@ -64,7 +64,7 @@ const MySubscriptions: React.FC = () => {
       const response = await axios.post(
         `${
           import.meta.env.VITE_NODE_SERVER
-        }/payments/create-checkout-session-subscription`,
+        }/payments/stripe/subscriptions/create-checkout-session-subscription`,
         {
           lookup_key: chosenSubscription,
           redirectFromCheckoutURLCancelled:
@@ -87,7 +87,9 @@ const MySubscriptions: React.FC = () => {
 
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_NODE_SERVER}/payments/get-user-subscription`
+        `${
+          import.meta.env.VITE_NODE_SERVER
+        }/payments/stripe/subscriptions/get-user-subscription`
       );
       setSubscriptionInfo({
         lookupKey: response.data.lookupKey,

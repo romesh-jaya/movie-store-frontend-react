@@ -30,7 +30,9 @@ const TransactionResult: React.FC = () => {
       try {
         setIsLoading(true);
         const response = await axios.post(
-          `${import.meta.env.VITE_NODE_SERVER}/payments/complete-payment`,
+          `${
+            import.meta.env.VITE_NODE_SERVER
+          }/payments/stripe/products/complete-payment`,
           {
             orderId,
           }

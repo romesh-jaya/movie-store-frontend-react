@@ -36,7 +36,9 @@ export default function Checkout() {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_NODE_SERVER}/payments/create-payment-intent`,
+        `${
+          import.meta.env.VITE_NODE_SERVER
+        }/payments/stripe/products/create-payment-intent`,
         {
           titlesRented,
         }
