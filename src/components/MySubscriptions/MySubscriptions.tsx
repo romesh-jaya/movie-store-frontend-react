@@ -32,7 +32,7 @@ const MySubscriptions: React.FC = () => {
   const [subscriptionInfo, setSubscriptionInfo] = useState<ISubscriptionInfo>({
     currentPeriodEnd: new Date(),
   });
-  const subscriptionText = subscriptionInfo.lookupKey
+  const subscriptionHtml = subscriptionInfo.lookupKey
     ? `The following subscription is currently active: <strong>${getSubscriptionTypeValue(
         subscriptionInfo.lookupKey
       )}</strong> (${getSubscriptionTypeDescription(
@@ -153,7 +153,7 @@ const MySubscriptions: React.FC = () => {
           {subscriptionInfo.lookupKey ? (
             <SubscriptionExists
               proceedToCustomerPortal={proceedToCustomerPortal}
-              subscriptionText={subscriptionText}
+              subscriptionText={subscriptionHtml}
             />
           ) : (
             <NoSubscription proceedToSubscribe={proceedToSubscribe} />
