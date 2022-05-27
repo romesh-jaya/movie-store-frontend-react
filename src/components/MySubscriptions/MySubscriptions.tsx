@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
 
 import styles from './mySubscriptions.module.scss';
 import globStyles from '../../index.module.scss';
-import Button from '@mui/material/Button';
 import axios from '../../axios';
 import Spinner from '../UI/Spinner/Spinner';
 import {
@@ -17,10 +12,11 @@ import {
   getSubscriptionTypeDescription,
   getSubscriptionTypeValue,
 } from '../../utils/SubscriptionUtil';
-import { useNavigate } from 'react-router-dom';
-import { subscriptionTypes } from '../../constants/SubscriptionTypes';
-import { initPrices, prices } from '../../state/price';
+
+import { initPrices } from '../../state/price';
 import { getPrices } from '../../api/server/server';
+import SubscriptionExists from './SubscriptionExists/SubscriptionExists';
+import NoSubscription from './NoSubscription/NoSubscription';
 
 interface ISubscriptionInfo {
   lookupKey?: string;
@@ -31,9 +27,7 @@ interface ISubscriptionInfo {
 const MySubscriptions: React.FC = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [chosenSubscription, setChosenSubscription] = useState('');
-  const pricesArray = prices.use();
-  const navigate = useNavigate();
+
   const [subscriptionInfo, setSubscriptionInfo] = useState<ISubscriptionInfo>({
     currentPeriodEnd: new Date(),
   });
@@ -50,13 +44,7 @@ const MySubscriptions: React.FC = () => {
       }.`
     : '';
 
-  const handleChangeSubscriptionType = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setChosenSubscription((event.target as HTMLInputElement).value);
-  };
-
-  const proceedToSubscribe = async () => {
+  const proceedToSubscribe = async (chosenSubscription: string) => {
     setError('');
 
     try {
@@ -142,18 +130,8 @@ const MySubscriptions: React.FC = () => {
     }
   };
 
-  const getSubscriptionPrice = (lookupKey: string) => {
-    const priceObject = pricesArray.find(
-      (price) => price.lookupKey === lookupKey
-    );
-    return `${priceObject?.price} ${priceObject?.currency.toUpperCase()}`;
-  };
-
   useEffect(() => {
     retrieveSubscriptionInfo();
-    if (pricesArray.length === 0) {
-      fetchPrices();
-    }
   }, []);
 
   if (isLoading) {
@@ -169,72 +147,16 @@ const MySubscriptions: React.FC = () => {
       <h2>My subscriptions</h2>
       {!error && (
         <>
-          {!subscriptionInfo.lookupKey && (
-            <>
-              <p className={styles.intro}>
-                Sign up today and get a <strong>limited time offer</strong> on
-                annual and half-yearly subscriptions!
-              </p>
-              <FormControl>
-                <RadioGroup
-                  onChange={handleChangeSubscriptionType}
-                  classes={{
-                    root: styles['radio-group'],
-                  }}
-                >
-                  {subscriptionTypes.map((type) => (
-                    <FormControlLabel
-                      value={type.name}
-                      key={type.name}
-                      control={<Radio />}
-                      label={`${type.value} (${
-                        type.description
-                      }) - ${getSubscriptionPrice(type.name)}`}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-              <div className={styles['button-div']}>
-                <Button
-                  color="primary"
-                  variant="contained"
-                  autoFocus
-                  onClick={proceedToSubscribe}
-                  disabled={!chosenSubscription}
-                >
-                  Subscribe
-                </Button>
-                <Button
-                  color="secondary"
-                  variant="contained"
-                  onClick={() => navigate('/')}
-                >
-                  Back to Home
-                </Button>
-              </div>
-            </>
-          )}
-          {subscriptionInfo.lookupKey && (
-            <>
-              <p dangerouslySetInnerHTML={{ __html: subscriptionText }} />
-              <div className={styles['button-div']}>
-                <Button
-                  color="secondary"
-                  variant="contained"
-                  autoFocus
-                  onClick={() => navigate('/')}
-                >
-                  Back to Home
-                </Button>
-                <Button
-                  color="primary"
-                  variant="contained"
-                  onClick={proceedToCustomerPortal}
-                >
-                  Manage Subscription
-                </Button>
-              </div>
-            </>
+          {subscriptionInfo.lookupKey ? (
+            <SubscriptionExists
+              proceedToCustomerPortal={proceedToCustomerPortal}
+              subscriptionText={subscriptionText}
+            />
+          ) : (
+            <NoSubscription
+              fetchPrices={fetchPrices}
+              proceedToSubscribe={proceedToSubscribe}
+            />
           )}
         </>
       )}
