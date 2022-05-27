@@ -219,19 +219,19 @@ const MySubscriptions: React.FC = () => {
               <p dangerouslySetInnerHTML={{ __html: subscriptionText }} />
               <div className={styles['button-div']}>
                 <Button
-                  color="primary"
-                  variant="contained"
-                  autoFocus
-                  onClick={proceedToCustomerPortal}
-                >
-                  Manage Subscription
-                </Button>
-                <Button
                   color="secondary"
                   variant="contained"
+                  autoFocus
                   onClick={() => navigate('/')}
                 >
                   Back to Home
+                </Button>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={proceedToCustomerPortal}
+                >
+                  Manage Subscription
                 </Button>
               </div>
             </>

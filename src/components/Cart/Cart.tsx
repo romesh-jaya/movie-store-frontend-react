@@ -13,7 +13,7 @@ import StyledMTableToolbar from '../Controls/StyledMTableToolbar/StyledMTableToo
 import globStyles from '../../index.module.scss';
 import axios from '../../axios';
 import { initPrices, prices, titlePriceId } from '../../state/price';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   redirectFromCheckoutURLCancelled,
   redirectFromCheckoutURLSuccess,
@@ -209,6 +209,17 @@ const Cart: React.FC = () => {
               {pricePerTitle === 0 && (
                 <p className={styles['subscription-info']}>
                   Your DVD subscription is currently <span>active</span>.
+                </p>
+              )}
+              {pricePerTitle !== 0 && (
+                <p className={styles['subscription-info']}>
+                  Enjoy free DVD rentals with a{' '}
+                  <span>
+                    <Link to="/my-subscriptions">
+                      <a>Subscription</a>
+                    </Link>
+                  </span>
+                  .
                 </p>
               )}
               <div className={styles['button-div']}>

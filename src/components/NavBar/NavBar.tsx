@@ -127,9 +127,11 @@ const NavBar: React.FC<IProps> = (props: IProps) => {
             >
               Welcome, {user && user?.name && user.name.split(' ')[0]}
             </MenuItem>
-            <MenuItem onClick={onMySubscriptionsClicked}>
-              My subscriptions
-            </MenuItem>
+            {!isAdmin(user) && (
+              <MenuItem onClick={onMySubscriptionsClicked}>
+                My subscriptions
+              </MenuItem>
+            )}
             <MenuItem onClick={onLogoutClicked}>Logout</MenuItem>
           </Menu>
         </div>
