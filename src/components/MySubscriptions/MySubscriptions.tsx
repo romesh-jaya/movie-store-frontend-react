@@ -13,7 +13,7 @@ import {
   getSubscriptionTypeValue,
 } from '../../utils/SubscriptionUtil';
 
-import { initPrices } from '../../state/price';
+import { initPrices, prices } from '../../state/price';
 import { getPrices } from '../../api/server/server';
 import SubscriptionExists from './SubscriptionExists/SubscriptionExists';
 import NoSubscription from './NoSubscription/NoSubscription';
@@ -25,6 +25,7 @@ interface ISubscriptionInfo {
 }
 
 const MySubscriptions: React.FC = () => {
+  const pricesArray = prices.use();
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -94,8 +95,6 @@ const MySubscriptions: React.FC = () => {
   };
 
   const retrieveSubscriptionInfo = async () => {
-    setError('');
-
     try {
       const response = await axios.get(
         `${
@@ -111,27 +110,31 @@ const MySubscriptions: React.FC = () => {
       });
     } catch (error) {
       setError(`Error while retrieving subscription info: ${error}`);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const fetchPrices = async () => {
-    setError('');
-
     try {
-      setIsLoading(true);
       const priceInfo = await getPrices();
       initPrices(priceInfo);
     } catch (error) {
       setError(`Error while fetching prices: ${error}`);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    retrieveSubscriptionInfo();
+    const loadData = async () => {
+      const promiseArray = [retrieveSubscriptionInfo()];
+      if (pricesArray.length === 0) {
+        promiseArray.push(fetchPrices());
+      }
+
+      setError('');
+      setIsLoading(true);
+      await Promise.all(promiseArray);
+      setIsLoading(false);
+    };
+    loadData();
   }, []);
 
   if (isLoading) {
@@ -153,10 +156,7 @@ const MySubscriptions: React.FC = () => {
               subscriptionText={subscriptionText}
             />
           ) : (
-            <NoSubscription
-              fetchPrices={fetchPrices}
-              proceedToSubscribe={proceedToSubscribe}
-            />
+            <NoSubscription proceedToSubscribe={proceedToSubscribe} />
           )}
         </>
       )}

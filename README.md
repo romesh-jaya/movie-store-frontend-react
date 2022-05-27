@@ -36,6 +36,7 @@ Tech Stack used:
 - Cypress e2e testing
 - MERN
 - Stripe payments with pre-built checkout page and Stripe React library
+- Stripe subscriptions
 
 This project uses OMDB API to search for movie data. The latter has a 1,000 daily API call limit. Another free alternative might be TMDB: https://developers.themoviedb.org/3/getting-started
 
@@ -49,6 +50,12 @@ Note: MongoDB automatically goes to inactive state after a period of inactivity,
 ## Stripe payments
 
 There is an environment variable, namely VITE_REDIRECT_TO_STRIPE, via which we can choose either Stripe's builtin checkout page, or our own Checkout page. For more info, https://stripe.com/docs/checkout/quickstart.
+
+Stripe is running in TEST mode currently. Test cards to use are as follows:
+
+- Payment succeeds: 4242 4242 4242 4242
+- Payment requires authentication: 4000 0025 0000 3155
+- Payment is declined: 4000 0000 0000 9995
 
 ## Available Scripts
 

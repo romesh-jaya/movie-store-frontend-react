@@ -11,12 +11,11 @@ import { useEffect, useState } from 'react';
 import { prices } from '../../../state/price';
 
 interface IProps {
-  fetchPrices: () => {};
   proceedToSubscribe: (chosenSubscription: string) => {};
 }
 
 export default function NoSubscription(props: IProps) {
-  const { fetchPrices, proceedToSubscribe } = props;
+  const { proceedToSubscribe } = props;
   const [chosenSubscription, setChosenSubscription] = useState('');
   const pricesArray = prices.use();
   const navigate = useNavigate();
@@ -34,11 +33,7 @@ export default function NoSubscription(props: IProps) {
     return `${priceObject?.price} ${priceObject?.currency.toUpperCase()}`;
   };
 
-  useEffect(() => {
-    if (pricesArray.length === 0) {
-      fetchPrices();
-    }
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <>
