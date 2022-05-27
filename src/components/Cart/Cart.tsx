@@ -1,19 +1,13 @@
-import MaterialTable, { Action, Column, Options } from '@material-table/core';
 import React, { useEffect, useState } from 'react';
-import Delete from '@mui/icons-material/Delete';
-import isArray from 'lodash/isArray';
 import Button from '@mui/material/Button';
+import { Link, useNavigate } from 'react-router-dom';
 
-import TableIcons from '../../constants/TableIcons';
-import { cartItems, ICartItem, removeItem } from '../../state/cart';
+import { cartItems } from '../../state/cart';
 import styles from './cart.module.scss';
 import MovieDetails from '../Movies/MovieDetails/MovieDetails';
-import StyledMTableToolbar from '../Controls/StyledMTableToolbar/StyledMTableToolbar';
-
 import globStyles from '../../index.module.scss';
 import axios from '../../axios';
 import { initPrices, prices, titlePriceId } from '../../state/price';
-import { Link, useNavigate } from 'react-router-dom';
 import {
   redirectFromCheckoutURLCancelled,
   redirectFromCheckoutURLSuccess,
@@ -21,6 +15,7 @@ import {
 } from '../../constants/Constants';
 import Spinner from '../UI/Spinner/Spinner';
 import { getPrices } from '../../api/server/server';
+import CartItemsTable from './CartItemsTable/CartItemsTable';
 
 const Cart: React.FC = () => {
   const cartItemsArray = cartItems.use();
@@ -35,89 +30,11 @@ const Cart: React.FC = () => {
     pricesArray.find((price) => price.lookupKey === titlePriceId)?.currency ||
     '';
 
-  const onDeleteClicked = (data: ICartItem | ICartItem[]) => {
-    if (isArray(data)) {
-      data.forEach((dataOne) => removeItem(dataOne.imdbID));
-      return;
-    }
-
-    removeItem(data.imdbID);
-  };
-
-  const handleClickTitle = (imdbID: string): void => {
-    setSelectedMovieIMDBId(imdbID);
-  };
-
   useEffect(() => {
     if (pricesArray.length === 0) {
       fetchPrices();
     }
   }, []);
-
-  const getColumns = (): Column<ICartItem>[] => {
-    return [
-      {
-        title: 'Title',
-        field: 'title',
-        width: '85%',
-        render: (rowData: ICartItem) => {
-          return (
-            <button
-              type="button"
-              className={styles['link-button']}
-              onClick={() => handleClickTitle(rowData.imdbID)}
-            >
-              {rowData.title}
-            </button>
-          );
-        },
-      },
-      {
-        title: `Amount (${priceCurrency.toUpperCase()})`,
-        field: 'amount',
-        width: '15%',
-        render: () => <p>{pricePerTitle.toFixed(2)}</p>,
-      },
-    ];
-  };
-
-  const getOptions = (): Options<ICartItem> => {
-    return {
-      showTitle: false,
-      search: false,
-      paging: false,
-      sorting: true,
-      headerStyle: { fontSize: '1rem' },
-      selection: true,
-    };
-  };
-
-  const getActions = ():
-    | (Action<ICartItem> | ((rowData: ICartItem) => Action<ICartItem>))[]
-    | undefined => {
-    return [
-      {
-        tooltip: 'Delete title',
-        icon: () => <Delete />,
-        onClick: (_: any, data: ICartItem | ICartItem[]) =>
-          onDeleteClicked(data),
-      },
-    ];
-  };
-
-  const getSummaryValue = (
-    column: Column<ICartItem>,
-    data: ICartItem[]
-  ): string | undefined => {
-    switch (column.field) {
-      case 'title':
-        return 'Total: ';
-      case 'amount':
-        return data.reduce((agg) => agg + 1 * pricePerTitle, 0).toFixed(2);
-      default:
-        return undefined;
-    }
-  };
 
   const proceedToRent = async () => {
     const titlesRented = cartItemsArray.map((item) => item.title);
@@ -186,32 +103,18 @@ const Cart: React.FC = () => {
         <>
           {cartItemsArray.length > 0 ? (
             <>
-              <MaterialTable
-                columns={getColumns()}
-                data={cartItemsArray}
-                options={getOptions()}
-                actions={getActions()}
-                icons={TableIcons}
-                components={{
-                  Toolbar: (props) => <StyledMTableToolbar {...props} />,
-                }}
-                renderSummaryRow={({ column, data }) => {
-                  return {
-                    value: getSummaryValue(column, data),
-                    style: {
-                      fontWeight: 'bold',
-                      fontSize: '16px',
-                      lineHeight: '3',
-                    },
-                  };
-                }}
+              <CartItemsTable
+                pricePerTitle={pricePerTitle}
+                priceCurrency={priceCurrency}
+                setSelectedMovieIMDBId={(imdbID: string) =>
+                  setSelectedMovieIMDBId(imdbID)
+                }
               />
-              {pricePerTitle === 0 && (
+              {pricePerTitle === 0 ? (
                 <p className={styles['subscription-info']}>
                   Your DVD subscription is currently <span>active</span>.
                 </p>
-              )}
-              {pricePerTitle !== 0 && (
+              ) : (
                 <p className={styles['subscription-info']}>
                   Enjoy free DVD rentals with a{' '}
                   <span>
