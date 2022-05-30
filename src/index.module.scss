@@ -147,10 +147,6 @@ Material UI related styles START
   justify-content: center;
 }
 
-:global(.MuiCheckbox-root) {
-  color: rgba(0, 0, 0, 0.3) !important;
-}
-
 :global(.MuiDialogActions-root) {
   padding: 16px 24px !important;
 }

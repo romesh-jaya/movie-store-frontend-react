@@ -16,7 +16,8 @@
 }
 
 .link-button {
-  background-color: transparent;
+  background: inherit;
+  color: inherit;
   border: none;
   cursor: pointer;
   text-decoration: underline;

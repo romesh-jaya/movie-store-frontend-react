@@ -1,5 +1,6 @@
 import MaterialTable, { Action, Column, Options } from '@material-table/core';
 import Delete from '@mui/icons-material/Delete';
+import { useTheme } from '@mui/material/styles';
 
 import TableIcons from '../../../constants/TableIcons';
 import { cartItems, ICartItem, removeItem } from '../../../state/cart';
@@ -14,6 +15,7 @@ interface IProps {
 
 export default function CartItemsTable(props: IProps) {
   const { pricePerTitle, priceCurrency, setSelectedMovieIMDBId } = props;
+  const theme = useTheme();
   const cartItemsArray = cartItems.use();
 
   const onDeleteClicked = (data: ICartItem | ICartItem[]) => {
@@ -63,6 +65,11 @@ export default function CartItemsTable(props: IProps) {
       paging: false,
       sorting: true,
       headerStyle: { fontSize: '1rem' },
+      rowStyle: (rowData: any) => ({
+        backgroundColor: rowData.tableData.checked
+          ? 'rgba(232, 210, 192, 0.5)'
+          : theme.palette.background.paper,
+      }),
       selection: true,
     };
   };

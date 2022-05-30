@@ -4,7 +4,7 @@ import { useLocation } from 'react-router';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-import logo from '../../assets/img/movie.png';
+import logo from '../../assets/img/movie.svg';
 import NavBar from '../../components/NavBar/NavBar';
 import styles from './containerHeader.module.scss';
 import { PREFERS_DARK_MODE_MEDIA_QUERY } from '../../constants/Constants';
@@ -39,6 +39,11 @@ const ContainerHeader: React.FC<IProps> = (props: IProps) => {
           <span className={`${styles['nowrap-div']} ${styles['div-logo']}`}>
             <img
               src={logo}
+              style={{
+                filter: prefersDarkMode
+                  ? 'invert(100%) sepia(2%) saturate(7444%) hue-rotate(290deg) brightness(108%) contrast(97%)'
+                  : '',
+              }}
               height="50px"
               alt="movies"
               className={styles.logo}

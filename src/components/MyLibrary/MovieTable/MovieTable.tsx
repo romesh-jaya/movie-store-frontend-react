@@ -1,6 +1,7 @@
 import React from 'react';
 import MaterialTable, { Action, Column, Options } from '@material-table/core';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 import Chip from '@mui/material/Chip';
 import TablePagination from '@mui/material/TablePagination';
 import Delete from '@mui/icons-material/Delete';
@@ -42,6 +43,7 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
   } = props;
   const { user } = useAuth0();
   const isDesktopWidth = useMediaQuery(DESKTOP_WIDTH_MEDIA_QUERY);
+  const theme = useTheme();
   const isAdminUser = isAdmin(user);
 
   const getActions = ():
@@ -72,7 +74,7 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
       rowStyle: (rowData: any) => ({
         backgroundColor: rowData.tableData.checked
           ? 'rgba(232, 210, 192, 0.5)'
-          : '#fff',
+          : theme.palette.background.paper,
       }),
       selection: false,
     };
