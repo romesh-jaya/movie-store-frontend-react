@@ -14,5 +14,5 @@
 
 .imdb-link:hover,
 .imdb-link:active {
-  color: orange;
+  color: orange !important;
 }
