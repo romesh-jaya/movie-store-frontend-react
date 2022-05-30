@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import { ExportToCsv } from 'export-to-csv';
+import { useTheme } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import styles from './librarySearchBox.module.scss';
@@ -17,6 +18,8 @@ import IMovieLibrary from '../../../interfaces/IMovieLibrary';
 import { isAdmin } from '../../../utils/AuthUtil';
 import { formatExportData } from '../../../utils/ExportUtil';
 import SearchControls from './SearchControls/SearchControls';
+import { PREFERS_DARK_MODE_MEDIA_QUERY } from '../../../constants/Constants';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const exportFileName = 'Export.csv';
 
@@ -45,6 +48,11 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
   const { user } = useAuth0();
   const [isBoxExpanded, setIsBoxExpanded] = useState(true);
+  const theme = useTheme();
+  const prefersDarkMode = useMediaQuery(PREFERS_DARK_MODE_MEDIA_QUERY);
+  const boxShadowColor = prefersDarkMode
+    ? theme.palette.secondary.dark
+    : 'rgb(0 0 0 / 20%)';
 
   const { enableExportButton, setLastSearchInfo, exportMovies } = props;
 
@@ -233,7 +241,12 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
 
   return (
     <>
-      <Card className={styles['card-style']}>
+      <Card
+        className={styles['card-style']}
+        style={{
+          boxShadow: `0px 2px 1px -1px ${boxShadowColor}, 0px 1px 1px 0px ${boxShadowColor}, 0px 1px 3px 0px ${boxShadowColor}`,
+        }}
+      >
         <Typography
           className={styles['card-title']}
           variant="h5"

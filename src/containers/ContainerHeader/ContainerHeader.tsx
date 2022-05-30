@@ -1,10 +1,13 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import React from 'react';
 import { useLocation } from 'react-router';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import logo from '../../assets/img/movie.png';
 import NavBar from '../../components/NavBar/NavBar';
 import styles from './containerHeader.module.scss';
+import { PREFERS_DARK_MODE_MEDIA_QUERY } from '../../constants/Constants';
 
 interface IProps {
   tabIndex: number;
@@ -15,6 +18,8 @@ const ContainerHeader: React.FC<IProps> = (props: IProps) => {
   const { tabIndex, setTabIndex } = props;
   const { user } = useAuth0();
   const location = useLocation();
+  const prefersDarkMode = useMediaQuery(PREFERS_DARK_MODE_MEDIA_QUERY);
+  const theme = useTheme();
   const dontShowNavBar =
     location.pathname.includes('transaction-result') ||
     location.pathname.includes('checkout') ||
@@ -22,7 +27,14 @@ const ContainerHeader: React.FC<IProps> = (props: IProps) => {
 
   return (
     <>
-      <div className={styles['header-container']}>
+      <div
+        style={{
+          backgroundColor: prefersDarkMode
+            ? theme.palette.secondary.dark
+            : theme.palette.secondary.main,
+        }}
+        className={styles['header-container']}
+      >
         <div className={styles.header}>
           <span className={`${styles['nowrap-div']} ${styles['div-logo']}`}>
             <img

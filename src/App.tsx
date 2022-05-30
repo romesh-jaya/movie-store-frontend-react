@@ -1,5 +1,7 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { Route, Routes } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { SnackbarProvider } from 'notistack';
@@ -7,10 +9,10 @@ import { SnackbarProvider } from 'notistack';
 import globStyles from './index.module.scss';
 import styles from './app.module.scss';
 import axios from './axios';
-import { MAIN_COLOUR, SEC_COLOUR_TEXT, SEC_COLOUR } from './constants/Colours';
 import ContainerHeader from './containers/ContainerHeader/ContainerHeader';
 import Spinner from './components/UI/Spinner/Spinner';
 import { manageUserSession } from './utils/UserSession';
+import { PREFERS_DARK_MODE_MEDIA_QUERY } from './constants/Constants';
 
 const Login = React.lazy(() => import('./components/Login/Login'));
 const TransactionResult = React.lazy(
@@ -28,22 +30,36 @@ const MySubscriptions = React.lazy(
 
 const SERVER_PATH = import.meta.env.VITE_NODE_SERVER || '';
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: MAIN_COLOUR,
-      // Note: light, dark and contrastText will be calculated from palette.primary.main,
-    },
-    secondary: {
-      main: SEC_COLOUR,
-      contrastText: SEC_COLOUR_TEXT,
-    },
+const customPalette = {
+  primary: {
+    // Note: contrastText will be calculated from palette.primary.main,
+    light: '#7794aa',
+    main: '#557a95',
+    dark: '#3b5568',
   },
-});
+  secondary: {
+    light: '#ecdbcc',
+    main: '#e8d2c0',
+    dark: '#a29386',
+    contrastText: '#473f3a',
+  },
+};
 
 const App: React.FC = () => {
   const { getAccessTokenSilently, isLoading } = useAuth0();
   const [tabIndex, setTabIndex] = useState(0);
+  const prefersDarkMode = useMediaQuery(PREFERS_DARK_MODE_MEDIA_QUERY);
+
+  const theme = React.useMemo(
+    () =>
+      createTheme({
+        palette: {
+          ...customPalette,
+          mode: prefersDarkMode ? 'dark' : 'light',
+        },
+      }),
+    [prefersDarkMode]
+  );
 
   axios.interceptors.request.use(async (req) => {
     if (req.url?.toUpperCase().includes(SERVER_PATH.toUpperCase())) {
@@ -95,10 +111,10 @@ const App: React.FC = () => {
         autoHideDuration={4000}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <div className={styles.container}>
+        <Paper className={styles.container}>
           <ContainerHeader tabIndex={tabIndex} setTabIndex={setTabIndex} />
           {renderContent()}
-        </div>
+        </Paper>
       </SnackbarProvider>
     </ThemeProvider>
   );
