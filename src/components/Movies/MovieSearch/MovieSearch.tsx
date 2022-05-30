@@ -9,7 +9,7 @@ import styles from './movieSearch.module.css';
 import globStyles from '../../../index.module.scss';
 import IMovieSearch from '../../../interfaces/IMovieSearch';
 import MovieDetails from '../MovieDetails/MovieDetails';
-import MovieLoadingSkeleton from '../MovieLoadingSkeleton';
+import LoadingSkeleton from '../../LoadingSkeleton/LoadingSkeleton';
 import { TextConstants } from '../../../constants/TextConstants';
 import { getMovieDetails } from '../../../utils/MovieUtil';
 import { SEARCH_URL } from '../../../constants/Constants';
@@ -225,7 +225,7 @@ const MovieSearch: React.FC = () => {
 
   return (
     <>
-      {isLoading && <MovieLoadingSkeleton />}
+      {isLoading && <LoadingSkeleton />}
       {renderContent()}
     </>
   );

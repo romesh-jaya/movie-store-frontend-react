@@ -5,12 +5,12 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 import globStyles from '../../index.module.scss';
 import { TextConstants } from '../../constants/TextConstants';
-import MovieContainerSkeleton from '../MovieContainerSkeleton';
 import axios from '../../axios';
 import INameValue from '../../interfaces/INameValue';
 import { isAdmin } from '../../utils/AuthUtil';
 import MyLibrary from '../../components/MyLibrary/MyLibrary';
 import { initSettings, settings, getSettingValue } from '../../state/settings';
+import LoadingSkeleton from '../../components/LoadingSkeleton/LoadingSkeleton';
 
 interface IProps {
   tabIndex: number;
@@ -132,7 +132,7 @@ const ContainerBody: React.FC<IProps> = (props: IProps) => {
 
   return (
     <>
-      {isLoading && <MovieContainerSkeleton />}
+      {isLoading && <LoadingSkeleton />}
       {renderContent()}
       {!isLoading && settingsError && (
         <p className={globStyles['error-text']}>{settingsError}</p>

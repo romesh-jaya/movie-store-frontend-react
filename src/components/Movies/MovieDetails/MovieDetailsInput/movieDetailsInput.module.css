@@ -11,3 +11,8 @@
 .imdb-link {
   margin-right: 10px;
 }
+
+.imdb-link:hover,
+.imdb-link:active {
+  color: orange;
+}

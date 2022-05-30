@@ -1,5 +1,9 @@
 @import '../../../styles/globalTheme.module.scss';
 
+.drawer {
+  max-width: 550px !important;
+}
+
 .container {
   min-height: 100%;
   padding: 20px 0;
@@ -40,7 +44,7 @@
 }
 
 .header-custom {
-  height: 40px;
+  min-height: 40px;
   display: flex;
   margin: 0;
 }
@@ -49,9 +53,6 @@
   display: flex;
   width: 100%;
   font-weight: bold;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   align-items: center;
   justify-content: left !important;
   text-align: left !important;
@@ -68,10 +69,6 @@
 .Button:disabled {
   color: #ccc;
   cursor: not-allowed;
-}
-
-.drawer {
-  max-width: 550px !important;
 }
 
 .spinner-div {

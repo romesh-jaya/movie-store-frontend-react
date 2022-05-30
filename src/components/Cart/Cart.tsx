@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
+import {
+  redirectFromCheckoutURLCancelled,
+  redirectFromCheckoutURLSuccess,
+  redirectFromCheckoutURLSuccessNoCheckout,
+} from '../../constants/Constants';
 import { cartItems } from '../../state/cart';
 import styles from './cart.module.scss';
 import MovieDetails from '../Movies/MovieDetails/MovieDetails';
 import globStyles from '../../index.module.scss';
 import axios from '../../axios';
 import { initPrices, prices, titlePriceId } from '../../state/price';
-import {
-  redirectFromCheckoutURLCancelled,
-  redirectFromCheckoutURLSuccess,
-  redirectFromCheckoutURLSuccessNoCheckout,
-} from '../../constants/Constants';
 import Spinner from '../UI/Spinner/Spinner';
 import { getPrices } from '../../api/server/server';
 import CartItemsTable from './CartItemsTable/CartItemsTable';
+import CustomLink from '../CustomLink/CustomLink';
 
 const Cart: React.FC = () => {
   const cartItemsArray = cartItems.use();
@@ -24,6 +25,7 @@ const Cart: React.FC = () => {
   const [selectedMovieIMDBId, setSelectedMovieIMDBId] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
   const pricePerTitle =
     pricesArray.find((price) => price.lookupKey === titlePriceId)?.price || 0;
   const priceCurrency =
@@ -118,9 +120,7 @@ const Cart: React.FC = () => {
                 <p className={styles['subscription-info']}>
                   Enjoy free DVD rentals with a{' '}
                   <span>
-                    <Link to="/my-subscriptions">
-                      <a>Subscription</a>
-                    </Link>
+                    <CustomLink to="/my-subscriptions">Subscription</CustomLink>
                   </span>
                   .
                 </p>

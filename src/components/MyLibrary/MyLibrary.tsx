@@ -3,7 +3,7 @@ import React, { useState, useCallback, useEffect, ReactElement } from 'react';
 import globStyles from '../../index.module.scss';
 import { TextConstants } from '../../constants/TextConstants';
 import axios from '../../axios';
-import MovieLoadingSkeleton from '../Movies/MovieLoadingSkeleton';
+import LoadingSkeleton from '../LoadingSkeleton/LoadingSkeleton';
 import AlertConfirmation from '../UI/AlertConfirmation/AlertConfirmation';
 import LibrarySearchBox from './LibrarySearchBox/LibrarySearchBox';
 import { ISearchInfo } from '../../interfaces/ISearchInfo';
@@ -220,7 +220,7 @@ const MyLibrary: React.FC = () => {
         setLastSearchInfo={setLastSearchInfo}
         exportMovies={exportMovies}
       />
-      {isLoading ? <MovieLoadingSkeleton /> : renderContent()}
+      {isLoading ? <LoadingSkeleton /> : renderContent()}
     </>
   );
 };

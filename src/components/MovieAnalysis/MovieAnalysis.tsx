@@ -4,7 +4,7 @@ import { Bar } from 'react-chartjs-2';
 import globStyles from '../../index.module.scss';
 import axios from '../../axios';
 import { TextConstants } from '../../constants/TextConstants';
-import MovieLoadingSkeleton from '../Movies/MovieLoadingSkeleton';
+import LoadingSkeleton from '../LoadingSkeleton/LoadingSkeleton';
 
 const CHART_OPTIONS = {
   responsive: false,
@@ -134,7 +134,7 @@ const MovieAnalysis: React.FC = () => {
 
   return (
     <>
-      {isLoading ? <MovieLoadingSkeleton /> : renderContent()}
+      {isLoading ? <LoadingSkeleton /> : renderContent()}
       {error && <p className={globStyles['error-text']}>{error}</p>}
     </>
   );
