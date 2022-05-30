@@ -9,25 +9,18 @@
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  padding: 20px 0;
   width: 90%;
   margin: 0 auto;
   text-align: center;
-
-  @media #{$md} {
-    padding: 20px;
-    box-shadow: 0 2px 3px #ccc;
-  }
 }
 
-.movie-absent {
-  border: 1px solid #eee;
-}
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 100%;
 
-.movie-present {
-  @media #{$md} {
-    border: 2px solid darkblue;
-  }
+  padding: 20px 10px;
 }
 
 .top-half {
@@ -47,22 +40,28 @@
 }
 
 .header-custom {
-  height: 35px;
+  height: 48px;
+  display: flex;
   margin: 0;
 }
 
 .header-custom-span {
+  display: flex;
+  width: 100%;
   font-weight: bold;
-  background-color: darkblue;
-  color: white;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  float: left;
+  align-items: center;
   justify-content: left !important;
   text-align: left !important;
   padding: 5px 15px;
-  max-width: 340px;
+}
+
+.close-button {
+  height: 48px;
+  width: 48px;
+  padding: 0 !important;
 }
 
 .Button:disabled {
@@ -77,8 +76,4 @@
 .spinner-div {
   height: 2.6em;
   padding: 20px;
-}
-
-.close-button {
-  float: right;
 }

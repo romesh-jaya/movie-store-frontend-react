@@ -11,6 +11,7 @@ import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { useSnackbar } from 'notistack';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { useAuth0 } from '@auth0/auth0-react';
 import styles from './movieDetailsInput.module.css';
@@ -20,6 +21,7 @@ import { TextConstants } from '../../../../constants/TextConstants';
 import { isAdmin } from '../../../../utils/AuthUtil';
 import { addItem, removeItem, cartItems } from '../../../../state/cart';
 import { getSettingValue } from '../../../../state/settings';
+import { PREFERS_DARK_MODE_MEDIA_QUERY } from '../../../../constants/Constants';
 
 interface IProps {
   languagesInitial: string[];
@@ -54,6 +56,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
   const { user } = useAuth0();
   const cartItemsArray = cartItems.use();
   const { enqueueSnackbar } = useSnackbar();
+  const prefersDarkMode = useMediaQuery(PREFERS_DARK_MODE_MEDIA_QUERY);
 
   const itemExists = (imdbID: string): boolean => {
     return !!cartItemsArray.find((itemOne) => itemOne.imdbID === imdbID);
@@ -262,6 +265,9 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
             target="_blank"
             rel="noopener noreferrer"
             className={styles['imdb-link']}
+            style={{
+              color: prefersDarkMode ? 'white' : '',
+            }}
           >
             View in IMDB
           </a>
