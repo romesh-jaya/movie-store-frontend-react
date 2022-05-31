@@ -6,7 +6,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 import globStyles from '../../index.module.scss';
 import { TextConstants } from '../../constants/TextConstants';
 import axios from '../../axios';
-import INameValue from '../../interfaces/INameValue';
 import { isAdmin } from '../../utils/AuthUtil';
 import MyLibrary from '../../components/MyLibrary/MyLibrary';
 import { initSettings, settings, getSettingValue } from '../../state/settings';
@@ -28,7 +27,7 @@ const Cart = React.lazy(() => import('../../components/Cart/Cart'));
 
 const ContainerBody: React.FC<IProps> = (props: IProps) => {
   const { tabIndex, setTabIndex } = props;
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [settingsError, setSettingsError] = useState('');
   const settingsArray = settings.use();
   const apiKeySetting = getSettingValue('apiKey');
@@ -56,31 +55,13 @@ const ContainerBody: React.FC<IProps> = (props: IProps) => {
 
   useEffect(() => {
     async function loadSettings(): Promise<void> {
-      setIsLoading(true);
       try {
-        const responseApiKey = await axios.get(
-          `${import.meta.env.VITE_NODE_SERVER}/settings/apiKey`
-        );
-        if (responseApiKey.data.value) {
-          console.log('Retrieved API key.');
-        } else {
-          console.warn('API key was returned blank.');
-        }
-
-        const responseLang = await axios.get(
-          `${import.meta.env.VITE_NODE_SERVER}/settings/languages`
+        const response = await axios.get(
+          `${import.meta.env.VITE_NODE_SERVER}/settings`
         );
 
-        const settings: INameValue[] = [
-          {
-            name: 'apiKey',
-            value: responseApiKey.data.value,
-          },
-          {
-            name: 'languages',
-            value: responseLang.data.value,
-          },
-        ];
+        const settings = response.data;
+        console.log('Retrieved settings', settings);
         initSettings(settings);
       } catch {
         setSettingsError(TextConstants.CANNOTCONNECTSERVER);
@@ -91,7 +72,9 @@ const ContainerBody: React.FC<IProps> = (props: IProps) => {
 
     if (settingsArray.length === 0) {
       loadSettings();
+      return;
     }
+    setIsLoading(false);
   }, []);
 
   const renderNoApiKey = (): ReactElement => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
@@ -12,13 +12,14 @@ import { getSettingValue, initSettings } from '../../state/settings';
 
 const Settings: React.FC = () => {
   const [settingsError, setSettingsError] = useState('');
-  const [omdbAPIKeyEntered, setOmdbAPIKeyEntered] = useState('');
-  const [languagesEntered, setLanguagesEntered] = useState('');
   const [languagesEnteredError, setLanguagesEnteredError] = useState('');
   const [settingsChanged, setSettingsChanged] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const isMountedRef = useRef(false);
   const apiKeySetting = getSettingValue('apiKey');
+  const languagesSetting = getSettingValue('languages');
+  const [languagesEntered, setLanguagesEntered] = useState(languagesSetting);
+  const [omdbAPIKeyEntered, setOmdbAPIKeyEntered] = useState(apiKeySetting);
 
   const omdbAPIKeyEnteredOnChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
@@ -90,36 +91,6 @@ const Settings: React.FC = () => {
       setIsLoading(false);
     }
   };
-
-  // load the settings
-  useEffect(() => {
-    isMountedRef.current = true;
-    if (apiKeySetting) {
-      setOmdbAPIKeyEntered(apiKeySetting);
-    }
-
-    async function loadLanguages(): Promise<void> {
-      try {
-        setIsLoading(true);
-        const response = await axios.get(
-          `${import.meta.env.VITE_NODE_SERVER}/settings/languages`
-        );
-        if (response.data.value) {
-          setLanguagesEntered(response.data.value);
-        }
-      } catch {
-        setSettingsError(TextConstants.CANNOTCONNECTSERVER);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    loadLanguages();
-
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, [apiKeySetting]);
 
   return (
     <>

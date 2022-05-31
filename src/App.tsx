@@ -30,6 +30,8 @@ const MySubscriptions = React.lazy(
 
 const SERVER_PATH = import.meta.env.VITE_NODE_SERVER || '';
 
+// Note: these colors have no relation to dark mode. We need to manually change the colors for dark mode
+// if necessary
 const customPalette = {
   primary: {
     // Note: contrastText will be calculated from palette.primary.main,
