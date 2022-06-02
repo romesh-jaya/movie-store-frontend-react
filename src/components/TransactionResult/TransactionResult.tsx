@@ -60,7 +60,10 @@ const TransactionResult: React.FC = () => {
     <div className={styles.table}>
       <h2>{heading}</h2>
       {!error && (
-        <p>Thank you for your order. Your order no is: {orderNoRetrieved}</p>
+        <p>
+          Thank you for your order. Your order no is: {orderNoRetrieved}. You
+          should receive a confirmation email shortly.
+        </p>
       )}
       {error && <p className={globStyles['error-text']}>{error}</p>}
       <div className={styles['button-div']}>
