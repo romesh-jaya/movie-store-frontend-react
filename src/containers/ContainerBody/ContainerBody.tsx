@@ -61,7 +61,6 @@ const ContainerBody: React.FC<IProps> = (props: IProps) => {
         );
 
         const settings = response.data;
-        console.log('Retrieved settings', settings);
         initSettings(settings);
       } catch {
         setSettingsError(TextConstants.CANNOTCONNECTSERVER);
