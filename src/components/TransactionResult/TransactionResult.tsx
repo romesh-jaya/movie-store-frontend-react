@@ -29,15 +29,12 @@ const TransactionResult: React.FC = () => {
 
       try {
         setIsLoading(true);
-        const response = await axios.post(
+        const response = await axios.get(
           `${
             import.meta.env.VITE_NODE_SERVER
-          }/payments/stripe/products/complete-payment`,
-          {
-            orderId,
-          }
+          }/orders/get-order-no?orderId=${orderId}`
         );
-        setOrderNoRetrieved(response.data.orderNo);
+        setOrderNoRetrieved(response.data);
         clearCart();
       } catch (error) {
         setError(`Error while completing payment: ${error}`);
