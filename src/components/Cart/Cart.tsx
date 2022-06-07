@@ -24,7 +24,7 @@ const Cart: React.FC = () => {
   const navigate = useNavigate();
   const [selectedMovieIMDBId, setSelectedMovieIMDBId] = useState('');
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const pricePerTitle =
     pricesArray.find((price) => price.lookupKey === titlePriceId)?.price || 0;
@@ -35,7 +35,9 @@ const Cart: React.FC = () => {
   useEffect(() => {
     if (pricesArray.length === 0) {
       fetchPrices();
+      return;
     }
+    setIsLoading(false);
   }, []);
 
   const proceedToRent = async () => {
@@ -79,7 +81,6 @@ const Cart: React.FC = () => {
     setError('');
 
     try {
-      setIsLoading(true);
       const priceInfo = await getPrices();
       initPrices(priceInfo);
     } catch (error) {

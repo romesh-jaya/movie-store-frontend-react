@@ -12,7 +12,7 @@ const TransactionResult: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [error, setError] = useState('');
   const [orderNoRetrieved, setOrderNoRetrieved] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const heading = error ? 'Something went wrong' : 'Transaction Success';
 
@@ -22,13 +22,13 @@ const TransactionResult: React.FC = () => {
 
       if (!orderId) {
         setError('OrderId param is missing in URL');
+        setIsLoading(false);
         return;
       }
 
       setError('');
 
       try {
-        setIsLoading(true);
         const response = await axios.get(
           `${
             import.meta.env.VITE_NODE_SERVER
