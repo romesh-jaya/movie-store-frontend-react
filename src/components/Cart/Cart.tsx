@@ -13,10 +13,10 @@ import MovieDetails from '../Movies/MovieDetails/MovieDetails';
 import globStyles from '../../index.module.scss';
 import axios from '../../axios';
 import { initPrices, prices, titlePriceId } from '../../state/price';
-import Spinner from '../UI/Spinner/Spinner';
 import { getPrices } from '../../api/server/server';
 import CartItemsTable from './CartItemsTable/CartItemsTable';
 import CustomLink from '../CustomLink/CustomLink';
+import LoadingSkeleton from '../LoadingSkeleton/LoadingSkeleton';
 
 const Cart: React.FC = () => {
   const cartItemsArray = cartItems.use();
@@ -91,11 +91,7 @@ const Cart: React.FC = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className={globStyles['spinner-full-page']}>
-        <Spinner />
-      </div>
-    );
+    return <LoadingSkeleton />;
   }
 
   return (
