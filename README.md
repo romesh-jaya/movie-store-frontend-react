@@ -11,8 +11,7 @@ The app also allows potential customers to login and browse the available titles
 The app is hosted here:
 https://movie-shop-dev.web.app/
 
-Quick start guide can be found here:
-https://github.com/romesh-jaya/movie-store-frontend-react/blob/master/Quick%20Start%20Guide.pdf?raw=true
+Quick start guide can be found [here](https://github.com/romesh-jaya/movie-store-frontend-react/blob/master/Quick%20Start%20Guide.pdf?raw=true).
 
 ## Technical details
 
@@ -36,10 +35,11 @@ Tech Stack used:
   - Webhooks for payment completion
 - React material-table (@material-table/core had to be used with Vite)
   - Pagination
-- Material UI
+- Material UI [in this branch](https://github.com/romesh-jaya/movie-store-frontend-react/tree/material-ui)
   - useMediaQuery hook
   - Side-drawer
   - Loading skeletons
+- Bootstrap v5  
 
 This project uses OMDB API to search for movie data. The latter has a 1,000 daily API call limit. Another free alternative might be TMDB: https://developers.themoviedb.org/3/getting-started
 
