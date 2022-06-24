@@ -1,13 +1,12 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Route, Routes } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { SnackbarProvider } from 'notistack';
+import Container from 'react-bootstrap/Container';
 
 import globStyles from './index.module.scss';
-import styles from './app.module.scss';
 import axios from './axios';
 import ContainerHeader from './containers/ContainerHeader/ContainerHeader';
 import Spinner from './components/UI/Spinner/Spinner';
@@ -114,10 +113,10 @@ const App: React.FC = () => {
         autoHideDuration={4000}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <Paper className={styles.container}>
-          <ContainerHeader tabIndex={tabIndex} setTabIndex={setTabIndex} />
+        <ContainerHeader tabIndex={tabIndex} setTabIndex={setTabIndex} />
+        <Container className="d-flex flex-column min-vh-100">
           {renderContent()}
-        </Paper>
+        </Container>
       </SnackbarProvider>
     </ThemeProvider>
   );

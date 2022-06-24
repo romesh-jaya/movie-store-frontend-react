@@ -1,0 +1,10 @@
+/*
+// Note: overriding Bootstrap styles as per https://react-bootstrap.github.io/getting-started/introduction/#customize-bootstrap
+*/
+
+$theme-colors: (
+  'primary': #557a95,
+  'secondary': #e8d2c0,
+);
+
+@import 'bootstrap/scss/bootstrap';
