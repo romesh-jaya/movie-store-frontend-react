@@ -30,6 +30,7 @@ export default function NoSubscription(props: IProps) {
 
   useEffect(() => {}, []);
 
+  // Note: onChange() in the ToggleButtonGroup didn't fire, so used onClick in the ToggleButton instead
   return (
     <>
       <p className="mt-4">
