@@ -77,7 +77,6 @@ const App: React.FC = () => {
   }, []);
 
   const renderContent = () => {
-    // Had to use the Spinner here instead of Loading Skeleton as the styles weren't applied at this point
     if (isLoading) {
       return (
         <div className={globStyles['spinner-full-page']}>

@@ -21,6 +21,7 @@ Tech Stack used:
 - MERN Stack
 - Vite server
 - Typescript
+- React Skeletons
 - React Router v6
 - Lazy loading of code
 - Auth0 Authentication
@@ -29,7 +30,7 @@ Tech Stack used:
 - notistack
 - Cypress e2e testing
 - prefers-color-scheme media query for dark mode support
-- Automatic email sending via Nodemailer
+- Automatic email sending via EmailJS
 - Stripe
   - Payments with pre-built checkout page and Stripe React library
   - Subscriptions
@@ -39,9 +40,13 @@ Tech Stack used:
 - Material UI
   - useMediaQuery hook
   - Side-drawer
-  - Loading skeletons
 
 This project uses OMDB API to search for movie data. The latter has a 1,000 daily API call limit. Another free alternative might be TMDB: https://developers.themoviedb.org/3/getting-started
+
+This app communicates with the backend - which is available in a separate git project: movie-shop-backend.
+
+To deploy to Firebase, first perform a build, then run the following command from the terminal:
+firebase deploy --only hosting
 
 Note: MongoDB automatically goes to inactive state after a period of inactivity, and needs restarting manually.
 
@@ -92,3 +97,9 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).

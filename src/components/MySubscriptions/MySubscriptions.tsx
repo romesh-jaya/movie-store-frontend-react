@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './mySubscriptions.module.scss';
 import globStyles from '../../index.module.scss';
 import axios from '../../axios';
+import Spinner from '../UI/Spinner/Spinner';
 import {
   redirectFromCheckoutURLCancelledSubscription,
   redirectFromCheckoutURLSuccessSubscription,
@@ -16,7 +17,6 @@ import { initPrices, prices } from '../../state/price';
 import { getPrices } from '../../api/server/server';
 import SubscriptionExists from './SubscriptionExists/SubscriptionExists';
 import NoSubscription from './NoSubscription/NoSubscription';
-import LoadingSkeleton from '../LoadingSkeleton/LoadingSkeleton';
 
 interface ISubscriptionInfo {
   lookupKey?: string;
@@ -138,7 +138,11 @@ const MySubscriptions: React.FC = () => {
   }, []);
 
   if (isLoading) {
-    return <LoadingSkeleton />;
+    return (
+      <div className={globStyles['spinner-full-page']}>
+        <Spinner />
+      </div>
+    );
   }
 
   return (

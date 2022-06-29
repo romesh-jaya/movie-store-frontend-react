@@ -5,8 +5,8 @@ import globStyles from '../../index.module.scss';
 import Button from '@mui/material/Button';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from '../../axios';
+import Spinner from '../UI/Spinner/Spinner';
 import { clearCart } from '../../state/cart';
-import LoadingSkeleton from '../LoadingSkeleton/LoadingSkeleton';
 
 const TransactionResult: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -46,7 +46,11 @@ const TransactionResult: React.FC = () => {
   }, []);
 
   if (isLoading) {
-    return <LoadingSkeleton />;
+    return (
+      <div className={globStyles['spinner-full-page']}>
+        <Spinner />
+      </div>
+    );
   }
 
   return (
