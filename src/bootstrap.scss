@@ -2,9 +2,32 @@
 // Note: overriding Bootstrap styles as per https://react-bootstrap.github.io/getting-started/introduction/#customize-bootstrap
 */
 
+/* 
+-----------------------------------------------------------------------------
+Boostrap variables override START
+*/
 $theme-colors: (
   'primary': #557a95,
   'secondary': #e8d2c0,
 );
+
+/* 
+Boostrap variables override END
+-----------------------------------------------------------------------------
+*/
+
+/* 
+-----------------------------------------------------------------------------
+Boostrap classes override START
+*/
+
+.btn-outline-secondary {
+  color: black !important;
+}
+
+/* 
+Boostrap classes override END
+-----------------------------------------------------------------------------
+*/
 
 @import 'bootstrap/scss/bootstrap';
