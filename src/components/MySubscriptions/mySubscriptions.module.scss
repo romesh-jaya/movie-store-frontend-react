@@ -5,20 +5,3 @@
   width: 90%;
   max-width: $md-screen;
 }
-
-.intro {
-  margin-top: 30px;
-}
-
-.button-div {
-  margin-top: 30px;
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-}
-
-.radio-group {
-  @media #{$xs} {
-    gap: 20px;
-  }
-}

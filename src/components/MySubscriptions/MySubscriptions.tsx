@@ -141,6 +141,7 @@ const MySubscriptions: React.FC = () => {
     return <LoadingSkeleton />;
   }
 
+  // Note: styles.table has been left intentionally as we cannot set custom boostrap max-width
   return (
     <div className={styles.table}>
       <h2>My subscriptions</h2>
