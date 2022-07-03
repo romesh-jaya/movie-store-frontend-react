@@ -1,62 +1,69 @@
-import { useAuth0 } from '@auth0/auth0-react';
 import React from 'react';
 import { useLocation } from 'react-router';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 import logo from '../../assets/img/movie.svg';
-import NavBar from '../../components/NavBar/NavBar';
 import styles from './containerHeader.module.scss';
-import { PREFERS_DARK_MODE_MEDIA_QUERY } from '../../constants/Constants';
+import Navbar from 'react-bootstrap/esm/Navbar';
+import Container from 'react-bootstrap/esm/Container';
+import NavDropdown from 'react-bootstrap/esm/NavDropdown';
+import Nav from 'react-bootstrap/esm/Nav';
 
+/*
 interface IProps {
   tabIndex: number;
   setTabIndex: (newTabIndex: number) => void;
 }
+*/
 
-const ContainerHeader: React.FC<IProps> = (props: IProps) => {
-  const { tabIndex, setTabIndex } = props;
-  const { user } = useAuth0();
+const ContainerHeader: React.FC = () => {
   const location = useLocation();
-  const prefersDarkMode = useMediaQuery(PREFERS_DARK_MODE_MEDIA_QUERY);
-  const theme = useTheme();
+
   const dontShowNavBar =
     location.pathname.includes('transaction-result') ||
     location.pathname.includes('checkout') ||
-    location.pathname.includes('my-subscriptions');
+    location.pathname.includes('my-subscriptions') ||
+    location.pathname.includes('login');
 
   return (
     <>
-      <div
-        style={{
-          backgroundColor: prefersDarkMode
-            ? theme.palette.secondary.dark
-            : theme.palette.secondary.main,
-        }}
-        className={styles['header-container']}
-      >
-        <div className={styles.header}>
-          <span className={`${styles['nowrap-div']} ${styles['div-logo']}`}>
+      <Navbar variant="dark" bg="primary" collapseOnSelect expand="md">
+        <Container>
+          <Navbar.Brand href="#home">
             <img
               src={logo}
               style={{
-                filter: prefersDarkMode
-                  ? 'invert(100%) sepia(2%) saturate(7444%) hue-rotate(290deg) brightness(108%) contrast(97%)'
-                  : '',
+                filter:
+                  'invert(100%) sepia(2%) saturate(7444%) hue-rotate(290deg) brightness(108%) contrast(97%)',
               }}
               height="50px"
               alt="movies"
               className={styles.logo}
             />
-          </span>
-          <h1 className={`${styles['nowrap-div']} ${styles['header-text']}`}>
-            Ultra Movie Shop
-          </h1>
-        </div>
-      </div>
-      {!!user && !dontShowNavBar && (
-        <NavBar tabIndex={tabIndex} setTabIndex={setTabIndex} />
-      )}
+            <div>Ultra Movie Shop</div>
+          </Navbar.Brand>
+          {!dontShowNavBar && (
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="me-auto">
+                <Nav.Link href="#home">Home</Nav.Link>
+                <Nav.Link href="#link">Link</Nav.Link>
+                <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+                  <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+                  <NavDropdown.Item href="#action/3.2">
+                    Another action
+                  </NavDropdown.Item>
+                  <NavDropdown.Item href="#action/3.3">
+                    Something
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item href="#action/3.4">
+                    Separated link
+                  </NavDropdown.Item>
+                </NavDropdown>
+              </Nav>
+            </Navbar.Collapse>
+          )}
+        </Container>
+      </Navbar>
     </>
   );
 };

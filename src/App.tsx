@@ -113,7 +113,7 @@ const App: React.FC = () => {
         autoHideDuration={4000}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <ContainerHeader tabIndex={tabIndex} setTabIndex={setTabIndex} />
+        <ContainerHeader />
         <Container className="d-flex flex-column min-vh-100">
           {renderContent()}
         </Container>
