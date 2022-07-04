@@ -30,4 +30,38 @@ Boostrap classes override END
 -----------------------------------------------------------------------------
 */
 
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/utilities';
+
+/* 
+Boostrap utilities override START
+-----------------------------------------------------------------------------
+*/
+$font-sizes: (
+  1: 6rem,
+  2: 4rem,
+  3: 3rem,
+  4: 2rem,
+  5: 1rem,
+  6: 0.75rem,
+);
+
+$utilities: map-merge(
+  $utilities,
+  (
+    'font-size':
+      map-merge(
+        map-get($utilities, 'font-size'),
+        (
+          values: $font-sizes,
+        )
+      ),
+  )
+);
+/* 
+Boostrap utilities override END
+-----------------------------------------------------------------------------
+*/
+
 @import 'bootstrap/scss/bootstrap';
