@@ -1,32 +1,23 @@
 import React from 'react';
 import { useLocation } from 'react-router';
-
-import logo from '../../assets/img/movie.svg';
-import styles from './containerHeader.module.scss';
+import { useNavigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 import Navbar from 'react-bootstrap/esm/Navbar';
 import Container from 'react-bootstrap/esm/Container';
 import NavDropdown from 'react-bootstrap/esm/NavDropdown';
 import Nav from 'react-bootstrap/esm/Nav';
-import { isAdmin } from '../../utils/AuthUtil';
-import { useAuth0 } from '@auth0/auth0-react';
 import { GearFill } from 'react-bootstrap-icons';
 
-/*
-interface IProps {
-  tabIndex: number;
-  setTabIndex: (newTabIndex: number) => void;
-}
-*/
+import logo from '../../assets/img/movie.svg';
+import styles from './containerHeader.module.scss';
+import { isAdmin } from '../../utils/AuthUtil';
 
 const ContainerHeader: React.FC = () => {
   const location = useLocation();
   const { user, logout } = useAuth0();
+  const navigate = useNavigate();
 
-  const dontShowNavBar =
-    location.pathname.includes('transaction-result') ||
-    location.pathname.includes('checkout') ||
-    location.pathname.includes('my-subscriptions') ||
-    location.pathname.includes('login');
+  const dontShowNavBarPaths = location.pathname.includes('login');
 
   const onLogoutClicked = (): void => {
     logout({ returnTo: `${window.location.origin}/login` });
@@ -34,9 +25,15 @@ const ContainerHeader: React.FC = () => {
 
   return (
     <>
-      <Navbar variant="dark" bg="primary" collapseOnSelect expand="md">
+      <Navbar
+        variant="dark"
+        bg="primary"
+        collapseOnSelect
+        expand="md"
+        onSelect={(selectedKey) => selectedKey && navigate(selectedKey)}
+      >
         <Container>
-          <Navbar.Brand href="#home">
+          <Navbar.Brand>
             <img
               src={logo}
               style={{
@@ -49,7 +46,7 @@ const ContainerHeader: React.FC = () => {
             />
             <div>Ultra Movie Shop</div>
           </Navbar.Brand>
-          {!dontShowNavBar && (
+          {!dontShowNavBarPaths && (
             <Navbar.Collapse>
               <Nav className="me-auto">
                 <Nav.Link eventKey="/">Home</Nav.Link>
