@@ -29,8 +29,9 @@ const ContainerHeader: React.FC = () => {
         variant="dark"
         bg="primary"
         collapseOnSelect
-        expand="md"
+        expand="sm"
         onSelect={(selectedKey) => selectedKey && navigate(selectedKey)}
+        className="px-2"
       >
         <Container>
           <Navbar.Brand>
@@ -47,8 +48,8 @@ const ContainerHeader: React.FC = () => {
             <div>Ultra Movie Shop</div>
           </Navbar.Brand>
           {!dontShowNavBarPaths && (
-            <Navbar.Collapse>
-              <Nav className="me-auto">
+            <Navbar.Collapse className="ms-3">
+              <Nav className="me-auto flex-grow-1">
                 <Nav.Link eventKey="/">Home</Nav.Link>
                 {!isAdmin(user) && (
                   <Nav.Link eventKey="/my-cart">Cart</Nav.Link>
@@ -58,28 +59,30 @@ const ContainerHeader: React.FC = () => {
                     Movie Search - OMDB
                   </Nav.Link>
                 )}
-                <NavDropdown title={<GearFill />}>
-                  <NavDropdown.Item disabled className="fs-6">
-                    Welcome, {user && user?.name && user.name.split(' ')[0]}
-                  </NavDropdown.Item>
-                  {!isAdmin(user) && (
-                    <NavDropdown.Item eventKey="/my-subscriptions">
-                      My subscriptions
-                    </NavDropdown.Item>
-                  )}
-                  {isAdmin(user) && (
-                    <NavDropdown.Item eventKey="/movie-search-analysis">
-                      Movie Search Analysis
-                    </NavDropdown.Item>
-                  )}
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item onClick={onLogoutClicked}>
-                    Logout
-                  </NavDropdown.Item>
-                </NavDropdown>
               </Nav>
             </Navbar.Collapse>
           )}
+          <Nav>
+            <NavDropdown align="end" title={<GearFill />}>
+              <NavDropdown.Item disabled className="fs-6">
+                Welcome, {user && user?.name && user.name.split(' ')[0]}
+              </NavDropdown.Item>
+              {!isAdmin(user) && (
+                <NavDropdown.Item eventKey="/my-subscriptions">
+                  My subscriptions
+                </NavDropdown.Item>
+              )}
+              {isAdmin(user) && (
+                <NavDropdown.Item eventKey="/movie-search-analysis">
+                  Movie Search Analysis
+                </NavDropdown.Item>
+              )}
+              <NavDropdown.Divider />
+              <NavDropdown.Item onClick={onLogoutClicked}>
+                Logout
+              </NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
         </Container>
       </Navbar>
     </>

@@ -25,6 +25,11 @@ Boostrap classes override START
   color: black !important;
 }
 
+.navbar-nav .dropdown-menu {
+  /* this makes the dropdown menu float over the container div */
+  position: absolute !important;
+}
+
 /* 
 Boostrap classes override END
 -----------------------------------------------------------------------------
