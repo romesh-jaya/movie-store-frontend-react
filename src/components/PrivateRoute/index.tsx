@@ -1,6 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { useRef } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
+import ContainerBody from '../../containers/ContainerBody/ContainerBody';
 
 const PrivateRoute = () => {
   const { user, isAuthenticated, error } = useAuth0();
@@ -12,7 +13,9 @@ const PrivateRoute = () => {
   }
 
   return isAuthenticated || error ? (
-    <Outlet />
+    <ContainerBody>
+      <Outlet />
+    </ContainerBody>
   ) : (
     <Navigate to={{ pathname: '/login' }} />
   );

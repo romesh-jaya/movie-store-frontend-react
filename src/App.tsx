@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Route, Routes } from 'react-router-dom';
@@ -17,10 +17,17 @@ const Login = React.lazy(() => import('./components/Login/Login'));
 const TransactionResult = React.lazy(
   () => import('./components/TransactionResult/TransactionResult')
 );
-const ContainerBody = React.lazy(
-  () => import('./containers/ContainerBody/ContainerBody')
+const MovieSearch = React.lazy(
+  () => import('./components/Movies/MovieSearch/MovieSearch')
 );
+const MovieAnalysis = React.lazy(
+  () => import('./components/MovieAnalysis/MovieAnalysis')
+);
+const Settings = React.lazy(() => import('./components/Settings/Settings'));
+const Cart = React.lazy(() => import('./components/Cart/Cart'));
+const MyLibrary = React.lazy(() => import('./components/MyLibrary/MyLibrary'));
 const PrivateRoute = React.lazy(() => import('./components/PrivateRoute'));
+const AdminRoute = React.lazy(() => import('./components/AdminRoute'));
 const ErrorPage = React.lazy(() => import('./components/Error/Error'));
 const Checkout = React.lazy(() => import('./components/Checkout/Checkout'));
 const MySubscriptions = React.lazy(
@@ -47,8 +54,7 @@ const customPalette = {
 };
 
 const App: React.FC = () => {
-  const { getAccessTokenSilently, isLoading } = useAuth0();
-  const [tabIndex, setTabIndex] = useState(0);
+  const { getAccessTokenSilently, isLoading: isLoadingAuth } = useAuth0();
   const prefersDarkMode = useMediaQuery(PREFERS_DARK_MODE_MEDIA_QUERY);
 
   const theme = React.useMemo(
@@ -77,28 +83,33 @@ const App: React.FC = () => {
 
   const renderContent = () => {
     // Had to use the Spinner here instead of Loading Skeleton as the styles weren't applied at this point
-    if (isLoading) {
+    if (isLoadingAuth) {
       return (
         <div className={globStyles['spinner-full-page']}>
           <Spinner />
         </div>
       );
     }
+
     return (
       <Suspense fallback={<div />}>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/login-admin" element={<Login />} />
           <Route path="/" element={<PrivateRoute />}>
-            <Route
-              path="/"
-              element={
-                <ContainerBody tabIndex={tabIndex} setTabIndex={setTabIndex} />
-              }
-            />
+            <Route path="/" element={<MyLibrary />} />
+            <Route path="/my-cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/my-subscriptions" element={<MySubscriptions />} />
             <Route path="/transaction-result" element={<TransactionResult />} />
+            <Route path="/" element={<AdminRoute />}>
+              <Route path="/movie-search-omdb" element={<MovieSearch />} />
+              <Route
+                path="/movie-search-analysis"
+                element={<MovieAnalysis />}
+              />
+              <Route path="/settings" element={<Settings />} />
+            </Route>
           </Route>
           <Route element={<ErrorPage />} />
         </Routes>

@@ -100,6 +100,11 @@ const ContainerHeader: React.FC = () => {
                       <Dropdown.Item>Movie Search Analysis</Dropdown.Item>
                     </LinkContainer>
                   )}
+                  {isAdmin(user) && (
+                    <LinkContainer to="/settings">
+                      <Dropdown.Item>Settings</Dropdown.Item>
+                    </LinkContainer>
+                  )}
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={onLogoutClicked} as="div">
                     Logout
