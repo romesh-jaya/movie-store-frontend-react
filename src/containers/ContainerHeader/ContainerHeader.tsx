@@ -7,6 +7,7 @@ import Container from 'react-bootstrap/esm/Container';
 import NavDropdown from 'react-bootstrap/esm/NavDropdown';
 import Nav from 'react-bootstrap/esm/Nav';
 import { GearFill } from 'react-bootstrap-icons';
+import { LinkContainer } from 'react-router-bootstrap';
 
 import logo from '../../assets/img/movie.svg';
 import styles from './containerHeader.module.scss';
@@ -51,9 +52,13 @@ const ContainerHeader: React.FC = () => {
             <>
               <Navbar.Collapse className="ms-3">
                 <Nav className="me-auto flex-grow-1">
-                  <Nav.Link eventKey="/">Home</Nav.Link>
+                  <LinkContainer to="/">
+                    <Nav.Link>Home</Nav.Link>
+                  </LinkContainer>
                   {!isAdmin(user) && (
-                    <Nav.Link eventKey="/my-cart">Cart</Nav.Link>
+                    <LinkContainer to="/my-cart">
+                      <Nav.Link>Cart</Nav.Link>
+                    </LinkContainer>
                   )}
                   {isAdmin(user) && (
                     <Nav.Link eventKey="/movie-search-omdb">
@@ -68,8 +73,8 @@ const ContainerHeader: React.FC = () => {
                     Welcome, {user && user?.name && user.name.split(' ')[0]}
                   </NavDropdown.Item>
                   <NavDropdown.Item
-                    eventKey="/"
                     className={styles['menu-item']}
+                    eventKey="/"
                   >
                     Home
                   </NavDropdown.Item>

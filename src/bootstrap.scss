@@ -30,6 +30,20 @@ Boostrap classes override START
   position: absolute !important;
 }
 
+.dropdown-item.active,
+.dropdown-item:active {
+  /* this makes the dropdown menu active styling to be reversed */
+  color: unset !important;
+  text-decoration: unset !important;
+  background-color: unset !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  /* this adds important attribute to the hover styling of dropdown item */
+  color: #1e2125 !important;
+  background-color: #e9ecef !important;
+}
 /* 
 Boostrap classes override END
 -----------------------------------------------------------------------------
