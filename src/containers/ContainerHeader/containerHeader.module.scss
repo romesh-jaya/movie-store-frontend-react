@@ -1,27 +1,5 @@
 @import '../../styles/globalTheme.module.scss';
 
-.header-container {
-  background-color: #e8d2c0;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 90%;
-  margin: auto;
-  white-space: nowrap;
-}
-
-.nowrap-div {
-  display: inline-block;
-  vertical-align: top;
-}
-
-.div-logo {
-  padding: 15px;
-}
-
 .logo {
   height: 40px;
   @media #{$md} {
@@ -29,10 +7,9 @@
   }
 }
 
-.header-text {
-  font-size: 1.5rem;
-
-  @media #{$md} {
-    font-size: 1.8rem;
+.menu-item {
+  display: none !important;
+  @media #{$xs} {
+    display: block !important;
   }
 }

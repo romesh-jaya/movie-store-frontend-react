@@ -48,41 +48,65 @@ const ContainerHeader: React.FC = () => {
             <div>Ultra Movie Shop</div>
           </Navbar.Brand>
           {!dontShowNavBarPaths && (
-            <Navbar.Collapse className="ms-3">
-              <Nav className="me-auto flex-grow-1">
-                <Nav.Link eventKey="/">Home</Nav.Link>
-                {!isAdmin(user) && (
-                  <Nav.Link eventKey="/my-cart">Cart</Nav.Link>
-                )}
-                {isAdmin(user) && (
-                  <Nav.Link eventKey="/movie-search-omdb">
-                    Movie Search - OMDB
-                  </Nav.Link>
-                )}
+            <>
+              <Navbar.Collapse className="ms-3">
+                <Nav className="me-auto flex-grow-1">
+                  <Nav.Link eventKey="/">Home</Nav.Link>
+                  {!isAdmin(user) && (
+                    <Nav.Link eventKey="/my-cart">Cart</Nav.Link>
+                  )}
+                  {isAdmin(user) && (
+                    <Nav.Link eventKey="/movie-search-omdb">
+                      Movie Search - OMDB
+                    </Nav.Link>
+                  )}
+                </Nav>
+              </Navbar.Collapse>
+              <Nav>
+                <NavDropdown align="end" title={<GearFill />}>
+                  <NavDropdown.Item disabled className="fs-6">
+                    Welcome, {user && user?.name && user.name.split(' ')[0]}
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    eventKey="/"
+                    className={styles['menu-item']}
+                  >
+                    Home
+                  </NavDropdown.Item>
+                  {!isAdmin(user) && (
+                    <NavDropdown.Item
+                      eventKey="/my-cart"
+                      className={styles['menu-item']}
+                    >
+                      Cart
+                    </NavDropdown.Item>
+                  )}
+                  {isAdmin(user) && (
+                    <NavDropdown.Item
+                      eventKey="/movie-search-omdb"
+                      className={styles['menu-item']}
+                    >
+                      Movie Search - OMDB
+                    </NavDropdown.Item>
+                  )}
+                  {!isAdmin(user) && (
+                    <NavDropdown.Item eventKey="/my-subscriptions">
+                      My subscriptions
+                    </NavDropdown.Item>
+                  )}
+                  {isAdmin(user) && (
+                    <NavDropdown.Item eventKey="/movie-search-analysis">
+                      Movie Search Analysis
+                    </NavDropdown.Item>
+                  )}
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item onClick={onLogoutClicked}>
+                    Logout
+                  </NavDropdown.Item>
+                </NavDropdown>
               </Nav>
-            </Navbar.Collapse>
+            </>
           )}
-          <Nav>
-            <NavDropdown align="end" title={<GearFill />}>
-              <NavDropdown.Item disabled className="fs-6">
-                Welcome, {user && user?.name && user.name.split(' ')[0]}
-              </NavDropdown.Item>
-              {!isAdmin(user) && (
-                <NavDropdown.Item eventKey="/my-subscriptions">
-                  My subscriptions
-                </NavDropdown.Item>
-              )}
-              {isAdmin(user) && (
-                <NavDropdown.Item eventKey="/movie-search-analysis">
-                  Movie Search Analysis
-                </NavDropdown.Item>
-              )}
-              <NavDropdown.Divider />
-              <NavDropdown.Item onClick={onLogoutClicked}>
-                Logout
-              </NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
         </Container>
       </Navbar>
     </>
