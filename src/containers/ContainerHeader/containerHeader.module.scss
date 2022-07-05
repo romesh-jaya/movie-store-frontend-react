@@ -13,3 +13,19 @@
     display: block !important;
   }
 }
+
+.dropdown {
+  button {
+    color: rgba(255, 255, 255, 0.55) !important;
+  }
+
+  button:focus {
+    box-shadow: none !important;
+  }
+}
+
+.dropdown:hover {
+  button {
+    color: rgba(255, 255, 255, 0.75) !important;
+  }
+}

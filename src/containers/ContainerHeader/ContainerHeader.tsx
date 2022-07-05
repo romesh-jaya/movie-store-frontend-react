@@ -1,10 +1,8 @@
 import React from 'react';
 import { useLocation } from 'react-router';
-import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import Navbar from 'react-bootstrap/esm/Navbar';
 import Container from 'react-bootstrap/esm/Container';
-import NavDropdown from 'react-bootstrap/esm/NavDropdown';
 import Nav from 'react-bootstrap/esm/Nav';
 import { GearFill } from 'react-bootstrap-icons';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -12,12 +10,11 @@ import { LinkContainer } from 'react-router-bootstrap';
 import logo from '../../assets/img/movie.svg';
 import styles from './containerHeader.module.scss';
 import { isAdmin } from '../../utils/AuthUtil';
+import Dropdown from 'react-bootstrap/esm/Dropdown';
 
 const ContainerHeader: React.FC = () => {
   const location = useLocation();
   const { user, logout } = useAuth0();
-  const navigate = useNavigate();
-
   const dontShowNavBarPaths = location.pathname.includes('login');
 
   const onLogoutClicked = (): void => {
@@ -31,7 +28,6 @@ const ContainerHeader: React.FC = () => {
         bg="primary"
         collapseOnSelect
         expand="sm"
-        onSelect={(selectedKey) => selectedKey && navigate(selectedKey)}
         className="px-2"
       >
         <Container>
@@ -67,49 +63,49 @@ const ContainerHeader: React.FC = () => {
                   )}
                 </Nav>
               </Navbar.Collapse>
-              <Nav>
-                <NavDropdown align="end" title={<GearFill />}>
-                  <NavDropdown.Item disabled className="fs-6">
+              <Dropdown navbar align="end" className={styles['dropdown']}>
+                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                  <GearFill />
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item disabled className="fs-6">
                     Welcome, {user && user?.name && user.name.split(' ')[0]}
-                  </NavDropdown.Item>
-                  <NavDropdown.Item
-                    className={styles['menu-item']}
-                    eventKey="/"
-                  >
-                    Home
-                  </NavDropdown.Item>
+                  </Dropdown.Item>
+                  <LinkContainer to="/">
+                    <Dropdown.Item className={styles['menu-item']}>
+                      Home
+                    </Dropdown.Item>
+                  </LinkContainer>
                   {!isAdmin(user) && (
-                    <NavDropdown.Item
-                      eventKey="/my-cart"
-                      className={styles['menu-item']}
-                    >
-                      Cart
-                    </NavDropdown.Item>
+                    <LinkContainer to="/my-cart">
+                      <Dropdown.Item className={styles['menu-item']}>
+                        Cart
+                      </Dropdown.Item>
+                    </LinkContainer>
                   )}
                   {isAdmin(user) && (
-                    <NavDropdown.Item
-                      eventKey="/movie-search-omdb"
-                      className={styles['menu-item']}
-                    >
-                      Movie Search - OMDB
-                    </NavDropdown.Item>
+                    <LinkContainer to="/movie-search-omdb">
+                      <Dropdown.Item className={styles['menu-item']}>
+                        Movie Search - OMDB
+                      </Dropdown.Item>
+                    </LinkContainer>
                   )}
                   {!isAdmin(user) && (
-                    <NavDropdown.Item eventKey="/my-subscriptions">
-                      My subscriptions
-                    </NavDropdown.Item>
+                    <LinkContainer to="/my-subscriptions">
+                      <Dropdown.Item>My subscriptions</Dropdown.Item>
+                    </LinkContainer>
                   )}
                   {isAdmin(user) && (
-                    <NavDropdown.Item eventKey="/movie-search-analysis">
-                      Movie Search Analysis
-                    </NavDropdown.Item>
+                    <LinkContainer to="/movie-search-analysis">
+                      <Dropdown.Item>Movie Search Analysis</Dropdown.Item>
+                    </LinkContainer>
                   )}
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item onClick={onLogoutClicked}>
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={onLogoutClicked} as="div">
                     Logout
-                  </NavDropdown.Item>
-                </NavDropdown>
-              </Nav>
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </>
           )}
         </Container>
