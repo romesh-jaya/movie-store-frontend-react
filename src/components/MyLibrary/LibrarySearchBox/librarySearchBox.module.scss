@@ -32,7 +32,7 @@
   height: 30px;
 
   @media #{$md} {
-    width: 328px;
+    width: 300px;
   }
 }
 
@@ -41,6 +41,7 @@
 }
 
 .input-style-form-control {
+  text-align: center;
   max-width: 350px;
   width: 250px;
   @media #{$md} {
@@ -48,12 +49,12 @@
   }
 }
 
-.input-style-search-genre {
-  height: 35px;
+.input-style-search-year-genre {
   margin-right: 10px;
-  width: 207px;
+  height: 30px;
+  width: 215px;
   @media #{$md} {
-    width: 286px;
+    width: 293px;
   }
 }
 
@@ -82,9 +83,19 @@
   }
 }
 
+.help-button {
+  padding: 0 !important;
+}
+
+.help-button:hover {
+  color: unset !important;
+  background-color: unset !important;
+  border-color: unset !important;
+}
+
 .genre-button {
-  min-width: unset !important;
-  padding: 5px 10px !important;
+  height: 30px;
+  width: 30px;
 }
 
 .button-div {
@@ -92,7 +103,13 @@
 }
 
 .helpicon {
-  margin-left: 5px;
+  height: 30px;
+  width: 30px;
+  color: $primary;
+}
+
+.helpicon:hover {
+  color: $primary-hover;
 }
 
 .helptext {

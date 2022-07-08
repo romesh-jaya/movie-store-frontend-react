@@ -1,7 +1,5 @@
 import React from 'react';
 
-import styles from './numberRangeInput.module.scss';
-
 interface IProps {
   name: string;
   classNameCustom: string;
@@ -44,10 +42,6 @@ const NumberRangeInput: React.FC<IProps> = (props) => {
     enterPressed,
     disabled,
   } = props;
-  const className =
-    classNameCustom === 'input-style-search'
-      ? styles['input-style-search']
-      : '';
 
   const handleKeyDown = (
     event: React.KeyboardEvent<HTMLInputElement>
@@ -120,7 +114,7 @@ const NumberRangeInput: React.FC<IProps> = (props) => {
     <input
       name={name}
       disabled={disabled}
-      className={className}
+      className={classNameCustom}
       type="text"
       value={value}
       onChange={handleChange}

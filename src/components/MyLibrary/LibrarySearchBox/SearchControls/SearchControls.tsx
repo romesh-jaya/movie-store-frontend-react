@@ -1,16 +1,14 @@
 import React, { ReactElement } from 'react';
-import Button from '@mui/material/Button';
-import FormControl from '@mui/material/FormControl';
-import MenuItem from '@mui/material/MenuItem';
 import Popover from '@mui/material/Popover';
-import Select from '@mui/material/Select';
-import HelpIcon from '@mui/icons-material/Help';
+import { QuestionSquareFill } from 'react-bootstrap-icons';
 
 import NumberRangeInput from '../../../Controls/Input/NumberRangeInput/NumberRangeInput';
 import styles from '../librarySearchBox.module.scss';
 import globStyles from '../../../../index.module.scss';
 import { MovieType } from '../../../../enums/MovieType';
 import { getSettingValue } from '../../../../state/settings';
+import Form from 'react-bootstrap/esm/Form';
+import Button from 'react-bootstrap/esm/Button';
 
 interface IProps {
   anchorEl: Element | null;
@@ -57,7 +55,7 @@ const SearchControls: React.FC<IProps> = (props) => {
   const languages = (languagesSetting && languagesSetting.split(',')) || [];
 
   const handleClickHelpIcon = (
-    event: React.MouseEvent<SVGSVGElement, MouseEvent>
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ): void => {
     setAnchorEl(event.currentTarget);
   };
@@ -71,8 +69,15 @@ const SearchControls: React.FC<IProps> = (props) => {
     const id = open ? 'simple-popover' : undefined;
 
     return (
-      <div className={styles.helpicon}>
-        <HelpIcon onClick={handleClickHelpIcon} color="primary" />
+      <div>
+        <Button
+          onClick={handleClickHelpIcon}
+          variant="outline-primary"
+          className={styles['help-button']}
+        >
+          <QuestionSquareFill className={styles.helpicon} />
+        </Button>
+
         <Popover
           id={id}
           open={open}
@@ -120,26 +125,18 @@ const SearchControls: React.FC<IProps> = (props) => {
         <label htmlFor="searchType">
           Type
           <div className={styles['inter-control-spacing']}>
-            <FormControl
-              variant="outlined"
-              className={styles['input-style-form-control']}
+            <Form.Select
+              className={`${styles['input-style-select']} ${styles['input-style-form-control']}`}
+              value={searchType}
+              onChange={(event) =>
+                handleChangeSearchType(event.target.value as string)
+              }
+              name="searchType"
             >
-              <Select
-                className={styles['input-style-select']}
-                value={searchType}
-                onChange={(event) =>
-                  handleChangeSearchType(event.target.value as string)
-                }
-                name="searchType"
-                variant="standard"
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={MovieType.Movie}>Movie</MenuItem>
-                <MenuItem value={MovieType.TvSeries}>TV Series</MenuItem>
-              </Select>
-            </FormControl>
+              <option value="">All</option>
+              <option value={MovieType.Movie}>Movie</option>
+              <option value={MovieType.TvSeries}>TV Series</option>
+            </Form.Select>
           </div>
         </label>
       </div>
@@ -147,29 +144,21 @@ const SearchControls: React.FC<IProps> = (props) => {
         <label htmlFor="searchLanguage">
           Language
           <div className={styles['inter-control-spacing']}>
-            <FormControl
-              variant="outlined"
-              className={styles['input-style-form-control']}
+            <Form.Select
+              className={`${styles['input-style-select']} ${styles['input-style-form-control']}`}
+              value={searchLanguage}
+              onChange={(event) =>
+                handleChangeSearchLanguage(event.target.value as string)
+              }
+              name="searchLanguage"
             >
-              <Select
-                className={styles['input-style-select']}
-                value={searchLanguage}
-                onChange={(event) =>
-                  handleChangeSearchLanguage(event.target.value as string)
-                }
-                name="searchLanguage"
-                variant="standard"
-              >
-                <MenuItem value="">
-                  <em key="None">None</em>
-                </MenuItem>
-                {languages.map((language) => (
-                  <MenuItem value={language} key={language}>
-                    {language}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+              <option value="">All</option>
+              {languages.map((language) => (
+                <option value={language} key={language}>
+                  {language}
+                </option>
+              ))}
+            </Form.Select>
           </div>
         </label>
       </div>
@@ -180,7 +169,7 @@ const SearchControls: React.FC<IProps> = (props) => {
             <NumberRangeInput
               name="searchYear"
               disabled={searchType !== MovieType.Movie}
-              classNameCustom="input-style-search"
+              classNameCustom={styles['input-style-search-year-genre']}
               value={searchYearInput}
               handleReturnValue={handleChangeSearchYear}
             />
@@ -200,15 +189,12 @@ const SearchControls: React.FC<IProps> = (props) => {
               type="text"
               name="searchGenres"
               value={searchGenres.join(', ')}
-              className={styles['input-style-search-genre']}
+              className={`${styles['input-style-search-year-genre']} ${styles['input-style-form-control']}`}
             />
             <Button
               onClick={onGenresClicked}
-              color="secondary"
-              variant="contained"
-              classes={{
-                root: styles['genre-button'],
-              }}
+              variant="primary"
+              className={styles['genre-button']}
             >
               ...
             </Button>
