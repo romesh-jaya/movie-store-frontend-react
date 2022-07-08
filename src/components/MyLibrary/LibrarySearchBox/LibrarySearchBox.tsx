@@ -44,7 +44,6 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     setSearchYearIsBetweenValuesIncomplete,
   ] = useState(false);
   const [searchGenres, setSearchGenres] = useState<string[]>([]);
-  const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
   const { user } = useAuth0();
   const [isBoxExpanded, setIsBoxExpanded] = useState(true);
   const theme = useTheme();
@@ -263,14 +262,12 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
         {isBoxExpanded && (
           <>
             <SearchControls
-              anchorEl={anchorEl}
               searchTitle={searchTitle}
               searchType={searchType}
               searchLanguage={searchLanguage}
               searchYearInput={searchYearInput}
               searchGenres={searchGenres}
               errorTextSearchYear={errorTextSearchYear}
-              setAnchorEl={setAnchorEl}
               handleChangeSearchTitle={handleChangeSearchTitle}
               handleKeyDown={handleKeyDown}
               handleChangeSearchType={handleChangeSearchType}

@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react';
-import Popover from '@mui/material/Popover';
 import { QuestionSquareFill } from 'react-bootstrap-icons';
 
 import NumberRangeInput from '../../../Controls/Input/NumberRangeInput/NumberRangeInput';
@@ -9,16 +8,16 @@ import { MovieType } from '../../../../enums/MovieType';
 import { getSettingValue } from '../../../../state/settings';
 import Form from 'react-bootstrap/esm/Form';
 import Button from 'react-bootstrap/esm/Button';
+import OverlayTrigger from 'react-bootstrap/esm/OverlayTrigger';
+import Popover from 'react-bootstrap/esm/Popover';
 
 interface IProps {
-  anchorEl: Element | null;
   searchTitle: string;
   searchType: string;
   searchLanguage: string;
   searchYearInput: string;
   searchGenres: string[];
   errorTextSearchYear: string;
-  setAnchorEl: (anchorEl: Element | null) => void;
   handleChangeSearchTitle: (title: string) => void;
   handleKeyDown: (keyName: string) => void;
   handleChangeSearchType: (searchType: string) => void;
@@ -36,14 +35,12 @@ interface IProps {
 
 const SearchControls: React.FC<IProps> = (props) => {
   const {
-    anchorEl,
     searchTitle,
     searchType,
     searchLanguage,
     searchYearInput,
     searchGenres,
     errorTextSearchYear,
-    setAnchorEl,
     handleChangeSearchTitle,
     handleKeyDown,
     handleChangeSearchType,
@@ -54,53 +51,27 @@ const SearchControls: React.FC<IProps> = (props) => {
   const languagesSetting = getSettingValue('languages');
   const languages = (languagesSetting && languagesSetting.split(',')) || [];
 
-  const handleClickHelpIcon = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ): void => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClosePopover = (): void => {
-    setAnchorEl(null);
-  };
-
   const renderHelpYear = (): ReactElement => {
-    const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
-
     return (
-      <div>
-        <Button
-          onClick={handleClickHelpIcon}
-          variant="outline-primary"
-          className={styles['help-button']}
-        >
+      <OverlayTrigger
+        trigger={['focus', 'hover']}
+        placement="bottom"
+        overlay={
+          <Popover className={styles.helptext}>
+            <Popover.Body>
+              <div>Value can be entered in the following formats:</div>
+              <div>Enter a single year: 2020</div>
+              <div>Enter a year to search from: &gt; 2020</div>
+              <div>Enter a year to search upto: &lt; 2020</div>
+              <div>Enter a range of years: 2010-2020</div>
+            </Popover.Body>
+          </Popover>
+        }
+      >
+        <Button variant="outline-primary" className={styles['help-button']}>
           <QuestionSquareFill className={styles.helpicon} />
         </Button>
-
-        <Popover
-          id={id}
-          open={open}
-          anchorEl={anchorEl}
-          onClose={handleClosePopover}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-        >
-          <div className={styles.helptext}>
-            <div>Value can be entered in the following formats:</div>
-            <div>Enter a single year: 2020</div>
-            <div>Enter a year to search from: &gt; 2020</div>
-            <div>Enter a year to search upto: &lt; 2020</div>
-            <div>Enter a range of years: 2010-2020</div>
-          </div>
-        </Popover>
-      </div>
+      </OverlayTrigger>
     );
   };
 
@@ -168,7 +139,7 @@ const SearchControls: React.FC<IProps> = (props) => {
           <div className={styles['inter-control-spacing']}>
             <NumberRangeInput
               name="searchYear"
-              disabled={searchType !== MovieType.Movie}
+              disabled={searchType === MovieType.TvSeries}
               classNameCustom={styles['input-style-search-year-genre']}
               value={searchYearInput}
               handleReturnValue={handleChangeSearchYear}

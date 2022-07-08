@@ -7,6 +7,7 @@
   font-size: 18px;
   font-weight: bold;
   color: $grey;
+  margin: 15px 0;
 
   @media #{$md} {
     font-size: 22px;
@@ -27,12 +28,11 @@
 }
 
 .input-style-search {
+  height: 30px;
   max-width: 350px;
   width: 250px;
-  height: 30px;
-
   @media #{$md} {
-    width: 300px;
+    width: 328px;
   }
 }
 
@@ -50,7 +50,7 @@
 }
 
 .input-style-search-year-genre {
-  margin-right: 10px;
+  margin-right: 5px;
   height: 30px;
   width: 215px;
   @media #{$md} {
@@ -68,7 +68,7 @@
 .card-style {
   width: 90%;
   max-width: 350px;
-  margin: auto;
+  margin: 15px auto;
   padding: 5px;
 
   @media #{$md} {
@@ -114,4 +114,5 @@
 
 .helptext {
   padding: 10px;
+  text-align: center;
 }
