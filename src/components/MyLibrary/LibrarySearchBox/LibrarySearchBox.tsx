@@ -1,10 +1,7 @@
 import React, { useState, useCallback, ReactElement } from 'react';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Card from '@mui/material/Card';
 import { ExportToCsv } from 'export-to-csv';
 import { useTheme } from '@mui/material/styles';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { CaretDownFill } from 'react-bootstrap-icons';
 
 import styles from './librarySearchBox.module.scss';
 import globStyles from '../../../index.module.scss';
@@ -20,6 +17,8 @@ import { formatExportData } from '../../../utils/ExportUtil';
 import SearchControls from './SearchControls/SearchControls';
 import { PREFERS_DARK_MODE_MEDIA_QUERY } from '../../../constants/Constants';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import Card from 'react-bootstrap/esm/Card';
+import Button from 'react-bootstrap/esm/Button';
 
 const exportFileName = 'Export.csv';
 
@@ -247,26 +246,20 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
           boxShadow: `0px 2px 1px -1px ${boxShadowColor}, 0px 1px 1px 0px ${boxShadowColor}, 0px 1px 3px 0px ${boxShadowColor}`,
         }}
       >
-        <Typography
-          className={styles['card-title']}
-          variant="h5"
-          color="textSecondary"
-          gutterBottom
-        >
+        <Card.Title className={styles['card-title']}>
           <div className={styles.heading}>
             Search Library
             <Button
-              classes={{
-                root: `${styles['expand-button']} ${
-                  isBoxExpanded ? '' : styles['expand-button-rotated']
-                }`,
-              }}
+              className={`ms-3 ${styles['expand-button']} ${
+                isBoxExpanded ? '' : styles['expand-button-rotated']
+              }`}
               onClick={() => setIsBoxExpanded(!isBoxExpanded)}
             >
-              <ExpandMoreIcon />
+              <CaretDownFill />
             </Button>
           </div>
-        </Typography>
+        </Card.Title>
+
         {isBoxExpanded && (
           <>
             <SearchControls

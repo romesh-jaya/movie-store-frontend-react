@@ -124,8 +124,8 @@ const App: React.FC = () => {
         autoHideDuration={4000}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <ContainerHeader />
-        <Container className="d-flex flex-column min-vh-100">
+        <Container fluid className="d-flex flex-column min-vh-100 px-0">
+          <ContainerHeader />
           {renderContent()}
         </Container>
       </SnackbarProvider>
