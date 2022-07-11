@@ -208,17 +208,15 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     <div className={styles['button-div']}>
       <span className={globStyles['right-spacer']}>
         <Button
-          id="search-button"
           disabled={!isSearchTextValid()}
           onClick={newSearch}
-          color="primary"
-          variant="contained"
+          variant="primary"
         >
           Search
         </Button>
       </span>
       <span className={globStyles['right-spacer']}>
-        <Button onClick={onResetClicked} color="secondary" variant="contained">
+        <Button onClick={onResetClicked} variant="secondary">
           Reset
         </Button>
       </span>
@@ -226,8 +224,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
         <Button
           disabled={!enableExportButton}
           onClick={onExportClicked}
-          color="secondary"
-          variant="contained"
+          variant="secondary"
         >
           Export to CSV
         </Button>

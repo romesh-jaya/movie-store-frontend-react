@@ -1,15 +1,15 @@
 import React, { ReactElement } from 'react';
 import { QuestionSquareFill } from 'react-bootstrap-icons';
+import Form from 'react-bootstrap/esm/Form';
+import Button from 'react-bootstrap/esm/Button';
+import OverlayTrigger from 'react-bootstrap/esm/OverlayTrigger';
+import Popover from 'react-bootstrap/esm/Popover';
 
 import NumberRangeInput from '../../../Controls/Input/NumberRangeInput/NumberRangeInput';
 import styles from '../librarySearchBox.module.scss';
 import globStyles from '../../../../index.module.scss';
 import { MovieType } from '../../../../enums/MovieType';
 import { getSettingValue } from '../../../../state/settings';
-import Form from 'react-bootstrap/esm/Form';
-import Button from 'react-bootstrap/esm/Button';
-import OverlayTrigger from 'react-bootstrap/esm/OverlayTrigger';
-import Popover from 'react-bootstrap/esm/Popover';
 
 interface IProps {
   searchTitle: string;
@@ -122,7 +122,7 @@ const SearchControls: React.FC<IProps> = (props) => {
       </Form.Group>
       <Form.Group className={styles['label-and-input-div']}>
         <Form.Label htmlFor="searchYear">Year</Form.Label>
-        <div className={styles['inter-control-spacing']}>
+        <div className={styles['same-line-controls']}>
           <NumberRangeInput
             id="searchYear"
             disabled={searchType === MovieType.TvSeries}
@@ -139,7 +139,7 @@ const SearchControls: React.FC<IProps> = (props) => {
 
       <Form.Group className={styles['label-and-input-div']}>
         <Form.Label htmlFor="searchGenres">Genres</Form.Label>
-        <div className={styles['inter-control-spacing']}>
+        <div className={styles['same-line-controls']}>
           <Form.Control
             disabled
             type="text"
