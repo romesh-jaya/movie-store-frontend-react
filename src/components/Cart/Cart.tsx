@@ -128,7 +128,6 @@ const Cart: React.FC = () => {
                     id="pay-button"
                     color="primary"
                     variant="contained"
-                    autoFocus
                     onClick={proceedToRent}
                   >
                     Proceed to Rent

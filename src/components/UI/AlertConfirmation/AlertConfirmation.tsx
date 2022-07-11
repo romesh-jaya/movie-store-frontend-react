@@ -41,12 +41,7 @@ const AlertConfirmation: React.FC<IProps> = (props) => {
             Cancel
           </Button>
         </span>
-        <Button
-          onClick={onConfirmed}
-          autoFocus
-          color="secondary"
-          variant="contained"
-        >
+        <Button onClick={onConfirmed} color="secondary" variant="contained">
           {oKButtonText}
         </Button>
       </DialogActions>

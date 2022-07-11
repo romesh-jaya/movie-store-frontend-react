@@ -23,7 +23,6 @@ interface IProps {
   handleChangeSearchType: (searchType: string) => void;
   handleChangeSearchLanguage: (language: string) => void;
   handleChangeSearchYear: (
-    __: string,
     isBetweenValuesIncomplete: boolean,
     value: string,
     valueSingle?: number,
@@ -77,101 +76,86 @@ const SearchControls: React.FC<IProps> = (props) => {
 
   return (
     <>
-      <div className={styles['label-and-input-div']}>
-        <label htmlFor="searchTitle">
-          Title
-          <div className={styles['inter-control-spacing']}>
-            <input
-              type="text"
-              name="searchTitle"
-              value={searchTitle}
-              className={styles['input-style-search']}
-              onChange={(event) => handleChangeSearchTitle(event.target.value)}
-              onKeyDown={(event) => handleKeyDown(event.key)}
-            />
-          </div>
-        </label>
-      </div>
-      <div className={styles['label-and-input-div']}>
-        <label htmlFor="searchType">
-          Type
-          <div className={styles['inter-control-spacing']}>
-            <Form.Select
-              className={`${styles['input-style-select']} ${styles['input-style-form-control']}`}
-              value={searchType}
-              onChange={(event) =>
-                handleChangeSearchType(event.target.value as string)
-              }
-              name="searchType"
-            >
-              <option value="">All</option>
-              <option value={MovieType.Movie}>Movie</option>
-              <option value={MovieType.TvSeries}>TV Series</option>
-            </Form.Select>
-          </div>
-        </label>
-      </div>
-      <div className={styles['label-and-input-div']}>
-        <label htmlFor="searchLanguage">
-          Language
-          <div className={styles['inter-control-spacing']}>
-            <Form.Select
-              className={`${styles['input-style-select']} ${styles['input-style-form-control']}`}
-              value={searchLanguage}
-              onChange={(event) =>
-                handleChangeSearchLanguage(event.target.value as string)
-              }
-              name="searchLanguage"
-            >
-              <option value="">All</option>
-              {languages.map((language) => (
-                <option value={language} key={language}>
-                  {language}
-                </option>
-              ))}
-            </Form.Select>
-          </div>
-        </label>
-      </div>
-      <div className={styles['label-and-input-div']}>
-        <label htmlFor="searchYear">
-          Year
-          <div className={styles['inter-control-spacing']}>
-            <NumberRangeInput
-              name="searchYear"
-              disabled={searchType === MovieType.TvSeries}
-              classNameCustom={styles['input-style-search-year-genre']}
-              value={searchYearInput}
-              handleReturnValue={handleChangeSearchYear}
-            />
-            {renderHelpYear()}
-          </div>
-        </label>
+      <Form.Group className={styles['label-and-input-div']}>
+        <Form.Label htmlFor="searchTitle">Title</Form.Label>
+        <Form.Control
+          className={`${styles['input-style-search']}`}
+          type="text"
+          id="searchTitle"
+          value={searchTitle}
+          onChange={(event) => handleChangeSearchTitle(event.target.value)}
+          onKeyDown={(event) => handleKeyDown(event.key)}
+        />
+      </Form.Group>
+      <Form.Group className={styles['label-and-input-div']}>
+        <Form.Label htmlFor="searchType">Type</Form.Label>
+        <Form.Select
+          className={`${styles['input-style-select']} ${styles['input-style-form-control']}`}
+          value={searchType}
+          onChange={(event) =>
+            handleChangeSearchType(event.target.value as string)
+          }
+          id="searchType"
+        >
+          <option value="">All</option>
+          <option value={MovieType.Movie}>Movie</option>
+          <option value={MovieType.TvSeries}>TV Series</option>
+        </Form.Select>
+      </Form.Group>
+      <Form.Group className={styles['label-and-input-div']}>
+        <Form.Label htmlFor="searchLanguage">Language</Form.Label>
+        <Form.Select
+          className={`${styles['input-style-select']} ${styles['input-style-form-control']}`}
+          value={searchLanguage}
+          onChange={(event) =>
+            handleChangeSearchLanguage(event.target.value as string)
+          }
+          id="searchLanguage"
+        >
+          <option value="">All</option>
+          {languages.map((language) => (
+            <option value={language} key={language}>
+              {language}
+            </option>
+          ))}
+        </Form.Select>
+      </Form.Group>
+      <Form.Group className={styles['label-and-input-div']}>
+        <Form.Label htmlFor="searchYear">Year</Form.Label>
+        <div className={styles['inter-control-spacing']}>
+          <NumberRangeInput
+            id="searchYear"
+            disabled={searchType === MovieType.TvSeries}
+            classNameCustom={styles['input-style-search-year-genre']}
+            value={searchYearInput}
+            handleReturnValue={handleChangeSearchYear}
+          />
+          {renderHelpYear()}
+        </div>
         <div className={globStyles['error-text-small']}>
           <small>{errorTextSearchYear}</small>
         </div>
-      </div>
-      <div className={styles['label-and-input-div']}>
-        <label htmlFor="searchGenres">
-          Genres
-          <div className={styles['inter-control-spacing']}>
-            <input
-              disabled
-              type="text"
-              name="searchGenres"
-              value={searchGenres.join(', ')}
-              className={`${styles['input-style-search-year-genre']} ${styles['input-style-form-control']}`}
-            />
-            <Button
-              onClick={onGenresClicked}
-              variant="primary"
-              className={styles['genre-button']}
-            >
-              ...
-            </Button>
-          </div>
-        </label>
-      </div>
+      </Form.Group>
+
+      <Form.Group className={styles['label-and-input-div']}>
+        <Form.Label htmlFor="searchGenres">Genres</Form.Label>
+        <div className={styles['inter-control-spacing']}>
+          <Form.Control
+            disabled
+            type="text"
+            id="searchGenres"
+            value={searchGenres.join(', ')}
+            className={`${styles['input-style-search-year-genre']} ${styles['input-style-form-control']}`}
+          />
+          <Button
+            onClick={onGenresClicked}
+            variant="primary"
+            className={styles['genre-button']}
+          >
+            ...
+          </Button>
+        </div>
+      </Form.Group>
     </>
   );
 };

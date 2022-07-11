@@ -14,7 +14,7 @@ export default function SubscriptionExists(props: IProps) {
     <>
       <p dangerouslySetInnerHTML={{ __html: subscriptionText }} />
       <div className="d-flex justify-content-center gap-3 mt-4">
-        <Button variant="secondary" autoFocus onClick={() => navigate('/')}>
+        <Button variant="secondary" onClick={() => navigate('/')}>
           Back to Home
         </Button>
         <Button variant="primary" onClick={proceedToCustomerPortal}>

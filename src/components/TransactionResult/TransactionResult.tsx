@@ -63,7 +63,6 @@ const TransactionResult: React.FC = () => {
         <Button
           color="primary"
           variant="contained"
-          autoFocus
           onClick={() => navigate('/')}
         >
           Back to Home

@@ -124,7 +124,6 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   };
 
   const handleChangeSearchYear = (
-    __: string,
     isBetweenValuesIncomplete: boolean,
     value: string,
     valueSingle?: number,
@@ -214,7 +213,6 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
           onClick={newSearch}
           color="primary"
           variant="contained"
-          autoFocus
         >
           Search
         </Button>

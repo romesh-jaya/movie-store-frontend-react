@@ -84,7 +84,6 @@ export default function Checkout() {
               <Button
                 color="primary"
                 variant="contained"
-                autoFocus
                 onClick={() => navigate('/')}
               >
                 Back

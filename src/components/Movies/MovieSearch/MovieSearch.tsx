@@ -185,7 +185,6 @@ const MovieSearch: React.FC = () => {
               label="Search OMDB"
               value={inputQuery}
               onChange={queryOnChange}
-              autoFocus
               variant="standard"
             />
           </span>

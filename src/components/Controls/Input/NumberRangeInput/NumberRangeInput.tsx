@@ -1,11 +1,11 @@
 import React from 'react';
+import Form from 'react-bootstrap/esm/Form';
 
 interface IProps {
-  name: string;
+  id: string;
   classNameCustom: string;
   value: string;
   handleReturnValue: (
-    name: string,
     isBetweenValuesIncomplete: boolean,
     value: string,
     valueSingle?: number,
@@ -35,7 +35,7 @@ const NumberRangeInput: React.FC<IProps> = (props) => {
   const regexpBetweenIncomplete = new RegExp('^[0-9]+[-][0-9]*$');
   const regexpBetweenComplete = new RegExp('^[0-9]+[-][0-9]+$');
   const {
-    name,
+    id,
     classNameCustom,
     value,
     handleReturnValue,
@@ -59,22 +59,15 @@ const NumberRangeInput: React.FC<IProps> = (props) => {
     if (regexpWhole.test(newValue)) {
       if (regexpPureNumber.test(newValue)) {
         console.log('Exact value: ', newValue);
-        handleReturnValue(name, false, newValue, parseFloat(newValue));
+        handleReturnValue(false, newValue, parseFloat(newValue));
       } else if (regexpFrom.test(newValue)) {
         const fromVal = newValue.substring(1, newValue.length);
         console.log('From value: ', fromVal);
-        handleReturnValue(
-          name,
-          false,
-          newValue,
-          undefined,
-          parseFloat(fromVal)
-        );
+        handleReturnValue(false, newValue, undefined, parseFloat(fromVal));
       } else if (regexpTo.test(newValue)) {
         const toVal = newValue.substring(1, newValue.length);
         console.log('To value: ', toVal);
         handleReturnValue(
-          name,
           false,
           newValue,
           undefined,
@@ -92,7 +85,6 @@ const NumberRangeInput: React.FC<IProps> = (props) => {
               numbers[1]
             );
             handleReturnValue(
-              name,
               false,
               newValue,
               undefined,
@@ -102,17 +94,17 @@ const NumberRangeInput: React.FC<IProps> = (props) => {
           }
         } else {
           console.log('Between values incomplete: ', newValue);
-          handleReturnValue(name, true, newValue);
+          handleReturnValue(true, newValue);
         }
       }
     } else {
-      handleReturnValue(name, false, value);
+      handleReturnValue(false, value);
     }
   };
 
   return (
-    <input
-      name={name}
+    <Form.Control
+      id={id}
       disabled={disabled}
       className={classNameCustom}
       type="text"

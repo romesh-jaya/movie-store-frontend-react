@@ -140,7 +140,6 @@ const GenreSelectModal: React.FC<IProps> = (props) => {
         </span>
         <Button
           onClick={() => onConfirmed(selectedGenres)}
-          autoFocus
           color="secondary"
           variant="contained"
         >

@@ -63,7 +63,6 @@ export default function NoSubscription(props: IProps) {
       <div className="d-flex justify-content-center gap-3 mt-4">
         <Button
           variant="primary"
-          autoFocus
           onClick={() => proceedToSubscribe(chosenSubscription)}
           disabled={!chosenSubscription}
         >
