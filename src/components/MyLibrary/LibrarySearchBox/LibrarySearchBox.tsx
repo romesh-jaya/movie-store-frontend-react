@@ -205,7 +205,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   };
 
   const renderButtons = (): ReactElement => (
-    <div className={styles['button-div']}>
+    <div className="mt-4 mb-3">
       <span className={globStyles['right-spacer']}>
         <Button
           disabled={!isSearchTextValid()}
@@ -235,13 +235,13 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   return (
     <>
       <Card
-        className={styles['card-style']}
+        className={`my-3 mx-auto p-2 ${styles['card-style']}`}
         style={{
           boxShadow: `0px 2px 1px -1px ${boxShadowColor}, 0px 1px 1px 0px ${boxShadowColor}, 0px 1px 3px 0px ${boxShadowColor}`,
         }}
       >
-        <Card.Title className={styles['card-title']}>
-          <div className={styles.heading}>
+        <Card.Title className={`md:p-2 ${styles['card-title']}`}>
+          <div className={`my-3 fs-3 md:fs-2 ${styles.heading}`}>
             Search Library
             <Button
               className={`ms-3 ${styles['expand-button']} ${

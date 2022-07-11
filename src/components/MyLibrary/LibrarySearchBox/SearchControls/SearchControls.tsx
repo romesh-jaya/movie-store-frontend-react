@@ -56,7 +56,7 @@ const SearchControls: React.FC<IProps> = (props) => {
         trigger={['focus', 'hover']}
         placement="bottom"
         overlay={
-          <Popover className={styles.helptext}>
+          <Popover className={`p-2 ${styles.helptext}`}>
             <Popover.Body>
               <div>Value can be entered in the following formats:</div>
               <div>Enter a single year: 2020</div>
@@ -76,7 +76,7 @@ const SearchControls: React.FC<IProps> = (props) => {
 
   return (
     <>
-      <Form.Group className={styles['label-and-input-div']}>
+      <Form.Group className="fs-5 mb-3">
         <Form.Label htmlFor="searchTitle">Title</Form.Label>
         <Form.Control
           className={`${styles['input-style-search']}`}
@@ -87,7 +87,7 @@ const SearchControls: React.FC<IProps> = (props) => {
           onKeyDown={(event) => handleKeyDown(event.key)}
         />
       </Form.Group>
-      <Form.Group className={styles['label-and-input-div']}>
+      <Form.Group className="fs-5 mb-3">
         <Form.Label htmlFor="searchType">Type</Form.Label>
         <Form.Select
           className={`${styles['input-style-select']} ${styles['input-style-form-control']}`}
@@ -102,7 +102,7 @@ const SearchControls: React.FC<IProps> = (props) => {
           <option value={MovieType.TvSeries}>TV Series</option>
         </Form.Select>
       </Form.Group>
-      <Form.Group className={styles['label-and-input-div']}>
+      <Form.Group className="fs-5 mb-3">
         <Form.Label htmlFor="searchLanguage">Language</Form.Label>
         <Form.Select
           className={`${styles['input-style-select']} ${styles['input-style-form-control']}`}
@@ -120,7 +120,7 @@ const SearchControls: React.FC<IProps> = (props) => {
           ))}
         </Form.Select>
       </Form.Group>
-      <Form.Group className={styles['label-and-input-div']}>
+      <Form.Group className="fs-5 mb-3">
         <Form.Label htmlFor="searchYear">Year</Form.Label>
         <div className={styles['same-line-controls']}>
           <NumberRangeInput
@@ -137,7 +137,7 @@ const SearchControls: React.FC<IProps> = (props) => {
         </div>
       </Form.Group>
 
-      <Form.Group className={styles['label-and-input-div']}>
+      <Form.Group className="fs-5 mb-3">
         <Form.Label htmlFor="searchGenres">Genres</Form.Label>
         <div className={styles['same-line-controls']}>
           <Form.Control

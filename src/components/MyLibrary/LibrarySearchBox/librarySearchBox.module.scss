@@ -1,17 +1,16 @@
 @import '../../../styles/globalTheme.module.scss';
 
+$control-width: 250px;
+$control-width-md: 328px;
+$control-height: 30px;
+$icon-width: 30px;
+
 .heading {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
   font-weight: bold;
   color: $grey;
-  margin: 15px 0;
-
-  @media #{$md} {
-    font-size: 22px;
-  }
 }
 
 .expand-button {
@@ -22,41 +21,36 @@
   transform: rotate(180deg);
 }
 
-.label-and-input-div {
-  margin-bottom: 20px;
-  font-size: 0.9rem;
-}
-
 .input-style-search {
-  height: 30px;
-  max-width: 350px;
-  width: 250px;
+  height: $control-height;
+
+  width: $control-width;
   margin: auto;
   @media #{$md} {
-    width: 328px;
+    width: $control-width-md;
   }
 }
 
 .input-style-select {
-  height: 30px;
+  height: $control-height;
   margin: auto;
 }
 
 .input-style-form-control {
   text-align: center;
-  max-width: 350px;
-  width: 250px;
+
+  width: $control-width;
   @media #{$md} {
-    width: 328px;
+    width: $control-width-md;
   }
 }
 
 .input-style-search-year-genre {
   margin-right: 5px;
-  height: 30px;
-  width: 215px;
+  height: $control-height;
+  width: $control-width - 35px;
   @media #{$md} {
-    width: 293px;
+    width: $control-width-md - 35px;
   }
 }
 
@@ -69,9 +63,6 @@
 
 .card-style {
   width: 90%;
-  max-width: 350px;
-  margin: 15px auto;
-  padding: 5px;
 
   @media #{$md} {
     max-width: 450px;
@@ -80,9 +71,6 @@
 
 .card-title {
   margin-bottom: 0 !important;
-  @media #{$md} {
-    padding: 5px;
-  }
 }
 
 .help-button {
@@ -96,17 +84,13 @@
 }
 
 .genre-button {
-  height: 30px;
-  width: 30px;
-}
-
-.button-div {
-  margin: 30px 0 15px 0;
+  height: $control-height;
+  width: $icon-width;
 }
 
 .helpicon {
-  height: 30px;
-  width: 30px;
+  height: $control-height;
+  width: $icon-width;
   color: $primary;
 }
 
@@ -115,6 +99,5 @@
 }
 
 .helptext {
-  padding: 10px;
   text-align: center;
 }
