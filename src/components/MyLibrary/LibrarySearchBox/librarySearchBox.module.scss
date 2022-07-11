@@ -23,7 +23,6 @@ $icon-width: 30px;
 
 .input-style-search {
   height: $control-height;
-
   width: $control-width;
   margin: auto;
   @media #{$md} {
@@ -34,11 +33,6 @@ $icon-width: 30px;
 .input-style-select {
   height: $control-height;
   margin: auto;
-}
-
-.input-style-form-control {
-  text-align: center;
-
   width: $control-width;
   @media #{$md} {
     width: $control-width-md;

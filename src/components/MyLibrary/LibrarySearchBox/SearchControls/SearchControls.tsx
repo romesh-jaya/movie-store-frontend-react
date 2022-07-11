@@ -90,7 +90,7 @@ const SearchControls: React.FC<IProps> = (props) => {
       <Form.Group className="fs-5 mb-3">
         <Form.Label htmlFor="searchType">Type</Form.Label>
         <Form.Select
-          className={`${styles['input-style-select']} ${styles['input-style-form-control']}`}
+          className={`text-center ${styles['input-style-select']}`}
           value={searchType}
           onChange={(event) =>
             handleChangeSearchType(event.target.value as string)
@@ -105,7 +105,7 @@ const SearchControls: React.FC<IProps> = (props) => {
       <Form.Group className="fs-5 mb-3">
         <Form.Label htmlFor="searchLanguage">Language</Form.Label>
         <Form.Select
-          className={`${styles['input-style-select']} ${styles['input-style-form-control']}`}
+          className={`text-center ${styles['input-style-select']}`}
           value={searchLanguage}
           onChange={(event) =>
             handleChangeSearchLanguage(event.target.value as string)
@@ -145,7 +145,7 @@ const SearchControls: React.FC<IProps> = (props) => {
             type="text"
             id="searchGenres"
             value={searchGenres.join(', ')}
-            className={`${styles['input-style-search-year-genre']} ${styles['input-style-form-control']}`}
+            className={`text-center ${styles['input-style-search-year-genre']}`}
           />
           <Button
             onClick={onGenresClicked}
