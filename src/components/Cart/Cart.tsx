@@ -142,10 +142,7 @@ const Cart: React.FC = () => {
       )}
       {error && <p className={globStyles['error-text']}>{error}</p>}
       {selectedMovieIMDBId && (
-        <MovieDetails
-          selectedMovieIMDBId={selectedMovieIMDBId}
-          closeDrawer={() => setSelectedMovieIMDBId('')}
-        />
+        <MovieDetails selectedMovieIMDBId={selectedMovieIMDBId} />
       )}
     </div>
   );

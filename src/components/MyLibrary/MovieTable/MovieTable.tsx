@@ -1,20 +1,12 @@
 import React from 'react';
-import MaterialTable, { Action, Column, Options } from '@material-table/core';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
-import Chip from '@mui/material/Chip';
 import TablePagination from '@mui/material/TablePagination';
-import Delete from '@mui/icons-material/Delete';
 
-import { useAuth0 } from '@auth0/auth0-react';
-import { isAdmin } from '../../../utils/AuthUtil';
-import { MovieType } from '../../../enums/MovieType';
-import TableIcons from '../../../constants/TableIcons';
 import styles from './movieTable.module.scss';
 import IMovieLibrary from '../../../interfaces/IMovieLibrary';
-import globStyles from '../../../index.module.scss';
 import { DESKTOP_WIDTH_MEDIA_QUERY } from '../../../constants/Constants';
-import StyledMTableToolbar from '../../Controls/StyledMTableToolbar/StyledMTableToolbar';
+import Accordion from 'react-bootstrap/esm/Accordion';
+import MovieDetails from '../../Movies/MovieDetails/MovieDetails';
 
 interface IProps {
   lastSearchMovieCount: number;
@@ -36,133 +28,23 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
     currentPage,
     pageSize,
     movies,
-    onDeleteClicked,
-    handleClickTitle,
     handleChangePage,
     handleChangeRowsPerPage,
   } = props;
-  const { user } = useAuth0();
   const isDesktopWidth = useMediaQuery(DESKTOP_WIDTH_MEDIA_QUERY);
-  const theme = useTheme();
-  const isAdminUser = isAdmin(user);
-
-  const getActions = ():
-    | (
-        | Action<IMovieLibrary>
-        | ((rowData: IMovieLibrary) => Action<IMovieLibrary>)
-      )[]
-    | undefined => {
-    return isAdminUser
-      ? [
-          {
-            tooltip: 'Delete selected movies',
-            icon: () => <Delete />,
-            onClick: (_: any, data: IMovieLibrary | IMovieLibrary[]) =>
-              onDeleteClicked(data),
-          },
-        ]
-      : undefined;
-  };
-
-  const getOptions = (): Options<IMovieLibrary> => {
-    const retVal = {
-      showTitle: false,
-      search: false,
-      paging: false,
-      sorting: true,
-      headerStyle: { fontSize: '1rem' },
-      rowStyle: (rowData: any) => ({
-        backgroundColor: rowData.tableData.checked
-          ? 'rgba(232, 210, 192, 0.5)'
-          : theme.palette.background.paper,
-      }),
-      selection: false,
-    };
-
-    if (isAdminUser) {
-      retVal.selection = true;
-    }
-
-    return retVal;
-  };
-
-  const getColumns = (): Column<IMovieLibrary>[] => {
-    const retVal: Column<IMovieLibrary>[] = [
-      {
-        title: 'Title',
-        field: 'title',
-        width: '45%',
-        render: (rowData: IMovieLibrary) => {
-          return (
-            <button
-              type="button"
-              className={styles['link-button']}
-              onClick={() => handleClickTitle(rowData.imdbID)}
-            >
-              {rowData.title}
-            </button>
-          );
-        },
-      },
-      {
-        title: 'Year',
-        field: 'year',
-        type: 'numeric',
-        width: '3%',
-      },
-    ];
-
-    if (isDesktopWidth) {
-      retVal.push({
-        title: 'Type',
-        field: 'type',
-        width: '3%',
-        render: (rowData: IMovieLibrary) => (
-          <p>{rowData.type === MovieType.TvSeries ? 'TV' : 'MOV'}</p>
-        ),
-      });
-
-      retVal.push({
-        title: 'Genre',
-        field: 'genre',
-        width: '39%',
-        sorting: false,
-        render: (rowData: IMovieLibrary) => {
-          return (
-            <>
-              {rowData.genre?.map((genre: string) => (
-                <span key={genre} className={globStyles['chip-spacer']}>
-                  <Chip label={genre} />
-                </span>
-              ))}
-            </>
-          );
-        },
-      });
-
-      retVal.push({
-        title: 'PG Rating',
-        field: 'pGRating',
-        width: '10%',
-      });
-    }
-    return retVal;
-  };
 
   return (
     <div className={styles['table-style']}>
-      <MaterialTable
-        columns={getColumns()}
-        data={movies}
-        options={getOptions()}
-        actions={getActions()}
-        icons={TableIcons}
-        components={{
-          Toolbar: (props) => (
-            <StyledMTableToolbar {...props} hidden={!isAdminUser} />
-          ),
-        }}
-      />
+      <Accordion>
+        {movies.map((movie) => (
+          <Accordion.Item eventKey={movie.imdbID} key={movie.imdbID}>
+            <Accordion.Header>{movie.title}</Accordion.Header>
+            <Accordion.Body>
+              <MovieDetails selectedMovieIMDBId={movie.imdbID}></MovieDetails>
+            </Accordion.Body>
+          </Accordion.Item>
+        ))}
+      </Accordion>
       <div className={styles['pagination-style']}>
         <TablePagination
           component="div"

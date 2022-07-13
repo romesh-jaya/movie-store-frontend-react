@@ -206,10 +206,7 @@ const MovieSearch: React.FC = () => {
         )}
         {renderMovies()}
         {selectedMovieIMDBId && (
-          <MovieDetails
-            selectedMovieIMDBId={selectedMovieIMDBId}
-            closeDrawer={() => setSelectedMovieIMDBId('')}
-          />
+          <MovieDetails selectedMovieIMDBId={selectedMovieIMDBId} />
         )}
         <section>
           {!selectedMovieIMDBId && !movError && movies.length > 0 && (

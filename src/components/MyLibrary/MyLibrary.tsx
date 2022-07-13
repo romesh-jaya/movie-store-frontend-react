@@ -199,10 +199,7 @@ const MyLibrary: React.FC = () => {
               handleChangeRowsPerPage={handleChangeRowsPerPage}
             />
             {selectedMovieIMDBId && (
-              <MovieDetails
-                selectedMovieIMDBId={selectedMovieIMDBId}
-                closeDrawer={() => setSelectedMovieIMDBId('')}
-              />
+              <MovieDetails selectedMovieIMDBId={selectedMovieIMDBId} />
             )}
           </>
         )}

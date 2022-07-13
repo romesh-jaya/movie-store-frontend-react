@@ -32,18 +32,11 @@ interface IProps {
     selectedLanguages: string[],
     movieTotal: number
   ) => Promise<boolean>;
-  handleDrawerClose: () => void;
 }
 
 const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
-  const {
-    languagesInitial,
-    movieTotalInitial,
-    imdbID,
-    title,
-    onSaveClicked,
-    handleDrawerClose,
-  } = props;
+  const { languagesInitial, movieTotalInitial, imdbID, title, onSaveClicked } =
+    props;
   const [movieTotal, setMovieTotal] = useState(0);
   const [movieValuesChanged, setMovieValuesChanged] = useState(false);
   const [checkboxValues, setCheckboxValues] = useState<ICheckboxValue[]>([]);
@@ -169,8 +162,6 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
       removeItem(imdbID);
       enqueueSnackbar('Title removed from cart');
     }
-
-    handleDrawerClose();
   };
 
   const renderLanguages = (): ReactElement => {
