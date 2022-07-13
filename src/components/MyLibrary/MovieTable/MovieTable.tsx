@@ -38,7 +38,8 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
           </Accordion.Item>
         ))}
       </Accordion>
-      <div className={`mt-2 ${styles['pagination-style']}`}>
+      <div className={`mt-3 mb-3 ${styles['pagination-style']}`}>
+        <div className="me-3">{`${lastSearchMovieCount} results found`}</div>
         <Pagination>
           <Pagination.First
             disabled={currentPage === 1}

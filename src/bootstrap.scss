@@ -2,12 +2,14 @@
 // Note: overriding Bootstrap styles as per https://react-bootstrap.github.io/getting-started/introduction/#customize-bootstrap
 */
 
+$primary: #557a95;
+
 /* 
 -----------------------------------------------------------------------------
 Boostrap variables override START
 */
 $theme-colors: (
-  'primary': #557a95,
+  'primary': $primary,
   'secondary': #e8d2c0,
 );
 
@@ -43,6 +45,22 @@ Boostrap classes override START
   /* this adds important attribute to the hover styling of dropdown item */
   color: #1e2125 !important;
   background-color: #e9ecef !important;
+}
+
+.page-link {
+  /* related to pagination */
+  color: $primary !important;
+}
+
+.page-item.active {
+  /* related to pagination */
+  .page-link {
+    color: white !important;
+  }
+}
+
+.pagination {
+  margin-bottom: 0 !important;
 }
 /* 
 Boostrap classes override END

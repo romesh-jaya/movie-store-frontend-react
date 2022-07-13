@@ -33,7 +33,7 @@ const MyLibrary: React.FC = () => {
       const page = pageNo ?? 1;
       const newSearchInfo = {
         ...lastSearchInfo,
-        currentPage: page - 1, // Note: the page always starts at 1 in Material UI, but 0 in the server
+        currentPage: page - 1, // Note: the page always starts at 1 in UI, but 0 in the server
         pageSize,
       };
       setIsLoading(true);
