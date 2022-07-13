@@ -1,12 +1,10 @@
 import React from 'react';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import TablePagination from '@mui/material/TablePagination';
 
 import styles from './movieTable.module.scss';
 import IMovieLibrary from '../../../interfaces/IMovieLibrary';
-import { DESKTOP_WIDTH_MEDIA_QUERY } from '../../../constants/Constants';
 import Accordion from 'react-bootstrap/esm/Accordion';
 import MovieDetails from '../../Movies/MovieDetails/MovieDetails';
+import Pagination from 'react-bootstrap/esm/Pagination';
 
 interface IProps {
   lastSearchMovieCount: number;
@@ -15,26 +13,21 @@ interface IProps {
   movies: IMovieLibrary[];
   onDeleteClicked: (data: IMovieLibrary | IMovieLibrary[]) => void;
   handleClickTitle: (imdbID: string) => void;
-  handleChangePage: (
-    _: React.MouseEvent<HTMLButtonElement> | null,
-    page: number
-  ) => void;
-  handleChangeRowsPerPage: (pageSizeVal: number) => void;
+  handleChangePage: (page: number) => void;
 }
 
 const MovieTable: React.FC<IProps> = (props: IProps) => {
   const {
     lastSearchMovieCount,
     currentPage,
-    pageSize,
     movies,
     handleChangePage,
-    handleChangeRowsPerPage,
+    pageSize,
   } = props;
-  const isDesktopWidth = useMediaQuery(DESKTOP_WIDTH_MEDIA_QUERY);
+  const noOfPages = Math.ceil(lastSearchMovieCount / pageSize);
 
   return (
-    <div className={styles['table-style']}>
+    <div className={`mt-2 ${styles['table-style']}`}>
       <Accordion>
         {movies.map((movie) => (
           <Accordion.Item eventKey={movie.imdbID} key={movie.imdbID}>
@@ -45,18 +38,34 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
           </Accordion.Item>
         ))}
       </Accordion>
-      <div className={styles['pagination-style']}>
-        <TablePagination
-          component="div"
-          count={lastSearchMovieCount ?? 0}
-          page={currentPage - 1}
-          onPageChange={handleChangePage}
-          rowsPerPage={pageSize}
-          onRowsPerPageChange={(
-            event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-          ) => handleChangeRowsPerPage(parseInt(event.target.value, 10))}
-          rowsPerPageOptions={isDesktopWidth ? [10, 25, 50] : []}
-        />
+      <div className={`mt-2 ${styles['pagination-style']}`}>
+        <Pagination>
+          <Pagination.First
+            disabled={currentPage === 1}
+            onClick={() => handleChangePage(1)}
+          />
+          <Pagination.Prev
+            disabled={currentPage === 1}
+            onClick={() => handleChangePage(currentPage - 1)}
+          />
+          {Array.from(Array(noOfPages)).map((_, idx) => (
+            <Pagination.Item
+              key={idx}
+              active={currentPage === idx + 1}
+              onClick={() => handleChangePage(idx + 1)}
+            >
+              {idx + 1}
+            </Pagination.Item>
+          ))}
+          <Pagination.Next
+            disabled={currentPage === noOfPages}
+            onClick={() => handleChangePage(currentPage + 1)}
+          />
+          <Pagination.Last
+            disabled={currentPage === noOfPages}
+            onClick={() => handleChangePage(noOfPages)}
+          />
+        </Pagination>
       </div>
     </div>
   );

@@ -12,6 +12,8 @@ import MovieDetails from '../Movies/MovieDetails/MovieDetails';
 import { isErrorResponse } from '../../types/ErrorResponse';
 import MovieTable from './MovieTable/MovieTable';
 
+const pageSize = 10;
+
 const MyLibrary: React.FC = () => {
   const [movies, setMovies] = useState<IMovieLibrary[]>([]);
   const [movError, setMovError] = useState('');
@@ -25,7 +27,6 @@ const MyLibrary: React.FC = () => {
   const [lastSearchMovieCount, setLastSearchMovieCount] = useState<number>(0);
   const [movToDelete, setMovToDelete] = useState<IMovieLibrary[] | undefined>();
   const [selectedMovieIMDBId, setSelectedMovieIMDBId] = useState('');
-  const [pageSize, setPageSize] = React.useState(10);
 
   const queryMovies = useCallback(
     async (pageNo?: number): Promise<void> => {
@@ -139,17 +140,8 @@ const MyLibrary: React.FC = () => {
     setSelectedMovieIMDBId(imdbID);
   };
 
-  const handleChangePage = (
-    _: React.MouseEvent<HTMLButtonElement> | null,
-    page: number
-  ): void => {
-    // Note: the page always starts at 1 in Material UI
-    queryMovies(page + 1);
-  };
-
-  const handleChangeRowsPerPage = (pageSizeVal: number): void => {
-    setPageSize(pageSizeVal);
-    setCurrentPage(1);
+  const handleChangePage = (page: number): void => {
+    queryMovies(page);
   };
 
   useEffect(() => {
@@ -196,7 +188,6 @@ const MyLibrary: React.FC = () => {
               onDeleteClicked={onDeleteClicked}
               handleChangePage={handleChangePage}
               handleClickTitle={handleClickTitle}
-              handleChangeRowsPerPage={handleChangeRowsPerPage}
             />
             {selectedMovieIMDBId && (
               <MovieDetails selectedMovieIMDBId={selectedMovieIMDBId} />
