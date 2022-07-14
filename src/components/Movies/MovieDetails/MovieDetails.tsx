@@ -18,16 +18,19 @@ import { SEARCH_URL } from '../../../constants/Constants';
 import MovieDetailsInput from './MovieDetailsInput/MovieDetailsInput';
 import { isValidUrl } from '../../../utils/UrlUtil';
 import { getSettingValue } from '../../../state/settings';
+import AlertConfirmation from '../../UI/AlertConfirmation/AlertConfirmation';
+import { isErrorResponse } from '../../../types/ErrorResponse';
 
 interface IProps {
   selectedMovieIMDBId: string;
+  removeMovie?: (imdbIDToRemove: string) => void;
 }
 
 const MovieDetails: React.FC<IProps> = (props: IProps) => {
-  const { selectedMovieIMDBId } = props;
+  const { selectedMovieIMDBId, removeMovie } = props;
   const [movieTotalInitial, setMovieTotalInitial] = useState(0);
   const [movieLoading, setMovieLoading] = useState(false);
-  const [movError, SetMovError] = useState('');
+  const [movError, setMovError] = useState('');
   const [movID, setMovID] = useState('');
   const [selectedMovie, setSelectedMovie] = useState<
     IMovieSearch | undefined
@@ -37,6 +40,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
   const languagesSetting = getSettingValue('languages');
   const languages = (languagesSetting && languagesSetting.split(',')) || [];
   const prevSelIMDBId = useRef('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const retrieveLanguagesFromOMDB = useCallback(
     (movie: IMovieSearch): string[] => {
@@ -83,17 +87,40 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
             languages: selectedLanguages,
           });
         }
-        SetMovError('');
+        setMovError('');
         setMovieTotalInitial(movieTotal);
         setLanguagesInitial(selectedLanguages);
         setMovieLoading(false);
         return true;
       } catch (error) {
-        SetMovError(`${TextConstants.MOVIESAVEERRORLIB}: ${error}`);
+        setMovError(`${TextConstants.MOVIESAVEERRORLIB}: ${error}`);
         setMovieLoading(false);
       }
     }
     return false;
+  };
+
+  const deleteMovie = async (): Promise<void> => {
+    setMovError('');
+    setMovieLoading(true);
+    try {
+      await axios.delete(`${import.meta.env.VITE_NODE_SERVER}/movies`, {
+        params: { idArray: [movID] },
+      });
+      setShowDeleteConfirm(false);
+      removeMovie && removeMovie(selectedMovieIMDBId);
+    } catch (err) {
+      if (isErrorResponse(err)) {
+        setMovError(
+          `${TextConstants.MOVIEDELETEERROR}: ${err.response.data.Error}`
+        );
+      } else {
+        setMovError(TextConstants.MOVIEDELETEERROR);
+      }
+      setShowDeleteConfirm(false);
+    } finally {
+      setMovieLoading(false);
+    }
   };
 
   // Perform init actions
@@ -119,10 +146,10 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
               : retrieveLanguagesFromOMDB(movie)
           );
           setMovID(response.data.id);
-          SetMovError('');
+          setMovError('');
         }
       } catch (error) {
-        SetMovError(`${TextConstants.MOVIELOADERRORLIB}: ${error}`);
+        setMovError(`${TextConstants.MOVIELOADERRORLIB}: ${error}`);
       }
     }
 
@@ -131,6 +158,26 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
       fetchData();
     }
   }, [apiKeySetting, retrieveLanguagesFromOMDB, selectedMovieIMDBId]);
+
+  const onDeleteClicked = (): void => {
+    setShowDeleteConfirm(true);
+  };
+
+  const onCancelledDelete = (): void => {
+    setShowDeleteConfirm(false);
+  };
+
+  const renderConfirmModal = (): ReactElement => {
+    return (
+      <AlertConfirmation
+        message="Are you sure you wish to delete these movies?"
+        title="Delete"
+        oKButtonText="Delete"
+        onConfirmed={deleteMovie}
+        onCancelled={onCancelledDelete}
+      />
+    );
+  };
 
   const renderContent = (): ReactElement | null => {
     if (!selectedMovie) {
@@ -167,6 +214,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
             onSaveClicked={onSaveClicked}
             imdbID={selectedMovie.imdbID}
             title={selectedMovie.title}
+            onDeleteClicked={onDeleteClicked}
           />
         </div>
       </div>
@@ -177,6 +225,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
     <>
       {!movError && renderContent()}
       {movError && <p className={globStyles['error-text']}>{movError}</p>}
+      {showDeleteConfirm && renderConfirmModal()}
     </>
   );
 };

@@ -11,9 +11,8 @@ interface IProps {
   currentPage: number;
   pageSize: number;
   movies: IMovieLibrary[];
-  onDeleteClicked: (data: IMovieLibrary | IMovieLibrary[]) => void;
-  handleClickTitle: (imdbID: string) => void;
   handleChangePage: (page: number) => void;
+  removeMovie: (imdbIDToRemove: string) => void;
 }
 
 const MovieTable: React.FC<IProps> = (props: IProps) => {
@@ -23,6 +22,7 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
     movies,
     handleChangePage,
     pageSize,
+    removeMovie,
   } = props;
   const noOfPages = Math.ceil(lastSearchMovieCount / pageSize);
 
@@ -33,7 +33,10 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
           <Accordion.Item eventKey={movie.imdbID} key={movie.imdbID}>
             <Accordion.Header>{movie.title}</Accordion.Header>
             <Accordion.Body>
-              <MovieDetails selectedMovieIMDBId={movie.imdbID}></MovieDetails>
+              <MovieDetails
+                selectedMovieIMDBId={movie.imdbID}
+                removeMovie={removeMovie}
+              ></MovieDetails>
             </Accordion.Body>
           </Accordion.Item>
         ))}

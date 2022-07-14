@@ -32,11 +32,18 @@ interface IProps {
     selectedLanguages: string[],
     movieTotal: number
   ) => Promise<boolean>;
+  onDeleteClicked: () => void;
 }
 
 const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
-  const { languagesInitial, movieTotalInitial, imdbID, title, onSaveClicked } =
-    props;
+  const {
+    languagesInitial,
+    movieTotalInitial,
+    imdbID,
+    title,
+    onSaveClicked,
+    onDeleteClicked,
+  } = props;
   const [movieTotal, setMovieTotal] = useState(0);
   const [movieValuesChanged, setMovieValuesChanged] = useState(false);
   const [checkboxValues, setCheckboxValues] = useState<ICheckboxValue[]>([]);
@@ -209,13 +216,22 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
                   +1 to library
                 </Button>
               </span>
+              <span className={globStyles['margin-r-10']}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={onRemoveClicked}
+                  disabled={movieTotal < 2}
+                >
+                  -1 from library
+                </Button>
+              </span>
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={onRemoveClicked}
-                disabled={movieTotal < 2}
+                onClick={onDeleteClicked}
               >
-                -1 from library
+                Delete from library
               </Button>
             </div>
             <div className={globStyles['margin-b-20']}>
