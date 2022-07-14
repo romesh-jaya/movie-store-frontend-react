@@ -23,8 +23,12 @@
   }
 }
 
-.imdb-link {
-  margin-right: 10px;
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  place-items: center;
 }
 
 .imdb-link:hover,

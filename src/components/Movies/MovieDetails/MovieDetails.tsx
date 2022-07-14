@@ -195,8 +195,8 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
     );
 
     return (
-      <div className={styles['content']}>
-        <div className={styles['top-half']}>
+      <div className={`py-3 ${styles['content']}`}>
+        <div className={`mb-4 ${styles['top-half']}`}>
           <div className="mb-4">
             <div className={`mb-3 ${styles['year-type']}`}>
               {selectedMovie.year}
@@ -205,7 +205,9 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
               </Badge>
             </div>
             <p>{selectedMovie.actors}</p>
-            <small>{selectedMovie.plot}</small>
+            <div className={styles.plot}>
+              <small>{selectedMovie.plot}</small>
+            </div>
           </div>
           <div className={styles['image-container']}>{image}</div>
         </div>

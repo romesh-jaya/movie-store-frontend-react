@@ -229,7 +229,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
             </div>
           </>
         )}
-        <div>
+        <div className={`${styles['footer']}`}>
           <a
             href={`https://www.imdb.com/title/${imdbID}`}
             target="_blank"
@@ -245,8 +245,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
             <>
               {!itemExists(imdbID) && (
                 <Button
-                  variant="contained"
-                  color="primary"
+                  variant="primary"
                   onClick={() => onAddRemoveFromCart(true)}
                 >
                   Add to Cart
@@ -254,8 +253,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
               )}
               {itemExists(imdbID) && (
                 <Button
-                  variant="contained"
-                  color="secondary"
+                  variant="secondary"
                   onClick={() => onAddRemoveFromCart(false)}
                 >
                   Remove from Cart

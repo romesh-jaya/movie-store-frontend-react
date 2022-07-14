@@ -64,7 +64,7 @@ const ContainerHeader: React.FC = () => {
                 </Nav>
               </Navbar.Collapse>
               <Dropdown navbar align="end" className={styles['dropdown']}>
-                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                <Dropdown.Toggle>
                   <GearFill />
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
