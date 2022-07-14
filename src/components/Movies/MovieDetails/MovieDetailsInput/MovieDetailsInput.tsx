@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-duplicate-props */
 import React, {
   useState,
   useEffect,
@@ -10,8 +9,10 @@ import React, {
 import Form from 'react-bootstrap/esm/Form';
 import { useSnackbar } from 'notistack';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
+import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
+import Button from 'react-bootstrap/esm/Button';
 import { useAuth0 } from '@auth0/auth0-react';
+
 import styles from './movieDetailsInput.module.scss';
 import globStyles from '../../../../index.module.scss';
 import { ICheckboxValue } from '../../../../interfaces/ICheckboxValue';
@@ -20,8 +21,6 @@ import { isAdmin } from '../../../../utils/AuthUtil';
 import { addItem, removeItem, cartItems } from '../../../../state/cart';
 import { getSettingValue } from '../../../../state/settings';
 import { PREFERS_DARK_MODE_MEDIA_QUERY } from '../../../../constants/Constants';
-import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
-import Button from 'react-bootstrap/esm/Button';
 
 interface IProps {
   languagesInitial: string[];

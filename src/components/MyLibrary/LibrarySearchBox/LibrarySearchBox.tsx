@@ -2,23 +2,21 @@ import React, { useState, useCallback, ReactElement } from 'react';
 import { ExportToCsv } from 'export-to-csv';
 import { useTheme } from '@mui/material/styles';
 import { CaretDownFill } from 'react-bootstrap-icons';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Card from 'react-bootstrap/esm/Card';
+import Button from 'react-bootstrap/esm/Button';
 
 import styles from './librarySearchBox.module.scss';
-import globStyles from '../../../index.module.scss';
 import { useAuth0 } from '@auth0/auth0-react';
 import { TextConstants } from '../../../constants/TextConstants';
 import { MovieType } from '../../../enums/MovieType';
 import GenreSelectModal from '../GenreSelectModal/GenreSelectModal';
 import { ISearchInfo } from '../../../interfaces/ISearchInfo';
 import IMovieLibrary from '../../../interfaces/IMovieLibrary';
-
 import { isAdmin } from '../../../utils/AuthUtil';
 import { formatExportData } from '../../../utils/ExportUtil';
 import SearchControls from './SearchControls/SearchControls';
 import { PREFERS_DARK_MODE_MEDIA_QUERY } from '../../../constants/Constants';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import Card from 'react-bootstrap/esm/Card';
-import Button from 'react-bootstrap/esm/Button';
 
 const exportFileName = 'Export.csv';
 
@@ -205,21 +203,17 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   };
 
   const renderButtons = (): ReactElement => (
-    <div className="mt-4 mb-3">
-      <span className={globStyles['right-spacer']}>
-        <Button
-          disabled={!isSearchTextValid()}
-          onClick={newSearch}
-          variant="primary"
-        >
-          Search
-        </Button>
-      </span>
-      <span className={globStyles['right-spacer']}>
-        <Button onClick={onResetClicked} variant="secondary">
-          Reset
-        </Button>
-      </span>
+    <div className={`mt-4 mb-3 ${styles['buttons']}`}>
+      <Button
+        disabled={!isSearchTextValid()}
+        onClick={newSearch}
+        variant="primary"
+      >
+        Search
+      </Button>
+      <Button onClick={onResetClicked} variant="secondary">
+        Reset
+      </Button>
       {isAdmin(user) && (
         <Button
           disabled={!enableExportButton}

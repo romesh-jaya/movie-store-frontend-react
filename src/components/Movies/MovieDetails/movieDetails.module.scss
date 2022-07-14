@@ -4,11 +4,6 @@
   max-width: 550px !important;
 }
 
-.container {
-  min-height: 100%;
-  padding: 20px 0;
-}
-
 .movie-details {
   display: flex;
   flex-direction: column;
@@ -74,4 +69,17 @@
 .spinner-div {
   height: 2.6em;
   padding: 20px;
+}
+
+.year-type {
+  display: flex;
+  justify-content: center;
+  place-items: center;
+  gap: 15px;
+}
+
+.type {
+  border: 1px solid black;
+  border-radius: 3px;
+  padding: 0 5px;
 }

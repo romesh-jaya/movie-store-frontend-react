@@ -20,6 +20,8 @@ import { isValidUrl } from '../../../utils/UrlUtil';
 import { getSettingValue } from '../../../state/settings';
 import AlertConfirmation from '../../UI/AlertConfirmation/AlertConfirmation';
 import { isErrorResponse } from '../../../types/ErrorResponse';
+import { MovieType } from '../../../enums/MovieType';
+import Badge from 'react-bootstrap/esm/Badge';
 
 interface IProps {
   selectedMovieIMDBId: string;
@@ -193,30 +195,33 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
     );
 
     return (
-      <div className={styles.container}>
-        <div className={styles['content']}>
-          <div className={styles['top-half']}>
-            <div className={globStyles['margin-b-20']}>
-              <p>{selectedMovie.year}</p>
-              <p>{selectedMovie.actors}</p>
-              <small>{selectedMovie.plot}</small>
+      <div className={styles['content']}>
+        <div className={styles['top-half']}>
+          <div className="mb-4">
+            <div className={`mb-3 ${styles['year-type']}`}>
+              {selectedMovie.year}
+              <Badge bg="success">
+                {selectedMovie.type === MovieType.Movie ? 'mov' : 'tv'}
+              </Badge>
             </div>
-            <div className={styles['image-container']}>{image}</div>
+            <p>{selectedMovie.actors}</p>
+            <small>{selectedMovie.plot}</small>
           </div>
-          {movieLoading && (
-            <div className={styles['spinner-div']}>
-              <Spinner />
-            </div>
-          )}
-          <MovieDetailsInput
-            languagesInitial={languagesInitial}
-            movieTotalInitial={movieTotalInitial}
-            onSaveClicked={onSaveClicked}
-            imdbID={selectedMovie.imdbID}
-            title={selectedMovie.title}
-            onDeleteClicked={onDeleteClicked}
-          />
+          <div className={styles['image-container']}>{image}</div>
         </div>
+        {movieLoading && (
+          <div className={styles['spinner-div']}>
+            <Spinner />
+          </div>
+        )}
+        <MovieDetailsInput
+          languagesInitial={languagesInitial}
+          movieTotalInitial={movieTotalInitial}
+          onSaveClicked={onSaveClicked}
+          imdbID={selectedMovie.imdbID}
+          title={selectedMovie.title}
+          onDeleteClicked={onDeleteClicked}
+        />
       </div>
     );
   };

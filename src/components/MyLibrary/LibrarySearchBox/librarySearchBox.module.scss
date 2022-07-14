@@ -95,3 +95,10 @@ $icon-width: 30px;
 .helptext {
   text-align: center;
 }
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
