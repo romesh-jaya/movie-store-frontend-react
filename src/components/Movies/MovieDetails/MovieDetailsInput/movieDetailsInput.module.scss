@@ -1,0 +1,37 @@
+.first-button {
+  margin-right: 5px;
+}
+
+.language-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.non-language {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+.movie-count {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  place-items: center;
+
+  button {
+    height: 40px;
+  }
+}
+
+.imdb-link {
+  margin-right: 10px;
+}
+
+.imdb-link:hover,
+.imdb-link:active {
+  color: orange !important;
+}
