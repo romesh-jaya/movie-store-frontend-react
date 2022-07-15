@@ -131,7 +131,7 @@ const Cart: React.FC = () => {
                   )} ${priceCurrency.toUpperCase()}`}</span>
                 </p>
               ) : (
-                <p className={styles['subscription-info']}>
+                <p className={`my-4 ${styles['subscription-info']}`}>
                   Enjoy free DVD rentals with a{' '}
                   <span>
                     <CustomLink to="/my-subscriptions">Subscription</CustomLink>
