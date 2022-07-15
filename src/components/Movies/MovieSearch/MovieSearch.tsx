@@ -17,7 +17,6 @@ const MovieSearch: React.FC = () => {
   const [movies, setMovies] = useState<MovieTableInfo[]>([]);
   const [movError, setMovError] = useState('');
   const [movInfo, setMovInfo] = useState('');
-  const [selectedMovieIMDBId, setSelectedMovieIMDBId] = useState('');
   const [inputQuery, setInputQuery] = useState('');
   const [inputQueryTrimmed, setInputQueryTrimmed] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +27,7 @@ const MovieSearch: React.FC = () => {
   const loadMovies = useCallback(
     async (pageNo?: number): Promise<void> => {
       const filteredMovies: MovieTableInfo[] = [];
-      const page = pageNo ? `&page=${pageNo.toFixed(0)}` : '';
+      const page = pageNo ? `&page=${pageNo}` : '';
 
       try {
         setIsLoading(true);
@@ -36,7 +35,6 @@ const MovieSearch: React.FC = () => {
           `${SEARCH_URL}?apikey=${apiKeySetting}&s=${inputQueryTrimmed}${page}`
         );
         if (!response.data || response.data.Response === 'False') {
-          setSelectedMovieIMDBId('');
           setMovies([]);
           setLastSearchMovieCount(0);
           setMovError('');
@@ -67,20 +65,13 @@ const MovieSearch: React.FC = () => {
           }
         });
 
-        setSelectedMovieIMDBId('');
         setMovies(filteredMovies);
         setLastSearchMovieCount(fetchedMovies.totalResults);
         setMovError('');
         setMovInfo('');
         setIsLoading(false);
-
-        if (!pageNo) {
-          setCurrentPage(1);
-        } else {
-          setCurrentPage(pageNo);
-        }
+        setCurrentPage(pageNo ?? 1);
       } catch (err) {
-        setSelectedMovieIMDBId('');
         setMovies([]);
         setLastSearchMovieCount(0);
         setMovInfo('');
@@ -175,11 +166,6 @@ const MovieSearch: React.FC = () => {
           </Button>
         </div>
         {renderMovies()}
-        <section>
-          {!selectedMovieIMDBId && !movError && movies.length > 0 && (
-            <p>{TextConstants.CLICKTOSEEDETAILS}</p>
-          )}
-        </section>
         {movError && renderError()}
         {movInfo && <p>{movInfo}</p>}
       </>

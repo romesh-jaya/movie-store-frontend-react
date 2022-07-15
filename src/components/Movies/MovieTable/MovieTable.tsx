@@ -28,6 +28,16 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
   } = props;
   const noOfPages = Math.ceil(lastSearchMovieCount / pageSize);
 
+  const getPaginationIndexes = () => {
+    const indexes = [];
+    for (let i = currentPage - 2; i <= currentPage + 2; i++) {
+      if (i >= 1 && i <= noOfPages) {
+        indexes.push(i);
+      }
+    }
+    return indexes;
+  };
+
   return (
     <div className={`mt-2 ${styles['table-style']}`}>
       <Accordion>
@@ -54,13 +64,13 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
             disabled={currentPage === 1}
             onClick={() => handleChangePage(currentPage - 1)}
           />
-          {Array.from(Array(noOfPages)).map((_, idx) => (
+          {getPaginationIndexes().map((idx) => (
             <Pagination.Item
               key={idx}
-              active={currentPage === idx + 1}
-              onClick={() => handleChangePage(idx + 1)}
+              active={currentPage === idx}
+              onClick={() => handleChangePage(idx)}
             >
-              {idx + 1}
+              {idx}
             </Pagination.Item>
           ))}
           <Pagination.Next
