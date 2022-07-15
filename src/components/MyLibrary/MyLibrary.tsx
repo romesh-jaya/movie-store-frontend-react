@@ -8,9 +8,8 @@ import LibrarySearchBox from './LibrarySearchBox/LibrarySearchBox';
 import { ISearchInfo } from '../../interfaces/ISearchInfo';
 import IMovieLibrary from '../../interfaces/IMovieLibrary';
 import { isErrorResponse } from '../../types/ErrorResponse';
-import MovieTable from './MovieTable/MovieTable';
-
-const pageSize = 10;
+import MovieTable from '../Movies/MovieTable/MovieTable';
+import { pageSize } from '../../constants/Constants';
 
 const MyLibrary: React.FC = () => {
   const [movies, setMovies] = useState<IMovieLibrary[]>([]);
@@ -129,9 +128,13 @@ const MyLibrary: React.FC = () => {
             lastSearchMovieCount={lastSearchMovieCount}
             currentPage={currentPage}
             pageSize={pageSize}
-            movies={movies}
+            movies={movies.map((movie) => ({
+              title: movie.title,
+              imdbID: movie.imdbID,
+            }))}
             handleChangePage={handleChangePage}
             removeMovie={removeMovie}
+            resultsFoundText={`${lastSearchMovieCount} results found`}
           />
         )}
 

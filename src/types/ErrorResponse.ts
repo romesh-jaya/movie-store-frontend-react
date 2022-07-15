@@ -8,5 +8,9 @@ export type ErrorResponse = {
 
 // Type guard with "type predicate"
 export function isErrorResponse(candidate: any): candidate is ErrorResponse {
-  return !!candidate.response.data.Error;
+  return !!(
+    candidate.response &&
+    candidate.response.data &&
+    candidate.response.data.Error
+  );
 }

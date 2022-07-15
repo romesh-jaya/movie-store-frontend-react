@@ -1,16 +1,17 @@
 import React from 'react';
 
 import styles from './movieTable.module.scss';
-import IMovieLibrary from '../../../interfaces/IMovieLibrary';
 import Accordion from 'react-bootstrap/esm/Accordion';
-import MovieDetails from '../../Movies/MovieDetails/MovieDetails';
+import MovieDetails from '../MovieDetails/MovieDetails';
 import Pagination from 'react-bootstrap/esm/Pagination';
+import { MovieTableInfo } from '../../../types/MovieTableInfo';
 
 interface IProps {
   lastSearchMovieCount: number;
   currentPage: number;
   pageSize: number;
-  movies: IMovieLibrary[];
+  resultsFoundText: string;
+  movies: MovieTableInfo[];
   handleChangePage: (page: number) => void;
   removeMovie: (imdbIDToRemove: string) => void;
 }
@@ -23,6 +24,7 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
     handleChangePage,
     pageSize,
     removeMovie,
+    resultsFoundText,
   } = props;
   const noOfPages = Math.ceil(lastSearchMovieCount / pageSize);
 
@@ -42,7 +44,7 @@ const MovieTable: React.FC<IProps> = (props: IProps) => {
         ))}
       </Accordion>
       <div className={`mt-3 mb-3 ${styles['pagination-style']}`}>
-        <div className="me-3">{`${lastSearchMovieCount} results found`}</div>
+        <div className="me-3">{resultsFoundText}</div>
         <Pagination>
           <Pagination.First
             disabled={currentPage === 1}

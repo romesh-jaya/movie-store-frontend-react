@@ -160,7 +160,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
 
   const onAddRemoveFromCart = (isAdd: boolean) => {
     if (isAdd) {
-      addItem({ title, imdbID, id: imdbID });
+      addItem({ title, imdbID });
       enqueueSnackbar('Title added to cart', { variant: 'success' });
     } else {
       removeItem(imdbID);

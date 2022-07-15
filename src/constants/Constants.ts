@@ -4,6 +4,8 @@ export const DESKTOP_WIDTH_MEDIA_QUERY = '(min-width:640px)';
 
 export const PREFERS_DARK_MODE_MEDIA_QUERY = '(prefers-color-scheme: dark)';
 
+export const pageSize = 10;
+
 export const redirectFromCheckoutURLCancelled =
   window.location.origin.toString();
 export const redirectFromCheckoutURLSuccess = `${window.location.origin.toString()}/transaction-result`;

@@ -1,6 +1,6 @@
-import { ICartItem } from '../state/cart';
+import { MovieTableInfo } from '../types/MovieTableInfo';
 
 export type SessionData = {
   dateCreated?: Date;
-  cartItems?: ICartItem[];
+  cartItems?: MovieTableInfo[];
 };
