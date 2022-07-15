@@ -31,7 +31,7 @@ interface IProps {
     selectedLanguages: string[],
     movieTotal: number
   ) => Promise<boolean>;
-  onDeleteClicked: () => void;
+  onDeleteClicked?: () => void;
 }
 
 const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
@@ -208,9 +208,11 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
               >
                 -1 from library
               </Button>
-              <Button variant="secondary" onClick={onDeleteClicked}>
-                Delete from library
-              </Button>
+              {onDeleteClicked && (
+                <Button variant="secondary" onClick={onDeleteClicked}>
+                  Delete from library
+                </Button>
+              )}
             </div>
             <div className={`mb-3 ${styles['movie-count']}`}>
               <FloatingLabel label="Total Count">

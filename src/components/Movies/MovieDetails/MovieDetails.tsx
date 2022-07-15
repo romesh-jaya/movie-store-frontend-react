@@ -222,7 +222,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
           onSaveClicked={onSaveClicked}
           imdbID={selectedMovie.imdbID}
           title={selectedMovie.title}
-          onDeleteClicked={onDeleteClicked}
+          onDeleteClicked={removeMovie && onDeleteClicked}
         />
       </div>
     );

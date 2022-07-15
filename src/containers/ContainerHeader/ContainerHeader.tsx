@@ -57,9 +57,9 @@ const ContainerHeader: React.FC = () => {
                     </LinkContainer>
                   )}
                   {isAdmin(user) && (
-                    <Nav.Link eventKey="/movie-search-omdb">
-                      Movie Search - OMDB
-                    </Nav.Link>
+                    <LinkContainer to="/movie-search-omdb">
+                      <Nav.Link>Movie Search - OMDB</Nav.Link>
+                    </LinkContainer>
                   )}
                 </Nav>
               </Navbar.Collapse>

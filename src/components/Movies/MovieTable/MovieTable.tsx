@@ -13,7 +13,7 @@ interface IProps {
   resultsFoundText: string;
   movies: MovieTableInfo[];
   handleChangePage: (page: number) => void;
-  removeMovie: (imdbIDToRemove: string) => void;
+  removeMovie?: (imdbIDToRemove: string) => void;
 }
 
 const MovieTable: React.FC<IProps> = (props: IProps) => {

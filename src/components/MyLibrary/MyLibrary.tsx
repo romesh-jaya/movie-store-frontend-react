@@ -20,7 +20,7 @@ const MyLibrary: React.FC = () => {
   const [lastSearchInfo, setLastSearchInfo] = useState<
     ISearchInfo | undefined
   >();
-  const [lastSearchMovieCount, setLastSearchMovieCount] = useState<number>(0);
+  const [lastSearchMovieCount, setLastSearchMovieCount] = useState(0);
 
   const queryMovies = useCallback(
     async (pageNo?: number): Promise<void> => {
