@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useCallback, ReactElement } from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 
 import axios from '../../../axios';
 import styles from './movieSearch.module.css';
@@ -12,6 +10,9 @@ import { isErrorResponse } from '../../../types/ErrorResponse';
 import { getSettingValue } from '../../../state/settings';
 import { MovieTableInfo } from '../../../types/MovieTableInfo';
 import MovieTable from '../MovieTable/MovieTable';
+import Button from 'react-bootstrap/esm/Button';
+import Form from 'react-bootstrap/esm/Form';
+import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
 
 const MovieSearch: React.FC = () => {
   const [movies, setMovies] = useState<MovieTableInfo[]>([]);
@@ -147,18 +148,12 @@ const MovieSearch: React.FC = () => {
 
     return (
       <>
-        <div className={styles['search-input']}>
-          <span className={globStyles['margin-r-30']}>
-            <TextField
-              label="Search OMDB"
-              value={inputQuery}
-              onChange={queryOnChange}
-              variant="standard"
-            />
-          </span>
+        <div className={`mt-3 mb-4 ${styles['movie-search']}`}>
+          <FloatingLabel label="Search OMDB">
+            <Form.Control value={inputQuery} onChange={queryOnChange} />
+          </FloatingLabel>
           <Button
-            variant="outlined"
-            color="primary"
+            variant="primary"
             onClick={onSearchClicked}
             disabled={!inputQueryTrimmed}
           >

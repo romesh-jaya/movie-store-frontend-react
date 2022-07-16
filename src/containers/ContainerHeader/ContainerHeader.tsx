@@ -47,18 +47,23 @@ const ContainerHeader: React.FC = () => {
           {!dontShowNavBarPaths && (
             <>
               <Navbar.Collapse className="ms-3">
-                <Nav className="me-auto flex-grow-1">
+                <Nav
+                  className="me-auto flex-grow-1"
+                  activeKey={location.pathname}
+                >
                   <LinkContainer to="/">
-                    <Nav.Link>Home</Nav.Link>
+                    <Nav.Link eventKey="/">Home</Nav.Link>
                   </LinkContainer>
                   {!isAdmin(user) && (
                     <LinkContainer to="/my-cart">
-                      <Nav.Link>Cart</Nav.Link>
+                      <Nav.Link eventKey="/my-cart">Cart</Nav.Link>
                     </LinkContainer>
                   )}
                   {isAdmin(user) && (
                     <LinkContainer to="/movie-search-omdb">
-                      <Nav.Link>Movie Search - OMDB</Nav.Link>
+                      <Nav.Link eventKey="/movie-search-omdb">
+                        Movie Search - OMDB
+                      </Nav.Link>
                     </LinkContainer>
                   )}
                 </Nav>
