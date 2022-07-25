@@ -4,6 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import App from './App';
 import './bootstrap.scss';
+import 'react-loading-skeleton/dist/skeleton.css';
 import ErrorBoundary from './hoc/ErrorBoundary/ErrorBoundary';
 
 const DOMAIN = import.meta.env.VITE_AUTH0_DOMAIN || '';

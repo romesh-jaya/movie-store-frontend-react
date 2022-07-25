@@ -5,7 +5,7 @@ import {
   useElements,
 } from '@stripe/react-stripe-js';
 
-import styles from './checkoutForm.module.scss';
+import styles from './stripeCheckoutForm.module.scss';
 import { redirectFromCheckoutURLSuccess } from '../../constants/Constants';
 
 interface IProps {

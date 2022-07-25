@@ -60,11 +60,7 @@ const TransactionResult: React.FC = () => {
       )}
       {error && <p className={globStyles['error-text']}>{error}</p>}
       <div className={styles['button-div']}>
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={() => navigate('/')}
-        >
+        <Button variant="primary" onClick={() => navigate('/')}>
           Back to Home
         </Button>
       </div>

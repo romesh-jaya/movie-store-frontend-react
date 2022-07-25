@@ -39,7 +39,7 @@ const Login: React.FC = () => {
   return !isAuthenticated ? (
     <div className={styles.content}>
       <div>
-        <div className={globStyles['margin-t-20']}>
+        <div className="my-4">
           {!isAdminLogin && (
             <p>
               Welcome! Sign in to browse movies and TV series at Ultra Movie
@@ -48,12 +48,7 @@ const Login: React.FC = () => {
           )}
         </div>
         <div className={styles['login-div']}>
-          <Button
-            id="login-button"
-            onClick={onLogin}
-            color="secondary"
-            variant="contained"
-          >
+          <Button id="login-button" onClick={onLogin} variant="secondary">
             {isAdminLogin ? 'Sign in - Admin' : 'Sign in'}
           </Button>
         </div>

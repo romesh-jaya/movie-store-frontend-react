@@ -82,11 +82,7 @@ export default function Checkout() {
           <p className={globStyles['error-text']}>{error}</p>
           <div className="mt-4">
             <span className="me-3">
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={() => navigate('/')}
-              >
+              <Button variant="primary" onClick={() => navigate('/')}>
                 Back
               </Button>
             </span>

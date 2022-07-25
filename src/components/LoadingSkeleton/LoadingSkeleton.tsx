@@ -1,16 +1,14 @@
 import React from 'react';
-import Skeleton from '@mui/material/Skeleton';
-import Stack from '@mui/material/Stack';
-
-import styles from './loadingSkeleton.module.scss';
+import Skeleton from 'react-loading-skeleton';
 
 const LoadingSkeleton: React.FC = () => {
   return (
-    <Stack spacing={1} alignItems="center" className={styles.container}>
-      <Skeleton width="60%" animation="wave" />
-      <Skeleton height={180} width="60%" />
-      <Skeleton width="60%" animation="wave" />
-    </Stack>
+    <div className="w-75 my-4 mx-auto">
+      <h1>
+        <Skeleton />
+      </h1>
+      <Skeleton count={4} />
+    </div>
   );
 };
 
