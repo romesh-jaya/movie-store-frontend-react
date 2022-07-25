@@ -172,7 +172,7 @@ const MovieDetails: React.FC<IProps> = (props: IProps) => {
   const renderConfirmModal = (): ReactElement => {
     return (
       <AlertConfirmation
-        message="Are you sure you wish to delete these movies?"
+        message="Are you sure you wish to delete this movie?"
         title="Delete"
         oKButtonText="Delete"
         onConfirmed={deleteMovie}

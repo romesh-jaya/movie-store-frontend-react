@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import Button from 'react-bootstrap/esm/Button';
 
 import styles from './transactionResult.module.scss';
 import globStyles from '../../index.module.scss';
-import Button from '@mui/material/Button';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from '../../axios';
 import { clearCart } from '../../state/cart';

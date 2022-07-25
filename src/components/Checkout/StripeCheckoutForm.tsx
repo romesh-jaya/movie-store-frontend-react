@@ -12,7 +12,7 @@ interface IProps {
   orderId?: string;
 }
 
-export default function CheckoutForm(props: IProps) {
+export default function StripeCheckoutForm(props: IProps) {
   const { orderId } = props;
   const stripe = useStripe();
   const elements = useElements();

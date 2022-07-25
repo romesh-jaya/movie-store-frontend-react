@@ -5,16 +5,17 @@ import {
   StripeElementsOptions,
 } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
+import { useNavigate } from 'react-router-dom';
 
-import CheckoutForm from './CheckoutForm';
+import StripeCheckoutForm from './StripeCheckoutForm';
 import axios from '../../axios';
 import { cartItems } from '../../state/cart';
 import styles from './checkout.module.scss';
 import globStyles from '../../index.module.scss';
-import Button from '@mui/material/Button';
-import { useNavigate } from 'react-router-dom';
 import { redirectFromCheckoutURLSuccessNoCheckout } from '../../constants/Constants';
+import Button from 'react-bootstrap/esm/Button';
 
+// Note: the code for this has mostly been taken from Stripe's examples
 // Make sure to call loadStripe outside of a component’s render to avoid
 // recreating the Stripe object on every render.
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK_TEST);
@@ -70,17 +71,17 @@ export default function Checkout() {
   };
 
   return (
-    <div className={styles['container']}>
+    <div className={`my-4 ${styles['container']}`}>
       {clientSecret && (
         <Elements options={options} stripe={stripePromise}>
-          <CheckoutForm orderId={orderId} />
+          <StripeCheckoutForm orderId={orderId} />
         </Elements>
       )}
       {error && (
         <>
           <p className={globStyles['error-text']}>{error}</p>
-          <div className={styles['button-div']}>
-            <span className={globStyles['right-spacer']}>
+          <div className="mt-4">
+            <span className="me-3">
               <Button
                 color="primary"
                 variant="contained"

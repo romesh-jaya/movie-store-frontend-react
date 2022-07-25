@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import Button from '@mui/material/Button';
 import { Navigate, useLocation } from 'react-router';
+import Button from 'react-bootstrap/esm/Button';
 
 import globStyles from '../../index.module.scss';
 import styles from './login.module.css';

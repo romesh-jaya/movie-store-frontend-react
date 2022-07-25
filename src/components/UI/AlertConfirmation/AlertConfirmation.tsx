@@ -1,13 +1,6 @@
 import React from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Button from '@mui/material/Button';
-import ClearIcon from '@mui/icons-material/Clear';
-
-import styles from './alertConfirmation.module.css';
+import Button from 'react-bootstrap/esm/Button';
+import Modal from 'react-bootstrap/esm/Modal';
 
 interface IProps {
   message: string;
@@ -21,31 +14,20 @@ const AlertConfirmation: React.FC<IProps> = (props) => {
   const { onConfirmed, message, onCancelled, title, oKButtonText } = props;
 
   return (
-    <Dialog open onClose={onCancelled}>
-      <DialogTitle>
-        <div className={styles.header}>
-          <div className={styles.title}>{title}</div>
-          <div className={styles['close-button']}>
-            <Button onClick={onCancelled}>
-              <ClearIcon />
-            </Button>
-          </div>
-        </div>
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText>{message}</DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <span className={styles['first-button']}>
-          <Button onClick={onCancelled} color="primary" variant="contained">
-            Cancel
-          </Button>
-        </span>
-        <Button onClick={onConfirmed} color="secondary" variant="contained">
+    <Modal show onHide={onCancelled}>
+      <Modal.Header closeButton>
+        <Modal.Title>{title}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>{message}</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={onCancelled}>
+          Cancel
+        </Button>
+        <Button variant="primary" onClick={onConfirmed}>
           {oKButtonText}
         </Button>
-      </DialogActions>
-    </Dialog>
+      </Modal.Footer>
+    </Modal>
   );
 };
 
