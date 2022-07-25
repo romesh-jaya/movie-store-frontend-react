@@ -1,0 +1,12 @@
+@import '../../styles/globalTheme.module.scss';
+
+.spinner-div {
+  height: 2.6em;
+  padding: 20px;
+}
+
+.container {
+  margin: auto;
+  width: 90%;
+  max-width: $md-screen;
+}

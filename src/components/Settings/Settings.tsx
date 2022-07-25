@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+import Button from 'react-bootstrap/esm/Button';
+import Form from 'react-bootstrap/esm/Form';
+import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
 
-import styles from './settings.module.css';
+import styles from './settings.module.scss';
 import globStyles from '../../index.module.scss';
 import axios from '../../axios';
 import { TextConstants } from '../../constants/TextConstants';
@@ -93,48 +94,44 @@ const Settings: React.FC = () => {
   };
 
   return (
-    <>
-      <h2>Settings</h2>
-      <form className={globStyles['margin-b-20']}>
-        <TextField
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          key="apiKey"
-          label="OMDB API Key"
-          value={omdbAPIKeyEntered}
-          onChange={omdbAPIKeyEnteredOnChange}
-        />
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          key="languages"
+    <div className={`my-3 ${styles.container}`}>
+      <h2 className={'mb-4'}>Settings</h2>
+      <Form className={'mb-4'}>
+        <FloatingLabel label="OMDB API Key" key="apiKey" className={'mb-3'}>
+          <Form.Control
+            value={omdbAPIKeyEntered}
+            onChange={omdbAPIKeyEnteredOnChange}
+          />
+        </FloatingLabel>
+        <FloatingLabel
           label="Languages (use comma separated values)"
-          value={languagesEntered}
-          onChange={languagesEnteredOnChange}
-          error={!!languagesEnteredError}
-          helperText={languagesEnteredError}
-        />
-      </form>
+          key="languages"
+        >
+          <Form.Control
+            value={languagesEntered}
+            onChange={languagesEnteredOnChange}
+            isInvalid={!!languagesEnteredError}
+          />
+        </FloatingLabel>
+      </Form>
       {isLoading && (
         <div className={styles['spinner-div']}>
           <Spinner />
         </div>
       )}
       <Button
-        variant="outlined"
-        color="primary"
+        variant="primary"
         onClick={onSaveClicked}
         disabled={!settingsChanged}
       >
         Save
       </Button>
-      {settingsError && (
-        <p className={globStyles['error-text']}>{settingsError}</p>
+      {(languagesEnteredError || settingsError) && (
+        <p className={globStyles['error-text']}>
+          {languagesEnteredError || settingsError}
+        </p>
       )}
-    </>
+    </div>
   );
 };
 

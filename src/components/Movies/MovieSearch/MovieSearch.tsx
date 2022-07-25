@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useCallback, ReactElement } from 'react';
+import Button from 'react-bootstrap/esm/Button';
+import Form from 'react-bootstrap/esm/Form';
+import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
 
 import axios from '../../../axios';
 import styles from './movieSearch.module.css';
@@ -10,9 +13,6 @@ import { isErrorResponse } from '../../../types/ErrorResponse';
 import { getSettingValue } from '../../../state/settings';
 import { MovieTableInfo } from '../../../types/MovieTableInfo';
 import MovieTable from '../MovieTable/MovieTable';
-import Button from 'react-bootstrap/esm/Button';
-import Form from 'react-bootstrap/esm/Form';
-import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
 
 const MovieSearch: React.FC = () => {
   const [movies, setMovies] = useState<MovieTableInfo[]>([]);
@@ -148,6 +148,7 @@ const MovieSearch: React.FC = () => {
 
     return (
       <>
+        <h2 className={'mb-4'}>Settings</h2>
         <div className={`mt-3 mb-4 ${styles['movie-search']}`}>
           <FloatingLabel label="Search OMDB">
             <Form.Control value={inputQuery} onChange={queryOnChange} />
