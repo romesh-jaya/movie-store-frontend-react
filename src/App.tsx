@@ -122,7 +122,8 @@ const App: React.FC = () => {
       <SnackbarProvider
         maxSnack={1}
         autoHideDuration={4000}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        classes={{ root: globStyles['snackbar-item-root'] }}
       >
         <Container fluid className="d-flex flex-column min-vh-100 px-0">
           <ContainerHeader />

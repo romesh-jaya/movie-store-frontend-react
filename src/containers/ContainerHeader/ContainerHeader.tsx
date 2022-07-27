@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router';
 import { useAuth0 } from '@auth0/auth0-react';
 import Navbar from 'react-bootstrap/esm/Navbar';
@@ -6,6 +6,7 @@ import Container from 'react-bootstrap/esm/Container';
 import Nav from 'react-bootstrap/esm/Nav';
 import { GearFill } from 'react-bootstrap-icons';
 import { LinkContainer } from 'react-router-bootstrap';
+import { useSnackbar } from 'notistack';
 
 import logo from '../../assets/img/movie.svg';
 import styles from './containerHeader.module.scss';
@@ -16,10 +17,15 @@ const ContainerHeader: React.FC = () => {
   const location = useLocation();
   const { user, logout } = useAuth0();
   const dontShowNavBarPaths = location.pathname.includes('login');
+  const { closeSnackbar } = useSnackbar();
 
   const onLogoutClicked = (): void => {
     logout({ returnTo: `${window.location.origin}/login` });
   };
+
+  useEffect(() => {
+    closeSnackbar();
+  }, [location]);
 
   return (
     <>

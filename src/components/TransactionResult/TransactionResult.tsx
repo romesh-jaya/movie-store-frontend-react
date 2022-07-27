@@ -50,7 +50,7 @@ const TransactionResult: React.FC = () => {
   }
 
   return (
-    <div className={styles.table}>
+    <div className={`my-4 ${styles.table}`}>
       <h2>{heading}</h2>
       {!error && (
         <p>

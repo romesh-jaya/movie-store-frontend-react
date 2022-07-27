@@ -21,6 +21,7 @@ import { isAdmin } from '../../../../utils/AuthUtil';
 import { addItem, removeItem, cartItems } from '../../../../state/cart';
 import { getSettingValue } from '../../../../state/settings';
 import { PREFERS_DARK_MODE_MEDIA_QUERY } from '../../../../constants/Constants';
+import CustomLink from '../../../CustomLink/CustomLink';
 
 interface IProps {
   languagesInitial: string[];
@@ -158,10 +159,21 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
     }
   };
 
+  const renderAddedToCart = () => {
+    return (
+      <>
+        <span className="me-4">Title added to cart</span>
+        <CustomLink to="/my-cart" ignoreDarkMode>
+          View
+        </CustomLink>
+      </>
+    );
+  };
+
   const onAddRemoveFromCart = (isAdd: boolean) => {
     if (isAdd) {
       addItem({ title, imdbID });
-      enqueueSnackbar('Title added to cart', { variant: 'success' });
+      enqueueSnackbar(renderAddedToCart(), { variant: 'success' });
     } else {
       removeItem(imdbID);
       enqueueSnackbar('Title removed from cart');
