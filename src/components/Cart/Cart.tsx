@@ -99,7 +99,7 @@ const Cart: React.FC = () => {
   }
 
   return (
-    <div className={styles.table}>
+    <div className={`py-4 ${styles.table}`}>
       <h2>My Cart</h2>
 
       {!error && (

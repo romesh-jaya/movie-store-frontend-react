@@ -236,7 +236,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
       >
         <Card.Title className={`md:p-2 ${styles['card-title']}`}>
           <div className={`my-3 fs-3 md:fs-2 ${styles.heading}`}>
-            Search Library
+            <h2>Search Library</h2>
             <Button
               className={`ms-3 ${styles['expand-button']} ${
                 isBoxExpanded ? '' : styles['expand-button-rotated']

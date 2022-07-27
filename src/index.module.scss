@@ -29,35 +29,14 @@ textarea {
 }
 
 /*
-Note: this is for the chart-js styling
+Note: chart-js styling, START
 */
 canvas {
   margin: 0 auto;
 }
-
-.margin-b-10 {
-  margin-bottom: 20px;
-}
-
-.margin-b-20 {
-  margin-bottom: 20px;
-}
-
-.margin-t-20 {
-  margin-top: 20px;
-}
-
-.margin-r-10 {
-  margin-right: 10px;
-}
-
-.margin-r-30 {
-  margin-right: 30px;
-}
-
-.padding-30 {
-  padding: 30px;
-}
+/*
+Note: chart-js styling, END
+*/
 
 .error-text {
   color: red;
@@ -68,106 +47,3 @@ canvas {
   color: red;
   font-size: 0.8rem;
 }
-
-/* 
------------------------------------------------------------------------------
- UI related styles START
--- Note: some styles, if they are to be assigned individually within the instance itself
---       will require styles to be set at each and every instance of that class. Therefore, setting them globally. 
------------------------------------------------------------------------------
-*/
-
-:global(table td) {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  word-break: break-all;
-  max-width: 0;
-}
-
-:global(tr > td:hover) {
-  overflow: visible;
-  white-space: unset;
-}
-
-:global(.MuiToolbar-regular) {
-  min-height: auto !important;
-}
-
-/* 
------------------------------------------------------------------------------
- UI related styles END
------------------------------------------------------------------------------
-*/
-
-/* 
------------------------------------------------------------------------------
-Material UI related styles START
--- Note: some styles, if they are to be assigned individually within the instance itself
---       will require styles to be set at each and every instance of that class. E.g. TableCell
---       This is tedious. Therefore, setting them globally. 
------------------------------------------------------------------------------
-*/
-
-:global(.MuiChip-root) {
-  height: 26px !important;
-}
-
-:global(.MuiTableCell-root) {
-  padding-top: 10px !important;
-  padding-bottom: 10px !important;
-}
-
-:global(.MuiTabs-root) {
-  height: 38px !important;
-  min-height: auto !important;
-}
-
-:global(.MuiTab-root) {
-  min-height: auto !important;
-}
-
-:global(.MuiBox-root) {
-  padding: 0 !important;
-  @media #{$md} {
-    padding: 24px !important;
-  }
-  padding-top: 5px !important;
-}
-
-:global(.MuiPagination-root) {
-  display: flex;
-  justify-content: center;
-}
-
-:global(.MuiDialogActions-root) {
-  padding: 16px 24px !important;
-}
-
-:global(.MuiDialogTitle-root) {
-  text-align: left;
-  border-bottom: 1px solid #cacdd2;
-  padding: 16px 0px 16px 24px !important;
-}
-
-:global(.MuiDialogContent-root) {
-  padding: 0 !important;
-  border-bottom: 1px solid #cacdd2;
-  @media #{$md} {
-    padding: 24px !important;
-  }
-}
-
-:global(.MuiDialogContentText-root) {
-  margin-bottom: 0px !important;
-  text-align: left !important;
-}
-
-:global(.MuiTypography-root) {
-  font-size: unset !important;
-}
-
-/* 
------------------------------------------------------------------------------
-Material UI related styles END
-*/

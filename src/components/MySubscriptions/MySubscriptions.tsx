@@ -87,9 +87,13 @@ const MySubscriptions: React.FC = () => {
       );
       const newURL = response.data.url;
       console.info('Redirecting to : ', newURL);
-      window.location.href = newURL;
+      window.open(
+        newURL,
+        '_blank' // open in a new tab
+      );
     } catch (error) {
       setError(`Error while redirecting to customer portal: ${error}`);
+    } finally {
       setIsLoading(false);
     }
   };

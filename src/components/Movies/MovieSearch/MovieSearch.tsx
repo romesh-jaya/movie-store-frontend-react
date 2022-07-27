@@ -148,7 +148,7 @@ const MovieSearch: React.FC = () => {
 
     return (
       <>
-        <h2 className={'mb-4'}>Settings</h2>
+        <h2 className={'my-4 mb-4'}>Movie Search - OMDB</h2>
         <div className={`mt-3 mb-4 ${styles['movie-search']}`}>
           <FloatingLabel label="Search OMDB">
             <Form.Control value={inputQuery} onChange={queryOnChange} />

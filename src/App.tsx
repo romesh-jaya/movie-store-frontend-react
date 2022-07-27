@@ -111,7 +111,7 @@ const App: React.FC = () => {
               <Route path="/settings" element={<Settings />} />
             </Route>
           </Route>
-          <Route element={<ErrorPage />} />
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </Suspense>
     );

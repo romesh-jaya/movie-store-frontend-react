@@ -94,7 +94,7 @@ const Settings: React.FC = () => {
   };
 
   return (
-    <div className={`my-3 ${styles.container}`}>
+    <div className={`my-4 ${styles.container}`}>
       <h2 className={'mb-4'}>Settings</h2>
       <Form className={'mb-4'}>
         <FloatingLabel label="OMDB API Key" key="apiKey" className={'mb-3'}>
