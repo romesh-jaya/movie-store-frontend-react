@@ -1,10 +1,9 @@
 import React, { Suspense, useEffect } from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { Route, Routes } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { SnackbarProvider } from 'notistack';
 import Container from 'react-bootstrap/Container';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import globStyles from './index.module.scss';
 import axios from './axios';
@@ -36,37 +35,9 @@ const MySubscriptions = React.lazy(
 
 const SERVER_PATH = import.meta.env.VITE_NODE_SERVER || '';
 
-// Note: these colors have no relation to dark mode. We need to manually change the colors for dark mode
-// if necessary
-const customPalette = {
-  primary: {
-    // Note: contrastText will be calculated from palette.primary.main,
-    light: '#7794aa',
-    main: '#557a95',
-    dark: '#3b5568',
-  },
-  secondary: {
-    light: '#ecdbcc',
-    main: '#e8d2c0',
-    dark: '#a29386',
-    contrastText: '#473f3a',
-  },
-};
-
 const App: React.FC = () => {
   const { getAccessTokenSilently, isLoading: isLoadingAuth } = useAuth0();
   const prefersDarkMode = useMediaQuery(PREFERS_DARK_MODE_MEDIA_QUERY);
-
-  const theme = React.useMemo(
-    () =>
-      createTheme({
-        palette: {
-          ...customPalette,
-          mode: prefersDarkMode ? 'dark' : 'light',
-        },
-      }),
-    [prefersDarkMode]
-  );
 
   axios.interceptors.request.use(async (req) => {
     if (req.url?.toUpperCase().includes(SERVER_PATH.toUpperCase())) {
@@ -80,6 +51,16 @@ const App: React.FC = () => {
   useEffect(() => {
     manageUserSession();
   }, []);
+
+  useEffect(() => {
+    // This is a hack for setting dark mode theme in React bootstrap, as there is no official support
+    // Taken from https://css-tricks.com/a-dark-mode-toggle-with-react-and-themeprovider/
+    if (prefersDarkMode) {
+      document.documentElement.setAttribute('darkMode', '');
+    } else {
+      document.documentElement.removeAttribute('darkMode');
+    }
+  }, [prefersDarkMode]);
 
   const renderContent = () => {
     // Had to use the Spinner here instead of Loading Skeleton as the styles weren't applied at this point
@@ -118,19 +99,17 @@ const App: React.FC = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <SnackbarProvider
-        maxSnack={1}
-        autoHideDuration={4000}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        classes={{ root: globStyles['snackbar-item-root'] }}
-      >
-        <Container fluid className="d-flex flex-column min-vh-100 px-0">
-          <ContainerHeader />
-          {renderContent()}
-        </Container>
-      </SnackbarProvider>
-    </ThemeProvider>
+    <SnackbarProvider
+      maxSnack={1}
+      autoHideDuration={4000}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      classes={{ root: globStyles['snackbar-item-root'] }}
+    >
+      <Container fluid className="d-flex flex-column min-vh-100 px-0">
+        <ContainerHeader />
+        {renderContent()}
+      </Container>
+    </SnackbarProvider>
   );
 };
 
