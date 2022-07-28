@@ -152,7 +152,7 @@ const SearchControls: React.FC<IProps> = (props) => {
             variant="primary"
             className={styles['genre-button']}
           >
-            ...
+            .
           </Button>
         </div>
       </Form.Group>
