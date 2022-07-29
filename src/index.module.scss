@@ -29,10 +29,6 @@ textarea {
   font-size: 1rem !important;
 }
 
-.spinner-full-page {
-  padding: 40px;
-}
-
 /*
 Note: chart-js styling, START
 */
@@ -43,6 +39,9 @@ canvas {
 Note: chart-js styling, END
 */
 
+/*
+Note: global classes, START
+*/
 .snackbar-item-root {
   div {
     width: 100% !important;
@@ -62,3 +61,10 @@ Note: chart-js styling, END
   color: red;
   font-size: 0.8rem;
 }
+
+.spinner-full-page {
+  padding: 40px;
+}
+/*
+Note: global classes, END
+*/
