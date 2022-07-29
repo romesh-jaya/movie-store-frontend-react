@@ -1,4 +1,12 @@
 html[darkmode] {
+  // Generate dark palettes for theme colors from color tool
+  // https://material.io/resources/color
+  $primary: #274e67;
+
+  $theme-colors: (
+    'primary': $primary,
+  );
+
   @each $color, $value in $theme-colors {
     --#{$variable-prefix}#{$color}: #{$value};
   }

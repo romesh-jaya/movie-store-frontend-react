@@ -5,6 +5,11 @@
   font-family: 'Roboto', sans-serif;
 }
 
+:root {
+  // this setting enables UA stylesheet to be applied automatically for dark mode
+  color-scheme: light dark;
+}
+
 html,
 body {
   font-size: 0.95rem;
