@@ -29,13 +29,7 @@ const ContainerHeader: React.FC = () => {
 
   return (
     <>
-      <Navbar
-        variant="dark"
-        bg="primary"
-        collapseOnSelect
-        expand="sm"
-        className="px-2"
-      >
+      <Navbar collapseOnSelect expand="sm" className="px-2">
         <Container>
           <Navbar.Brand>
             <img

@@ -71,6 +71,15 @@ Boostrap classes override START
   background-color: var(--color-body-bg);
 }
 
+.navbar {
+  background-color: var(--color-primary);
+}
+
+.nav-link,
+.navbar-brand {
+  color: var(--color-body-bg) !important;
+}
+
 /* 
 Boostrap classes override END
 -----------------------------------------------------------------------------
