@@ -1,25 +1,3 @@
-/*
-// Note: overriding Bootstrap styles as per https://react-bootstrap.github.io/getting-started/introduction/#customize-bootstrap
-*/
-
-$primary: #557a95;
-
-/* 
------------------------------------------------------------------------------
-Boostrap variables override START
-*/
-$theme-colors: (
-  'primary': $primary,
-  'secondary': #e8d2c0,
-  'success': #198754,
-  'info': #adb5bd,
-);
-
-/* 
-Boostrap variables override END
------------------------------------------------------------------------------
-*/
-
 /* 
 -----------------------------------------------------------------------------
 Boostrap classes override START
@@ -51,7 +29,7 @@ Boostrap classes override START
 
 .page-link {
   /* related to pagination */
-  color: $primary !important;
+  color: #{var(--color-primary)} !important;
 }
 
 .page-item.active {
@@ -88,6 +66,11 @@ Boostrap classes override START
   }
 }
 
+.card {
+  color: var(--color-body);
+  background-color: var(--color-body-bg);
+}
+
 /* 
 Boostrap classes override END
 -----------------------------------------------------------------------------
@@ -96,9 +79,6 @@ Boostrap classes override END
 @import 'bootstrap/scss/functions';
 @import 'bootstrap/scss/variables';
 @import 'bootstrap/scss/utilities';
-
-// DARK MODE
-@import './darkMode';
 
 /* 
 Boostrap utilities override START

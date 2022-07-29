@@ -3,14 +3,12 @@ import { Route, Routes } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { SnackbarProvider } from 'notistack';
 import Container from 'react-bootstrap/Container';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 import globStyles from './index.module.scss';
 import axios from './axios';
 import ContainerHeader from './containers/ContainerHeader/ContainerHeader';
 import Spinner from './components/UI/Spinner/Spinner';
 import { manageUserSession } from './utils/UserSession';
-import { PREFERS_DARK_MODE_MEDIA_QUERY } from './constants/Constants';
 
 const Login = React.lazy(() => import('./components/Login/Login'));
 const TransactionResult = React.lazy(
@@ -37,7 +35,6 @@ const SERVER_PATH = import.meta.env.VITE_NODE_SERVER || '';
 
 const App: React.FC = () => {
   const { getAccessTokenSilently, isLoading: isLoadingAuth } = useAuth0();
-  const prefersDarkMode = useMediaQuery(PREFERS_DARK_MODE_MEDIA_QUERY);
 
   axios.interceptors.request.use(async (req) => {
     if (req.url?.toUpperCase().includes(SERVER_PATH.toUpperCase())) {
@@ -51,16 +48,6 @@ const App: React.FC = () => {
   useEffect(() => {
     manageUserSession();
   }, []);
-
-  useEffect(() => {
-    // This is a hack for setting dark mode theme in React bootstrap, as there is no official support
-    // Taken from https://css-tricks.com/a-dark-mode-toggle-with-react-and-themeprovider/
-    if (prefersDarkMode) {
-      document.documentElement.setAttribute('darkMode', '');
-    } else {
-      document.documentElement.removeAttribute('darkMode');
-    }
-  }, [prefersDarkMode]);
 
   const renderContent = () => {
     // Had to use the Spinner here instead of Loading Skeleton as the styles weren't applied at this point

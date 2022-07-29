@@ -8,6 +8,23 @@
 :root {
   // this setting enables UA stylesheet to be applied automatically for dark mode
   color-scheme: light dark;
+
+  // Note: bootstrap doesn't support on-the-fly color swapping for light and dark modes
+  // Hence, we had to use css variables
+  --color-primary: #557a95;
+  --color-body: #fff;
+  --color-body-bg: #212529;
+  --color-secondary: #e8d2c0;
+  --color-success: #198754;
+  --color-info: #adb5bd;
+
+  @media (prefers-color-scheme: dark) {
+    // Generate dark palettes for theme colors from color tool
+    // https://material.io/resources/color
+    --color-primary: #84a9c6;
+    --color-body: #212529;
+    --color-body-bg: #fff;
+  }
 }
 
 html,
