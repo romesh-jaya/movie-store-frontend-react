@@ -12,6 +12,18 @@ Boostrap classes override START
   position: absolute !important;
 }
 
+.dropdown-menu {
+  @media (prefers-color-scheme: dark) {
+    background: var(--color-card-bg) !important;
+    box-shadow: var(--color-card-box-shadow);
+    color: var(--color-body) !important;
+  }
+}
+
+.dropdown-item {
+  color: var(--color-body) !important;
+}
+
 .dropdown-item.active,
 .dropdown-item:active {
   /* this makes the dropdown menu active styling to be reversed */
@@ -62,40 +74,25 @@ Boostrap classes override START
   background-size: unset !important;
 
   @media (prefers-color-scheme: dark) {
+    /* Fill color to white */
     background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") !important;
   }
 }
 
 .card {
   color: var(--color-body) !important;
-  background-color: var(--color-body-bg) !important;
-  box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%),
-    0px 1px 1px 0px rgb(0 0 0 / 20%), 0px 1px 3px 0px rgb(0 0 0 / 20%);
+  box-shadow: var(--color-card-box-shadow);
 
   @media (prefers-color-scheme: dark) {
-    background: linear-gradient(
-        0deg,
-        rgba(255, 255, 255, 0.16),
-        rgba(255, 255, 255, 0.16)
-      ),
-      var(--color-body-bg);
-    box-shadow: 0px 24px 38px rgba(0, 0, 0, 0.14),
-      0px 9px 46px rgba(0, 0, 0, 0.12), 0px 11px 15px rgba(0, 0, 0, 0.2);
+    background: var(--color-card-bg) !important;
   }
 }
 
 .navbar {
   background-color: var(--color-primary);
   @media (prefers-color-scheme: dark) {
-    /* Elevation Overlay / 12dp */
-    background: linear-gradient(
-        0deg,
-        rgba(255, 255, 255, 0.14),
-        rgba(255, 255, 255, 0.14)
-      ),
-      var(--color-body-bg) !important;
-    box-shadow: 0px 12px 17px rgba(0, 0, 0, 0.14),
-      0px 5px 22px rgba(0, 0, 0, 0.12), 0px 7px 8px rgba(0, 0, 0, 0.2) !important;
+    background: var(--color-navbar-bg);
+    box-shadow: var(--color-navbar-box-shadow);
   }
 }
 

@@ -17,8 +17,8 @@
 .dropdown {
   button {
     color: rgba(255, 255, 255, 0.55) !important;
-    background-color: var(--color-primary) !important;
-    border-color: var(--color-primary) !important;
+    background-color: var(--color-navbar-bg) !important;
+    border: none !important;
   }
 
   button:focus {
