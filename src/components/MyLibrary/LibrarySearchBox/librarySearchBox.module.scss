@@ -66,13 +66,9 @@ $icon-width: 30px;
 }
 
 .help-button {
+  height: $control-height;
+  width: $icon-width;
   padding: 0 !important;
-}
-
-.help-button:hover {
-  color: unset !important;
-  background-color: unset !important;
-  border-color: unset !important;
 }
 
 .genre-button {
@@ -81,13 +77,8 @@ $icon-width: 30px;
 }
 
 .helpicon {
-  height: $control-height;
-  width: $icon-width;
-  color: $primary;
-}
-
-.helpicon:hover {
-  color: $primary-hover;
+  height: 18px;
+  filter: $icon-filter-white;
 }
 
 .helptext {

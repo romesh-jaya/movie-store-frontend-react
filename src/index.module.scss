@@ -32,9 +32,11 @@ textarea {
   // Note: bootstrap doesn't support on-the-fly color swapping for light and dark modes
   // Hence, we had to use css variables
   --color-primary: #557a95;
+  --color-primary-hover: #48687f;
   --color-body: #212529;
   --color-body-bg: #fff;
   --color-secondary: #e8d2c0;
+  --color-secondary-hover: #a29386;
   --color-success: #198754;
   --color-info: #adb5bd;
 

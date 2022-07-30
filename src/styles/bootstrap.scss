@@ -3,6 +3,34 @@
 Boostrap classes override START
 */
 
+.btn-primary {
+  color: var(--color-body-bg) !important;
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  @media (prefers-color-scheme: dark) {
+    color: var(--color-body) !important;
+  }
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover) !important;
+  border-color: var(--color-primary-hover) !important;
+}
+
+.btn-secondary {
+  color: var(--color-body) !important;
+  background-color: var(--color-secondary) !important;
+  border-color: var(--color-secondary) !important;
+  @media (prefers-color-scheme: dark) {
+    color: var(--color-body-bg) !important;
+  }
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-secondary-hover) !important;
+  border-color: var(--color-secondary-hover) !important;
+}
+
 .btn-outline-secondary {
   color: black !important;
 }

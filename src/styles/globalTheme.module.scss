@@ -6,7 +6,5 @@ $md: '(min-width: 769px)';
 $md-screen: 768px;
 $xl-screen: 1200px;
 
-$primary: #557a95;
-$primary-dark: #274e67;
-$primary-hover: #48687f;
-$secondary: #e8d2c0;
+$icon-filter-white: invert(100%) sepia(2%) saturate(7444%) hue-rotate(290deg)
+  brightness(108%) contrast(97%);

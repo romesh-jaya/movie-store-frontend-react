@@ -34,10 +34,6 @@ const ContainerHeader: React.FC = () => {
           <Navbar.Brand>
             <img
               src={logo}
-              style={{
-                filter:
-                  'invert(100%) sepia(2%) saturate(7444%) hue-rotate(290deg) brightness(108%) contrast(97%)',
-              }}
               height="50px"
               alt="movies"
               className={styles.logo}

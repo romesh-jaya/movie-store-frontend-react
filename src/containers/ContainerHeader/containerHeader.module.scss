@@ -2,6 +2,7 @@
 
 .logo {
   height: 40px;
+  filter: $icon-filter-white;
   @media #{$md} {
     height: 50px;
   }

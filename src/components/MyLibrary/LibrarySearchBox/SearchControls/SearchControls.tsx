@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react';
-import { QuestionSquareFill } from 'react-bootstrap-icons';
 import Form from 'react-bootstrap/esm/Form';
 import Button from 'react-bootstrap/esm/Button';
 import OverlayTrigger from 'react-bootstrap/esm/OverlayTrigger';
 import Popover from 'react-bootstrap/esm/Popover';
+import questionMark from '../../../../assets/img/question-mark.svg';
 
 import NumberRangeInput from '../../../Controls/Input/NumberRangeInput/NumberRangeInput';
 import styles from '../librarySearchBox.module.scss';
@@ -67,8 +67,8 @@ const SearchControls: React.FC<IProps> = (props) => {
           </Popover>
         }
       >
-        <Button variant="outline-primary" className={styles['help-button']}>
-          <QuestionSquareFill className={styles.helpicon} />
+        <Button variant="primary" className={styles['help-button']}>
+          <img src={questionMark} alt="help" className={styles.helpicon} />
         </Button>
       </OverlayTrigger>
     );
