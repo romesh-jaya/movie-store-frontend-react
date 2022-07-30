@@ -1,8 +1,6 @@
 import React, { useState, useCallback, ReactElement } from 'react';
 import { ExportToCsv } from 'export-to-csv';
-import { useTheme } from '@mui/material/styles';
 import { CaretDownFill } from 'react-bootstrap-icons';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import Card from 'react-bootstrap/esm/Card';
 import Button from 'react-bootstrap/esm/Button';
 
@@ -16,7 +14,6 @@ import IMovieLibrary from '../../../interfaces/IMovieLibrary';
 import { isAdmin } from '../../../utils/AuthUtil';
 import { formatExportData } from '../../../utils/ExportUtil';
 import SearchControls from './SearchControls/SearchControls';
-import { PREFERS_DARK_MODE_MEDIA_QUERY } from '../../../constants/Constants';
 
 const exportFileName = 'Export.csv';
 
@@ -44,11 +41,6 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   const [searchGenres, setSearchGenres] = useState<string[]>([]);
   const { user } = useAuth0();
   const [isBoxExpanded, setIsBoxExpanded] = useState(true);
-  const theme = useTheme();
-  const prefersDarkMode = useMediaQuery(PREFERS_DARK_MODE_MEDIA_QUERY);
-  const boxShadowColor = prefersDarkMode
-    ? theme.palette.secondary.dark
-    : 'rgb(0 0 0 / 20%)';
 
   const { enableExportButton, setLastSearchInfo, exportMovies } = props;
 
@@ -228,12 +220,7 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
 
   return (
     <>
-      <Card
-        className={`my-3 mx-auto p-2 ${styles['card-style']}`}
-        style={{
-          boxShadow: `0px 2px 1px -1px ${boxShadowColor}, 0px 1px 1px 0px ${boxShadowColor}, 0px 1px 3px 0px ${boxShadowColor}`,
-        }}
-      >
+      <Card className={`my-3 mx-auto p-2 ${styles['card-style']}`}>
         <Card.Title className={`md:p-2 ${styles['card-title']}`}>
           <div className={`my-3 fs-3 md:fs-2 ${styles.heading}`}>
             <h2>Search Library</h2>

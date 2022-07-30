@@ -13,6 +13,7 @@ body {
   margin: auto;
   text-align: center;
   height: 100%;
+  background-color: unset !important;
 }
 
 input {
@@ -40,7 +41,7 @@ textarea {
   @media (prefers-color-scheme: dark) {
     // Generate dark palettes for theme colors from color tool
     // https://material.io/resources/color
-    --color-primary: #84a9c6;
+    --color-primary: #557a95;
     --color-body: #fff;
     --color-body-bg: #212529;
   }
