@@ -3,6 +3,11 @@
 Boostrap classes override START
 */
 
+body {
+  color: var(--color-body) !important;
+  background-color: unset !important;
+}
+
 .btn-primary {
   color: var(--color-body-bg) !important;
   background-color: var(--color-primary) !important;
@@ -109,11 +114,8 @@ Boostrap classes override START
 
 .card {
   color: var(--color-body) !important;
+  background: var(--color-card-bg) !important;
   box-shadow: var(--color-card-box-shadow);
-
-  @media (prefers-color-scheme: dark) {
-    background: var(--color-card-bg) !important;
-  }
 }
 
 .navbar {
@@ -129,6 +131,39 @@ Boostrap classes override START
   color: var(--color-body-bg) !important;
   @media (prefers-color-scheme: dark) {
     color: var(--color-body) !important;
+  }
+}
+
+.accordion-item {
+  color: var(--color-body) !important;
+  background: var(--color-card-bg) !important;
+  @media (prefers-color-scheme: dark) {
+    border: var(--color-dark-border) !important;
+    box-shadow: var(--color-card-box-shadow);
+  }
+}
+
+.accordion-button {
+  color: var(--color-body) !important;
+  background: var(--color-card-bg) !important;
+}
+
+.accordion-button:focus {
+  @media (prefers-color-scheme: dark) {
+    border: var(--color-dark-border) !important;
+    box-shadow: var(--color-accordion-header-box-shadow) !important;
+  }
+}
+
+.accordion-button::after {
+  @media (prefers-color-scheme: dark) {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
+  }
+}
+
+.accordion-button:not(.collapsed)::after {
+  @media (prefers-color-scheme: dark) {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
   }
 }
 

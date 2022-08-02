@@ -13,7 +13,6 @@ body {
   margin: auto;
   text-align: center;
   height: 100%;
-  background-color: unset !important;
 }
 
 input {
@@ -39,6 +38,9 @@ textarea {
   --color-secondary-hover: #a29386;
   --color-success: #198754;
   --color-info: #adb5bd;
+  --color-dark-border: 1px solid rgba(255, 255, 255, 0.05);
+  --color-accordion-header-box-shadow: 0px 16px 24px rgba(0, 0, 0, 0.14),
+    0px 6px 30px rgba(0, 0, 0, 0.12), 0px 8px 10px rgba(0, 0, 0, 0.2);
 
   /* Box shadows and background colors, START */
   --color-navbar-box-shadow: 0px 12px 17px rgba(0, 0, 0, 0.14),
