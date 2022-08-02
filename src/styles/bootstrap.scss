@@ -114,8 +114,10 @@ body {
 
 .card {
   color: var(--color-body) !important;
-  background: var(--color-card-bg) !important;
   box-shadow: var(--color-card-box-shadow);
+  @media (prefers-color-scheme: dark) {
+    background: var(--color-card-bg) !important;
+  }
 }
 
 .navbar {

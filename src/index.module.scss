@@ -38,33 +38,10 @@ textarea {
   --color-secondary-hover: #a29386;
   --color-success: #198754;
   --color-info: #adb5bd;
-  --color-dark-border: 1px solid rgba(255, 255, 255, 0.05);
-  --color-accordion-header-box-shadow: 0px 16px 24px rgba(0, 0, 0, 0.14),
-    0px 6px 30px rgba(0, 0, 0, 0.12), 0px 8px 10px rgba(0, 0, 0, 0.2);
 
   /* Box shadows and background colors, START */
-  --color-navbar-box-shadow: 0px 12px 17px rgba(0, 0, 0, 0.14),
-    0px 5px 22px rgba(0, 0, 0, 0.12), 0px 7px 8px rgba(0, 0, 0, 0.2);
-
   --color-card-box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%),
     0px 1px 1px 0px rgb(0 0 0 / 20%), 0px 1px 3px 0px rgb(0 0 0 / 20%);
-
-  /* Elevation Overlay / 12dp */
-  --color-navbar-bg: linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 0.14),
-      rgba(255, 255, 255, 0.14)
-    ),
-    var(--color-body-bg);
-
-  /* Elevation Overlay / 24dp */
-  --color-card-bg: linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 0.16),
-      rgba(255, 255, 255, 0.16)
-    ),
-    var(--color-body-bg);
-
   /* Box shadows and background colors, END */
 
   @media (prefers-color-scheme: dark) {
@@ -72,6 +49,31 @@ textarea {
     --color-body-bg: #212529;
     --color-card-box-shadow: 0px 24px 38px rgba(0, 0, 0, 0.14),
       0px 9px 46px rgba(0, 0, 0, 0.12), 0px 11px 15px rgba(0, 0, 0, 0.2);
+    --color-dark-border: 1px solid rgba(255, 255, 255, 0.05);
+
+    /* Box shadows and background colors, START */
+    --color-accordion-header-box-shadow: 0px 16px 24px rgba(0, 0, 0, 0.14),
+      0px 6px 30px rgba(0, 0, 0, 0.12), 0px 8px 10px rgba(0, 0, 0, 0.2);
+
+    --color-navbar-box-shadow: 0px 12px 17px rgba(0, 0, 0, 0.14),
+      0px 5px 22px rgba(0, 0, 0, 0.12), 0px 7px 8px rgba(0, 0, 0, 0.2);
+
+    /* Elevation Overlay / 12dp */
+    --color-navbar-bg: linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.14),
+        rgba(255, 255, 255, 0.14)
+      ),
+      var(--color-body-bg);
+
+    /* Elevation Overlay / 24dp */
+    --color-card-bg: linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.16),
+        rgba(255, 255, 255, 0.16)
+      ),
+      var(--color-body-bg);
+    /* Box shadows and background colors, END */
   }
 }
 
