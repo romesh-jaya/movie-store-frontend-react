@@ -3,7 +3,7 @@ import Skeleton from 'react-loading-skeleton';
 
 const LoadingSkeleton: React.FC = () => {
   return (
-    <div className="w-75 my-4 mx-auto">
+    <div className="w-75 my-5 mx-auto">
       <h1>
         <Skeleton />
       </h1>

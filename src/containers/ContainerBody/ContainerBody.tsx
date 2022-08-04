@@ -47,7 +47,11 @@ const ContainerBody: FunctionComponent = ({ children }) => {
   }
 
   if (!apiKeySetting) {
-    return <p>{TextConstants.NOAPIKEYDEFINED}</p>;
+    return (
+      <p className={globStyles['error-text']}>
+        {TextConstants.NOAPIKEYDEFINED}
+      </p>
+    );
   }
 
   if (authError) {
