@@ -151,7 +151,7 @@ const MySubscriptions: React.FC = () => {
 
   // Note: styles.table has been left intentionally as we cannot set custom boostrap max-width
   return (
-    <div className={styles.table}>
+    <div className={`my-4 ${styles.table}`}>
       <h2>My subscriptions</h2>
       {!error && (
         <>

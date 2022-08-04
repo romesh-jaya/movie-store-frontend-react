@@ -46,6 +46,7 @@ export default function NoSubscription(props: IProps) {
         {subscriptionTypes.map((type) => (
           <ToggleButton
             value={type.name}
+            id={type.name}
             key={type.name}
             onClick={() => handleChangeSubscriptionType(type.name)}
             variant={chosenSubscription === type.name ? 'info' : 'outline-info'}
