@@ -3,11 +3,6 @@
 Boostrap classes override START
 */
 
-body {
-  color: var(--color-body) !important;
-  background-color: var(--color-body-bg) !important;
-}
-
 .card {
   color: var(--color-body) !important;
   box-shadow: var(--color-card-box-shadow);
@@ -222,18 +217,6 @@ body {
   @media (prefers-color-scheme: dark) {
     background: var(--color-card-bg) !important;
   }
-}
-
-a {
-  color: var(--color-primary) !important;
-  @media (prefers-color-scheme: dark) {
-    color: var(--color-body) !important;
-  }
-}
-
-a:hover,
-a:active {
-  color: var(--color-secondary) !important;
 }
 
 /* 

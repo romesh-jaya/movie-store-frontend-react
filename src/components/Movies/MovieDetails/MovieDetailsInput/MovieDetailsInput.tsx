@@ -172,7 +172,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
       addItem({ title, imdbID });
       enqueueSnackbar(renderAddedToCart(), {
         variant: 'success',
-        className: globStyles['snackbar-item-root-success'],
+        className: styles['snackbar-item-root-success'],
       });
     } else {
       removeItem(imdbID);

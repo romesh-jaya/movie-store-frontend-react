@@ -15,6 +15,11 @@ body {
   height: 100%;
 }
 
+body {
+  color: var(--color-body) !important;
+  background-color: var(--color-body-bg) !important;
+}
+
 input {
   font-size: 1rem;
 }
@@ -22,6 +27,18 @@ input {
 textarea {
   resize: none;
   font-size: 1rem !important;
+}
+
+a {
+  color: var(--color-primary) !important;
+  @media (prefers-color-scheme: dark) {
+    color: var(--color-body) !important;
+  }
+}
+
+a:hover,
+a:active {
+  color: var(--color-secondary) !important;
 }
 
 :root {
@@ -39,6 +56,7 @@ textarea {
   --color-success: #198754;
   --color-success-text: #198754;
   --color-info: #cacfd4;
+  --color-error: red;
 
   /* Box shadows and background colors, START */
   --color-card-box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%),
@@ -50,6 +68,8 @@ textarea {
     --color-body-bg: #212529;
     --color-success: #115e3a;
     --color-success-text: #479f76;
+    --color-error: #f6685e;
+
     --color-card-box-shadow: 0px 24px 38px rgba(0, 0, 0, 0.14),
       0px 9px 46px rgba(0, 0, 0, 0.12), 0px 11px 15px rgba(0, 0, 0, 0.2);
     --color-dark-border: 1px solid rgba(255, 255, 255, 0.05);
@@ -103,17 +123,13 @@ Note: global classes, START
   }
 }
 
-.snackbar-item-root-success {
-  background-color: var(--color-success) !important;
-}
-
 .error-text {
-  color: red;
+  color: var(--color-error);
   margin-top: 30px;
 }
 
 .error-text-small {
-  color: red;
+  color: var(--color-error);
   font-size: 0.8rem;
 }
 

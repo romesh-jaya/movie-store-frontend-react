@@ -20,7 +20,7 @@ Tech Stack used:
 - MERN Stack
 - Vite server
 - Typescript
-- React Skeletons
+- React Loading Skeleton
 - React Router v6
 - Lazy loading of code
 - Auth0 Authentication
@@ -34,19 +34,19 @@ Tech Stack used:
   - Payments with pre-built checkout page and Stripe React library
   - Subscriptions
   - Webhooks for payment completion
-- React material-table (@material-table/core had to be used with Vite)
-  - Pagination
+- Pagination
 - Material UI [in this branch](https://github.com/romesh-jaya/movie-store-frontend-react/tree/material-ui)
   - useMediaQuery hook
   - Side-drawer
   - Loading skeletons
-- Bootstrap v5  
+  - React material-table (@material-table/core had to be used with Vite)
+- Bootstrap v5
 
 This project uses OMDB API to search for movie data. The latter has a 1,000 daily API call limit. Another free alternative might be TMDB: https://developers.themoviedb.org/3/getting-started
 
 This app communicates with the backend - which is available in a separate git project: movie-shop-backend.
 
-To deploy to Firebase, first perform a build, then run the following command from the terminal:
+To deploy to Firebase hosting, first perform a build, then run the following command from the terminal:
 firebase deploy --only hosting
 
 Note: MongoDB automatically goes to inactive state after a period of inactivity, and needs restarting manually.
