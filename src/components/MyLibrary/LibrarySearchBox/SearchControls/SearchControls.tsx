@@ -1,10 +1,9 @@
 import React, { ReactElement } from 'react';
-import Button from '@mui/material/Button';
-import FormControl from '@mui/material/FormControl';
-import MenuItem from '@mui/material/MenuItem';
-import Popover from '@mui/material/Popover';
-import Select from '@mui/material/Select';
-import HelpIcon from '@mui/icons-material/Help';
+import Form from 'react-bootstrap/esm/Form';
+import Button from 'react-bootstrap/esm/Button';
+import OverlayTrigger from 'react-bootstrap/esm/OverlayTrigger';
+import Popover from 'react-bootstrap/esm/Popover';
+import questionMark from '../../../../assets/img/question-mark.svg';
 
 import NumberRangeInput from '../../../Controls/Input/NumberRangeInput/NumberRangeInput';
 import styles from '../librarySearchBox.module.scss';
@@ -13,20 +12,17 @@ import { MovieType } from '../../../../enums/MovieType';
 import { getSettingValue } from '../../../../state/settings';
 
 interface IProps {
-  anchorEl: Element | null;
   searchTitle: string;
   searchType: string;
   searchLanguage: string;
   searchYearInput: string;
   searchGenres: string[];
   errorTextSearchYear: string;
-  setAnchorEl: (anchorEl: Element | null) => void;
   handleChangeSearchTitle: (title: string) => void;
   handleKeyDown: (keyName: string) => void;
   handleChangeSearchType: (searchType: string) => void;
   handleChangeSearchLanguage: (language: string) => void;
   handleChangeSearchYear: (
-    __: string,
     isBetweenValuesIncomplete: boolean,
     value: string,
     valueSingle?: number,
@@ -38,14 +34,12 @@ interface IProps {
 
 const SearchControls: React.FC<IProps> = (props) => {
   const {
-    anchorEl,
     searchTitle,
     searchType,
     searchLanguage,
     searchYearInput,
     searchGenres,
     errorTextSearchYear,
-    setAnchorEl,
     handleChangeSearchTitle,
     handleKeyDown,
     handleChangeSearchType,
@@ -56,165 +50,112 @@ const SearchControls: React.FC<IProps> = (props) => {
   const languagesSetting = getSettingValue('languages');
   const languages = (languagesSetting && languagesSetting.split(',')) || [];
 
-  const handleClickHelpIcon = (
-    event: React.MouseEvent<SVGSVGElement, MouseEvent>
-  ): void => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClosePopover = (): void => {
-    setAnchorEl(null);
-  };
-
   const renderHelpYear = (): ReactElement => {
-    const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
-
     return (
-      <div className={styles.helpicon}>
-        <HelpIcon onClick={handleClickHelpIcon} color="primary" />
-        <Popover
-          id={id}
-          open={open}
-          anchorEl={anchorEl}
-          onClose={handleClosePopover}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-        >
-          <div className={styles.helptext}>
-            <div>Value can be entered in the following formats:</div>
-            <div>Enter a single year: 2020</div>
-            <div>Enter a year to search from: &gt; 2020</div>
-            <div>Enter a year to search upto: &lt; 2020</div>
-            <div>Enter a range of years: 2010-2020</div>
-          </div>
-        </Popover>
-      </div>
+      <OverlayTrigger
+        trigger={['focus', 'hover']}
+        placement="bottom"
+        overlay={
+          <Popover className={`p-2 ${styles.helptext}`}>
+            <Popover.Body>
+              <div>Value can be entered in the following formats:</div>
+              <div>Enter a single year: 2020</div>
+              <div>Enter a year to search from: &gt; 2020</div>
+              <div>Enter a year to search upto: &lt; 2020</div>
+              <div>Enter a range of years: 2010-2020</div>
+            </Popover.Body>
+          </Popover>
+        }
+      >
+        <Button variant="primary" className={styles['help-button']}>
+          <img src={questionMark} alt="help" className={styles.helpicon} />
+        </Button>
+      </OverlayTrigger>
     );
   };
 
   return (
     <>
-      <div className={styles['label-and-input-div']}>
-        <label htmlFor="searchTitle">
-          Title
-          <div className={styles['inter-control-spacing']}>
-            <input
-              type="text"
-              name="searchTitle"
-              value={searchTitle}
-              className={styles['input-style-search']}
-              onChange={(event) => handleChangeSearchTitle(event.target.value)}
-              onKeyDown={(event) => handleKeyDown(event.key)}
-            />
-          </div>
-        </label>
-      </div>
-      <div className={styles['label-and-input-div']}>
-        <label htmlFor="searchType">
-          Type
-          <div className={styles['inter-control-spacing']}>
-            <FormControl
-              variant="outlined"
-              className={styles['input-style-form-control']}
-            >
-              <Select
-                className={styles['input-style-select']}
-                value={searchType}
-                onChange={(event) =>
-                  handleChangeSearchType(event.target.value as string)
-                }
-                name="searchType"
-                variant="standard"
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={MovieType.Movie}>Movie</MenuItem>
-                <MenuItem value={MovieType.TvSeries}>TV Series</MenuItem>
-              </Select>
-            </FormControl>
-          </div>
-        </label>
-      </div>
-      <div className={styles['label-and-input-div']}>
-        <label htmlFor="searchLanguage">
-          Language
-          <div className={styles['inter-control-spacing']}>
-            <FormControl
-              variant="outlined"
-              className={styles['input-style-form-control']}
-            >
-              <Select
-                className={styles['input-style-select']}
-                value={searchLanguage}
-                onChange={(event) =>
-                  handleChangeSearchLanguage(event.target.value as string)
-                }
-                name="searchLanguage"
-                variant="standard"
-              >
-                <MenuItem value="">
-                  <em key="None">None</em>
-                </MenuItem>
-                {languages.map((language) => (
-                  <MenuItem value={language} key={language}>
-                    {language}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </div>
-        </label>
-      </div>
-      <div className={styles['label-and-input-div']}>
-        <label htmlFor="searchYear">
-          Year
-          <div className={styles['inter-control-spacing']}>
-            <NumberRangeInput
-              name="searchYear"
-              disabled={searchType !== MovieType.Movie}
-              classNameCustom="input-style-search"
-              value={searchYearInput}
-              handleReturnValue={handleChangeSearchYear}
-            />
-            {renderHelpYear()}
-          </div>
-        </label>
+      <Form.Group className="fs-5 mb-3">
+        <Form.Label htmlFor="searchTitle">Title</Form.Label>
+        <Form.Control
+          className={`${styles['input-style-search']}`}
+          type="text"
+          id="searchTitle"
+          value={searchTitle}
+          onChange={(event) => handleChangeSearchTitle(event.target.value)}
+          onKeyDown={(event) => handleKeyDown(event.key)}
+        />
+      </Form.Group>
+      <Form.Group className="fs-5 mb-3">
+        <Form.Label htmlFor="searchType">Type</Form.Label>
+        <Form.Select
+          className={`text-center ${styles['input-style-select']}`}
+          value={searchType}
+          onChange={(event) =>
+            handleChangeSearchType(event.target.value as string)
+          }
+          id="searchType"
+        >
+          <option value="">All</option>
+          <option value={MovieType.Movie}>Movie</option>
+          <option value={MovieType.TvSeries}>TV Series</option>
+        </Form.Select>
+      </Form.Group>
+      <Form.Group className="fs-5 mb-3">
+        <Form.Label htmlFor="searchLanguage">Language</Form.Label>
+        <Form.Select
+          className={`text-center ${styles['input-style-select']}`}
+          value={searchLanguage}
+          onChange={(event) =>
+            handleChangeSearchLanguage(event.target.value as string)
+          }
+          id="searchLanguage"
+        >
+          <option value="">All</option>
+          {languages.map((language) => (
+            <option value={language} key={language}>
+              {language}
+            </option>
+          ))}
+        </Form.Select>
+      </Form.Group>
+      <Form.Group className="fs-5 mb-3">
+        <Form.Label htmlFor="searchYear">Year</Form.Label>
+        <div className={styles['same-line-controls']}>
+          <NumberRangeInput
+            id="searchYear"
+            disabled={searchType === MovieType.TvSeries}
+            classNameCustom={styles['input-style-search-year-genre']}
+            value={searchYearInput}
+            handleReturnValue={handleChangeSearchYear}
+          />
+          {renderHelpYear()}
+        </div>
         <div className={globStyles['error-text-small']}>
           <small>{errorTextSearchYear}</small>
         </div>
-      </div>
-      <div className={styles['label-and-input-div']}>
-        <label htmlFor="searchGenres">
-          Genres
-          <div className={styles['inter-control-spacing']}>
-            <input
-              disabled
-              type="text"
-              name="searchGenres"
-              value={searchGenres.join(', ')}
-              className={styles['input-style-search-genre']}
-            />
-            <Button
-              onClick={onGenresClicked}
-              color="secondary"
-              variant="contained"
-              classes={{
-                root: styles['genre-button'],
-              }}
-            >
-              ...
-            </Button>
-          </div>
-        </label>
-      </div>
+      </Form.Group>
+
+      <Form.Group className="fs-5 mb-3">
+        <Form.Label htmlFor="searchGenres">Genres</Form.Label>
+        <div className={styles['same-line-controls']}>
+          <Form.Control
+            disabled
+            type="text"
+            id="searchGenres"
+            value={searchGenres.join(', ')}
+            className={`text-center ${styles['input-style-search-year-genre']}`}
+          />
+          <Button
+            onClick={onGenresClicked}
+            variant="primary"
+            className={styles['genre-button']}
+          >
+            .
+          </Button>
+        </div>
+      </Form.Group>
     </>
   );
 };

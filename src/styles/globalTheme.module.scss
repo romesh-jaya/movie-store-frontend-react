@@ -1,7 +1,10 @@
-// Taken from https://tailwindcss.com/docs/responsive-design
-$xs: '(max-width: 640px)';
+// Taken from https://getbootstrap.com/docs/5.1/layout/breakpoints/
+$xs: '(max-width: 576px)';
 $sm: '(max-width: 768px)';
 $md: '(min-width: 769px)';
 
 $md-screen: 768px;
-$xl-screen: 1280px;
+$xl-screen: 1200px;
+
+$icon-filter-white: invert(100%) sepia(2%) saturate(7444%) hue-rotate(290deg)
+  brightness(108%) contrast(97%);

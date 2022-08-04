@@ -87,9 +87,13 @@ const MySubscriptions: React.FC = () => {
       );
       const newURL = response.data.url;
       console.info('Redirecting to : ', newURL);
-      window.location.href = newURL;
+      window.open(
+        newURL,
+        '_blank' // open in a new tab
+      );
     } catch (error) {
       setError(`Error while redirecting to customer portal: ${error}`);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -145,6 +149,7 @@ const MySubscriptions: React.FC = () => {
     );
   }
 
+  // Note: styles.table has been left intentionally as we cannot set custom boostrap max-width
   return (
     <div className={styles.table}>
       <h2>My subscriptions</h2>

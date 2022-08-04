@@ -1,9 +1,1 @@
 @import '../../../../styles/globalTheme.module.scss';
-
-.input-style-search {
-  height: 30px;
-  width: 222px;
-  @media #{$md} {
-    width: 300px;
-  }
-}

@@ -1,41 +1,34 @@
 import React, { useState, useEffect, useCallback, ReactElement } from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Pagination from '@mui/material/Pagination';
+import Button from 'react-bootstrap/esm/Button';
+import Form from 'react-bootstrap/esm/Form';
+import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
 
 import axios from '../../../axios';
-import Movie from '../Movie/Movie';
 import styles from './movieSearch.module.css';
 import globStyles from '../../../index.module.scss';
-import IMovieSearch from '../../../interfaces/IMovieSearch';
-import MovieDetails from '../MovieDetails/MovieDetails';
 import LoadingSkeleton from '../../LoadingSkeleton/LoadingSkeleton';
 import { TextConstants } from '../../../constants/TextConstants';
-import { getMovieDetails } from '../../../utils/MovieUtil';
-import { SEARCH_URL } from '../../../constants/Constants';
+import { pageSize, SEARCH_URL } from '../../../constants/Constants';
 import { isErrorResponse } from '../../../types/ErrorResponse';
 import { getSettingValue } from '../../../state/settings';
+import { MovieTableInfo } from '../../../types/MovieTableInfo';
+import MovieTable from '../MovieTable/MovieTable';
 
 const MovieSearch: React.FC = () => {
-  const [movies, setMovies] = useState<IMovieSearch[]>([]);
+  const [movies, setMovies] = useState<MovieTableInfo[]>([]);
   const [movError, setMovError] = useState('');
   const [movInfo, setMovInfo] = useState('');
-  const [wasLastSearchSuccess, setWasLastSearchSuccess] = useState(false);
-  const [selectedMovieIMDBId, setSelectedMovieIMDBId] = useState('');
   const [inputQuery, setInputQuery] = useState('');
   const [inputQueryTrimmed, setInputQueryTrimmed] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [lastSearchMovieCount, setLastSearchMovieCount] = useState(0);
   const apiKeySetting = getSettingValue('apiKey');
-
-  const setSelectedMovieIMDBInternal = (value: string): void => {
-    setSelectedMovieIMDBId(value);
-  };
 
   const loadMovies = useCallback(
     async (pageNo?: number): Promise<void> => {
-      const filteredMoviesIMDBIds: string[] = [];
-      const page = pageNo ? `&page=${pageNo.toFixed(0)}` : '';
+      const filteredMovies: MovieTableInfo[] = [];
+      const page = pageNo ? `&page=${pageNo}` : '';
 
       try {
         setIsLoading(true);
@@ -43,15 +36,13 @@ const MovieSearch: React.FC = () => {
           `${SEARCH_URL}?apikey=${apiKeySetting}&s=${inputQueryTrimmed}${page}`
         );
         if (!response.data || response.data.Response === 'False') {
-          setSelectedMovieIMDBId('');
           setMovies([]);
+          setLastSearchMovieCount(0);
           setMovError('');
           setMovInfo(TextConstants.NOMOVIESFOUND);
           setIsLoading(false);
 
-          if (!pageNo) {
-            setWasLastSearchSuccess(false);
-          } else {
+          if (pageNo) {
             setCurrentPage(pageNo);
           }
           return;
@@ -62,47 +53,30 @@ const MovieSearch: React.FC = () => {
         // get unique values as there are duplicates in the results returned from OMDB at times
         fetchedMovies.Search.forEach((movie: any) => {
           let matchFound = false;
-          filteredMoviesIMDBIds.forEach((filteredMovie) => {
+          filteredMovies.forEach((filteredMovie) => {
             if (filteredMovie === movie.imdbID) {
               matchFound = true;
             }
           });
           if (!matchFound) {
-            filteredMoviesIMDBIds.push(movie.imdbID);
+            filteredMovies.push({
+              imdbID: movie.imdbID,
+              title: movie.Title,
+            });
           }
         });
 
-        // loop through the filteredMovies to get additional actors info using the OMDB details URL
-        const getData = async (): Promise<IMovieSearch[]> => {
-          return Promise.all(
-            filteredMoviesIMDBIds.map((movie) =>
-              getMovieDetails(movie, SEARCH_URL, apiKeySetting)
-            )
-          );
-        };
-
-        const fullMovies = await getData();
-        setSelectedMovieIMDBId('');
-        setMovies(fullMovies);
+        setMovies(filteredMovies);
+        setLastSearchMovieCount(fetchedMovies.totalResults);
         setMovError('');
         setMovInfo('');
         setIsLoading(false);
-
-        if (!pageNo) {
-          setCurrentPage(1);
-          setWasLastSearchSuccess(true);
-        } else {
-          setCurrentPage(pageNo);
-        }
+        setCurrentPage(pageNo ?? 1);
       } catch (err) {
-        setSelectedMovieIMDBId('');
         setMovies([]);
+        setLastSearchMovieCount(0);
         setMovInfo('');
         setIsLoading(false);
-
-        if (!pageNo) {
-          setWasLastSearchSuccess(false);
-        }
 
         if (isErrorResponse(err)) {
           setMovError(
@@ -131,10 +105,6 @@ const MovieSearch: React.FC = () => {
     };
   }, [inputQueryTrimmed, loadMovies]);
 
-  const movieSelectedHandler = (movieSel: IMovieSearch): void => {
-    setSelectedMovieIMDBInternal(movieSel.imdbID);
-  };
-
   const queryOnChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ): void => {
@@ -146,25 +116,24 @@ const MovieSearch: React.FC = () => {
     loadMovies();
   };
 
-  const onPageNoChanged = (_: object, page: number): void => {
+  const onPageNoChanged = (page: number): void => {
     loadMovies(page);
   };
 
   const renderMovies = (): ReactElement => {
     return (
-      <section className={styles.movies}>
-        {movies.map((movie) => {
-          return (
-            <Movie
-              key={movie.imdbID}
-              title={movie.title}
-              body={movie.actors}
-              year={movie.year}
-              clicked={() => movieSelectedHandler(movie)}
-            />
-          );
-        })}
-      </section>
+      <>
+        {lastSearchMovieCount > 0 && (
+          <MovieTable
+            lastSearchMovieCount={lastSearchMovieCount}
+            currentPage={currentPage}
+            pageSize={pageSize}
+            movies={movies}
+            handleChangePage={onPageNoChanged}
+            resultsFoundText={`${lastSearchMovieCount} results found`}
+          />
+        )}
+      </>
     );
   };
 
@@ -179,44 +148,20 @@ const MovieSearch: React.FC = () => {
 
     return (
       <>
-        <div className={styles['search-input']}>
-          <span className={globStyles['margin-r-30']}>
-            <TextField
-              label="Search OMDB"
-              value={inputQuery}
-              onChange={queryOnChange}
-              autoFocus
-              variant="standard"
-            />
-          </span>
+        <h2 className={'my-4 mb-4'}>Movie Search - OMDB</h2>
+        <div className={`mt-3 mb-4 ${styles['movie-search']}`}>
+          <FloatingLabel label="Search OMDB">
+            <Form.Control value={inputQuery} onChange={queryOnChange} />
+          </FloatingLabel>
           <Button
-            variant="outlined"
-            color="primary"
+            variant="primary"
             onClick={onSearchClicked}
             disabled={!inputQueryTrimmed}
           >
             Search
           </Button>
         </div>
-        {wasLastSearchSuccess && (
-          <Pagination
-            count={10}
-            onChange={onPageNoChanged}
-            page={currentPage}
-          />
-        )}
         {renderMovies()}
-        {selectedMovieIMDBId && (
-          <MovieDetails
-            selectedMovieIMDBId={selectedMovieIMDBId}
-            closeDrawer={() => setSelectedMovieIMDBId('')}
-          />
-        )}
-        <section>
-          {!selectedMovieIMDBId && !movError && movies.length > 0 && (
-            <p>{TextConstants.CLICKTOSEEDETAILS}</p>
-          )}
-        </section>
         {movError && renderError()}
         {movInfo && <p>{movInfo}</p>}
       </>

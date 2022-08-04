@@ -1,62 +1,121 @@
-import { useAuth0 } from '@auth0/auth0-react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { useAuth0 } from '@auth0/auth0-react';
+import Navbar from 'react-bootstrap/esm/Navbar';
+import Container from 'react-bootstrap/esm/Container';
+import Nav from 'react-bootstrap/esm/Nav';
+import { GearFill } from 'react-bootstrap-icons';
+import { LinkContainer } from 'react-router-bootstrap';
+import { useSnackbar } from 'notistack';
 
 import logo from '../../assets/img/movie.svg';
-import NavBar from '../../components/NavBar/NavBar';
 import styles from './containerHeader.module.scss';
-import { PREFERS_DARK_MODE_MEDIA_QUERY } from '../../constants/Constants';
+import { isAdmin } from '../../utils/AuthUtil';
+import Dropdown from 'react-bootstrap/esm/Dropdown';
 
-interface IProps {
-  tabIndex: number;
-  setTabIndex: (newTabIndex: number) => void;
-}
-
-const ContainerHeader: React.FC<IProps> = (props: IProps) => {
-  const { tabIndex, setTabIndex } = props;
-  const { user } = useAuth0();
+const ContainerHeader: React.FC = () => {
   const location = useLocation();
-  const prefersDarkMode = useMediaQuery(PREFERS_DARK_MODE_MEDIA_QUERY);
-  const theme = useTheme();
-  const dontShowNavBar =
-    location.pathname.includes('transaction-result') ||
-    location.pathname.includes('checkout') ||
-    location.pathname.includes('my-subscriptions');
+  const { user, logout } = useAuth0();
+  const dontShowNavBarPaths = location.pathname.includes('login');
+  const { closeSnackbar } = useSnackbar();
+
+  const onLogoutClicked = (): void => {
+    logout({ returnTo: `${window.location.origin}/login` });
+  };
+
+  useEffect(() => {
+    closeSnackbar();
+  }, [location]);
 
   return (
     <>
-      <div
-        style={{
-          backgroundColor: prefersDarkMode
-            ? theme.palette.secondary.dark
-            : theme.palette.secondary.main,
-        }}
-        className={styles['header-container']}
-      >
-        <div className={styles.header}>
-          <span className={`${styles['nowrap-div']} ${styles['div-logo']}`}>
+      <Navbar collapseOnSelect expand="sm" className="px-2">
+        <Container>
+          <Navbar.Brand>
             <img
               src={logo}
-              style={{
-                filter: prefersDarkMode
-                  ? 'invert(100%) sepia(2%) saturate(7444%) hue-rotate(290deg) brightness(108%) contrast(97%)'
-                  : '',
-              }}
               height="50px"
               alt="movies"
               className={styles.logo}
             />
-          </span>
-          <h1 className={`${styles['nowrap-div']} ${styles['header-text']}`}>
-            Ultra Movie Shop
-          </h1>
-        </div>
-      </div>
-      {!!user && !dontShowNavBar && (
-        <NavBar tabIndex={tabIndex} setTabIndex={setTabIndex} />
-      )}
+            <div>Ultra Movie Shop</div>
+          </Navbar.Brand>
+          {!dontShowNavBarPaths && (
+            <>
+              <Navbar.Collapse className="ms-3">
+                <Nav
+                  className="me-auto flex-grow-1"
+                  activeKey={location.pathname}
+                >
+                  <LinkContainer to="/">
+                    <Nav.Link eventKey="/">Home</Nav.Link>
+                  </LinkContainer>
+                  {!isAdmin(user) && (
+                    <LinkContainer to="/my-cart">
+                      <Nav.Link eventKey="/my-cart">Cart</Nav.Link>
+                    </LinkContainer>
+                  )}
+                  {isAdmin(user) && (
+                    <LinkContainer to="/movie-search-omdb">
+                      <Nav.Link eventKey="/movie-search-omdb">
+                        Movie Search - OMDB
+                      </Nav.Link>
+                    </LinkContainer>
+                  )}
+                </Nav>
+              </Navbar.Collapse>
+              <Dropdown navbar align="end" className={styles['dropdown']}>
+                <Dropdown.Toggle>
+                  <GearFill />
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item disabled className="fs-6">
+                    Welcome, {user && user?.name && user.name.split(' ')[0]}
+                  </Dropdown.Item>
+                  <LinkContainer to="/">
+                    <Dropdown.Item className={styles['menu-item']}>
+                      Home
+                    </Dropdown.Item>
+                  </LinkContainer>
+                  {!isAdmin(user) && (
+                    <LinkContainer to="/my-cart">
+                      <Dropdown.Item className={styles['menu-item']}>
+                        Cart
+                      </Dropdown.Item>
+                    </LinkContainer>
+                  )}
+                  {isAdmin(user) && (
+                    <LinkContainer to="/movie-search-omdb">
+                      <Dropdown.Item className={styles['menu-item']}>
+                        Movie Search - OMDB
+                      </Dropdown.Item>
+                    </LinkContainer>
+                  )}
+                  {!isAdmin(user) && (
+                    <LinkContainer to="/my-subscriptions">
+                      <Dropdown.Item>My subscriptions</Dropdown.Item>
+                    </LinkContainer>
+                  )}
+                  {isAdmin(user) && (
+                    <LinkContainer to="/movie-search-analysis">
+                      <Dropdown.Item>Movie Search Analysis</Dropdown.Item>
+                    </LinkContainer>
+                  )}
+                  {isAdmin(user) && (
+                    <LinkContainer to="/settings">
+                      <Dropdown.Item>Settings</Dropdown.Item>
+                    </LinkContainer>
+                  )}
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={onLogoutClicked} as="div">
+                    Logout
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </>
+          )}
+        </Container>
+      </Navbar>
     </>
   );
 };

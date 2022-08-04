@@ -3,6 +3,8 @@ import { Auth0Provider } from '@auth0/auth0-react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import App from './App';
+import './styles/bootstrap.scss';
+import 'react-loading-skeleton/dist/skeleton.css';
 import ErrorBoundary from './hoc/ErrorBoundary/ErrorBoundary';
 
 const DOMAIN = import.meta.env.VITE_AUTH0_DOMAIN || '';

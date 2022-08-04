@@ -104,8 +104,8 @@ const MovieAnalysis: React.FC = () => {
     }
 
     return (
-      <>
-        <h2 className={globStyles['margin-b-20']}>Library Movie Analysis</h2>
+      <div className="my-4">
+        <h2 className="mb-4">Library Movie Analysis</h2>
         <p>Below chart displays top 5 genres of all titles in the library.</p>
         {chartDataLib && (
           <Bar
@@ -115,7 +115,7 @@ const MovieAnalysis: React.FC = () => {
             options={CHART_OPTIONS}
           />
         )}
-        <h2 className={globStyles['margin-b-20']}>Search Movie Analysis</h2>
+        <h2 className="mb-4">Search Movie Analysis</h2>
         <p>
           Below chart displays top 5 genres of all titles that users viewed
           details of, the past month.
@@ -128,7 +128,7 @@ const MovieAnalysis: React.FC = () => {
             options={CHART_OPTIONS}
           />
         )}
-      </>
+      </div>
     );
   };
 

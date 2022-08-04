@@ -1,0 +1,278 @@
+/* 
+-----------------------------------------------------------------------------
+Boostrap classes override START
+*/
+
+body {
+  color: var(--color-body) !important;
+  background-color: var(--color-body-bg) !important;
+}
+
+.card {
+  color: var(--color-body) !important;
+  box-shadow: var(--color-card-box-shadow);
+  @media (prefers-color-scheme: dark) {
+    background: var(--color-card-bg) !important;
+  }
+}
+
+.btn-primary {
+  color: var(--color-body-bg) !important;
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  @media (prefers-color-scheme: dark) {
+    color: var(--color-body) !important;
+  }
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover) !important;
+  border-color: var(--color-primary-hover) !important;
+}
+
+.btn-secondary {
+  color: var(--color-body) !important;
+  background-color: var(--color-secondary) !important;
+  border-color: var(--color-secondary) !important;
+  @media (prefers-color-scheme: dark) {
+    color: var(--color-body-bg) !important;
+  }
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-secondary-hover) !important;
+  border-color: var(--color-secondary-hover) !important;
+}
+
+.btn-info {
+  color: var(--color-body) !important;
+  background-color: var(--color-info) !important;
+  border-color: var(--color-info) !important;
+  @media (prefers-color-scheme: dark) {
+    color: var(--color-body-bg) !important;
+  }
+}
+
+.btn-outline-info {
+  color: var(--color-body) !important;
+  border-color: var(--color-info) !important;
+}
+
+.btn-outline-info:hover {
+  background-color: var(--color-info) !important;
+  box-shadow: 0 0 0 0.1rem var(--color-primary) !important;
+}
+
+.btn-check:checked + .btn-info:focus,
+.btn-check:active + .btn-info:focus,
+.btn-info:active:focus,
+.btn-info.active:focus,
+.show > .btn-info.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.1rem var(--color-primary) !important;
+}
+
+.btn-check:focus + .btn-outline-info,
+.btn-outline-info:focus {
+  box-shadow: none !important;
+}
+
+.navbar-nav .dropdown-menu {
+  /* this makes the dropdown menu float over the container div */
+  position: absolute !important;
+}
+
+.dropdown-menu {
+  @media (prefers-color-scheme: dark) {
+    background: var(--color-card-bg) !important;
+    box-shadow: var(--color-card-box-shadow);
+    color: var(--color-body) !important;
+  }
+}
+
+.dropdown-item {
+  color: var(--color-body) !important;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+  /* this makes the dropdown menu active styling to be reversed */
+  color: unset !important;
+  text-decoration: unset !important;
+  background-color: unset !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  /* this adds important attribute to the hover styling of dropdown item */
+  color: #1e2125 !important;
+  background-color: #e9ecef !important;
+}
+
+/* Related to pagination, START */
+.page-link {
+  /* related to pagination */
+  color: var(--color-body) !important;
+  box-shadow: var(--color-card-box-shadow);
+  border: var(--color-dark-border) !important;
+  @media (prefers-color-scheme: dark) {
+    background: var(--color-card-bg) !important;
+  }
+}
+
+.page-item.disabled .page-link {
+  color: #6c757d !important;
+}
+
+.page-item.active {
+  .page-link {
+    color: var(--color-body-bg) !important;
+    background-color: var(--color-primary) !important;
+    @media (prefers-color-scheme: dark) {
+      color: var(--color-body) !important;
+    }
+  }
+}
+
+.pagination {
+  margin-bottom: 0 !important;
+}
+/* Related to pagination, END */
+
+.form-control {
+  // resetting to UA defaults
+  color: fieldtext !important;
+  background-color: field !important;
+}
+
+.form-select {
+  padding: 0 2.25rem 0 0.75rem !important;
+
+  // resetting to UA defaults
+  color: fieldtext !important;
+  background-color: field !important;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  // Note: following changes the dropdown caret color
+  background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") !important;
+  background-size: unset !important;
+
+  @media (prefers-color-scheme: dark) {
+    /* Fill color to white */
+    background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") !important;
+  }
+}
+
+.navbar {
+  background-color: var(--color-primary);
+  @media (prefers-color-scheme: dark) {
+    background: var(--color-navbar-bg);
+    box-shadow: var(--color-navbar-box-shadow);
+  }
+}
+
+.nav-link,
+.navbar-brand {
+  color: var(--color-body-bg) !important;
+  @media (prefers-color-scheme: dark) {
+    color: var(--color-body) !important;
+  }
+}
+
+.accordion-item {
+  color: var(--color-body) !important;
+  background: var(--color-card-bg) !important;
+  @media (prefers-color-scheme: dark) {
+    border: var(--color-dark-border) !important;
+    box-shadow: var(--color-card-box-shadow);
+  }
+}
+
+.accordion-button {
+  color: var(--color-body) !important;
+  background: var(--color-card-bg) !important;
+}
+
+.accordion-button:focus {
+  @media (prefers-color-scheme: dark) {
+    border: var(--color-dark-border) !important;
+    box-shadow: var(--color-accordion-header-box-shadow) !important;
+  }
+}
+
+.accordion-button::after {
+  @media (prefers-color-scheme: dark) {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
+  }
+}
+
+.accordion-button:not(.collapsed)::after {
+  @media (prefers-color-scheme: dark) {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
+  }
+}
+
+.form-check-input:checked {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+.offcanvas {
+  @media (prefers-color-scheme: dark) {
+    background: var(--color-card-bg) !important;
+  }
+}
+
+a {
+  color: var(--color-primary) !important;
+  @media (prefers-color-scheme: dark) {
+    color: var(--color-body) !important;
+  }
+}
+
+a:hover,
+a:active {
+  color: var(--color-secondary) !important;
+}
+
+/* 
+Boostrap classes override END
+-----------------------------------------------------------------------------
+*/
+
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/utilities';
+
+/* 
+Boostrap utilities override START
+-----------------------------------------------------------------------------
+*/
+$font-sizes: (
+  1: 4rem,
+  2: 2rem,
+  3: 1.5rem,
+  4: 1rem,
+  5: 0.9rem,
+  6: 0.75rem,
+);
+
+$utilities: map-merge(
+  $utilities,
+  (
+    'font-size':
+      map-merge(
+        map-get($utilities, 'font-size'),
+        (
+          values: $font-sizes,
+        )
+      ),
+  )
+);
+/* 
+Boostrap utilities override END
+-----------------------------------------------------------------------------
+*/
+
+@import 'bootstrap/scss/bootstrap';

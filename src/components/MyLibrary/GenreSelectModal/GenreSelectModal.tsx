@@ -1,18 +1,11 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Button from '@mui/material/Button';
-import ClearIcon from '@mui/icons-material/Clear';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import Offcanvas from 'react-bootstrap/esm/Offcanvas';
+import Button from 'react-bootstrap/esm/Button';
+import Form from 'react-bootstrap/esm/Form';
 
-import useMediaQuery from '@mui/material/useMediaQuery';
-import styles from './genreSelectModal.module.css';
+import styles from './genreSelectModal.module.scss';
 import { Genres, IGenre } from '../../../constants/Genres';
 import { ICheckboxValue } from '../../../interfaces/ICheckboxValue';
-import { DESKTOP_WIDTH_MEDIA_QUERY } from '../../../constants/Constants';
 
 interface IProps {
   initialGenres: string[];
@@ -24,7 +17,6 @@ const GenreSelectModal: React.FC<IProps> = (props) => {
   const { initialGenres, onConfirmed, onCancelled } = props;
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [checkboxValues, setCheckboxValues] = useState<ICheckboxValue[]>([]);
-  const isDesktopWidth = useMediaQuery(DESKTOP_WIDTH_MEDIA_QUERY);
 
   const initForm = useCallback((): void => {
     setSelectedGenres(initialGenres);
@@ -61,11 +53,9 @@ const GenreSelectModal: React.FC<IProps> = (props) => {
     });
   };
 
-  const onGenreChecked = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean
-  ): void => {
+  const onGenreChecked = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const checkboxName = event.target.name;
+    const checked = event.target.checked;
 
     Genres.forEach((genre) => {
       if (checkboxName === `is${genre.id}`) {
@@ -85,69 +75,56 @@ const GenreSelectModal: React.FC<IProps> = (props) => {
   };
 
   const renderGenres = (): ReactElement => {
-    const contClass = isDesktopWidth
-      ? styles['genre-container-3']
-      : styles['genre-container-2'];
     return (
-      <div className={contClass}>
+      <Form className={`my-4 ${styles['genre-container']}`}>
         {Genres.map((genre) => {
           return (
-            <FormControlLabel
+            <Form.Check
+              type="checkbox"
               key={`label${genre.id}`}
-              control={
-                <Checkbox
-                  checked={
-                    checkboxValues.find(
-                      (checkbox) => checkbox.name === `is${genre.id}`
-                    )?.checked
-                  }
-                  onChange={onGenreChecked}
-                  name={`is${genre.id}`}
-                  color="primary"
-                />
-              }
               label={genre.genre}
+              checked={
+                checkboxValues.find(
+                  (checkbox) => checkbox.name === `is${genre.id}`
+                )?.checked
+              }
+              onChange={onGenreChecked}
+              name={`is${genre.id}`}
             />
           );
         })}
+      </Form>
+    );
+  };
+
+  const renderActions = () => {
+    return (
+      <div className={styles['buttons']}>
+        <Button onClick={onReset} variant="primary">
+          Reset
+        </Button>
+        <Button onClick={onCancelled} variant="secondary">
+          Cancel
+        </Button>
+        <Button onClick={() => onConfirmed(selectedGenres)} variant="secondary">
+          OK
+        </Button>
       </div>
     );
   };
 
   return (
-    <Dialog open onClose={onCancelled}>
-      <DialogTitle>
-        <div className={styles.header}>
-          <div className={styles.title}>Select Genres</div>
-          <div className={styles['close-button']}>
-            <Button onClick={onCancelled}>
-              <ClearIcon />
-            </Button>
-          </div>
-        </div>
-      </DialogTitle>
-      <DialogContent>{renderGenres()}</DialogContent>
-      <DialogActions>
-        <span className={styles['first-button']}>
-          <Button onClick={onReset} color="primary" variant="contained">
-            Reset
-          </Button>
-        </span>
-        <span className={styles['first-button']}>
-          <Button onClick={onCancelled} color="primary" variant="contained">
-            Cancel
-          </Button>
-        </span>
-        <Button
-          onClick={() => onConfirmed(selectedGenres)}
-          autoFocus
-          color="secondary"
-          variant="contained"
-        >
-          OK
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <>
+      <Offcanvas show onHide={onCancelled}>
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Select Genres</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body className={styles.body}>
+          {renderGenres()}
+          {renderActions()}
+        </Offcanvas.Body>
+      </Offcanvas>
+    </>
   );
 };
 

@@ -1,74 +1,60 @@
 @import '../../../styles/globalTheme.module.scss';
 
+$control-width: 250px;
+$control-width-md: 328px;
+$control-height: 30px;
+$icon-width: 30px;
+
 .heading {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  font-weight: bold;
-
-  @media #{$md} {
-    font-size: 22px;
-  }
 }
 
 .expand-button {
   min-width: unset !important;
-  margin-left: 5px !important;
 }
 
 .expand-button-rotated {
   transform: rotate(180deg);
 }
 
-.label-and-input-div {
-  margin-bottom: 20px;
-  font-size: 0.9rem;
-}
-
 .input-style-search {
-  max-width: 350px;
-  width: 250px;
-  height: 30px;
-
+  height: $control-height;
+  width: $control-width;
+  margin: auto;
   @media #{$md} {
-    width: 328px;
+    width: $control-width-md;
   }
 }
 
 .input-style-select {
-  height: 30px;
-}
-
-.input-style-form-control {
-  max-width: 350px;
-  width: 250px;
+  height: $control-height;
+  margin: auto;
+  width: $control-width;
   @media #{$md} {
-    width: 328px;
+    width: $control-width-md;
   }
 }
 
-.input-style-search-genre {
-  height: 35px;
-  margin-right: 10px;
-  width: 207px;
+.input-style-search-year-genre {
+  margin-right: 5px;
+  height: $control-height;
+  width: $control-width - 35px;
   @media #{$md} {
-    width: 286px;
+    width: $control-width-md - 35px;
   }
 }
 
-.inter-control-spacing {
+.same-line-controls {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 5px;
+  margin: auto;
 }
 
 .card-style {
   width: 90%;
-  max-width: 350px;
-  margin: auto;
-  padding: 5px;
 
   @media #{$md} {
     max-width: 450px;
@@ -77,24 +63,31 @@
 
 .card-title {
   margin-bottom: 0 !important;
-  @media #{$md} {
-    padding: 5px;
-  }
+}
+
+.help-button {
+  height: $control-height;
+  width: $icon-width;
+  padding: 0 !important;
 }
 
 .genre-button {
-  min-width: unset !important;
-  padding: 5px 10px !important;
-}
-
-.button-div {
-  margin: 30px 0 15px 0;
+  height: $control-height;
+  width: $icon-width;
 }
 
 .helpicon {
-  margin-left: 5px;
+  height: 18px;
+  filter: $icon-filter-white;
 }
 
 .helptext {
-  padding: 10px;
+  text-align: center;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
 }

@@ -1,23 +1,18 @@
 import { entity } from 'simpler-state';
+import { MovieTableInfo } from '../types/MovieTableInfo';
 
-export interface ICartItem {
-  id: string;
-  title: string;
-  imdbID: string;
-}
-
-export const cartItems = entity<ICartItem[]>([]);
+export const cartItems = entity<MovieTableInfo[]>([]);
 
 export const clearCart = () => {
   cartItems.set([]);
   saveToLocalStorage();
 };
 
-export const initItems = (items: ICartItem[]) => {
+export const initItems = (items: MovieTableInfo[]) => {
   cartItems.set(items);
 };
 
-export const addItem = (item: ICartItem) => {
+export const addItem = (item: MovieTableInfo) => {
   cartItems.set((value) => [...value, item]);
   saveToLocalStorage();
 };

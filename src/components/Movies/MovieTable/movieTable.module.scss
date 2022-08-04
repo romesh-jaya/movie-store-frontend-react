@@ -8,11 +8,14 @@
   margin: auto;
   width: 90%;
   max-width: $xl-screen;
-  margin-top: 10px;
 }
 
 .pagination-style {
-  margin-top: 10px;
+  display: flex;
+  place-items: center;
+  justify-content: end;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .link-button {

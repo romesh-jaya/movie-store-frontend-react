@@ -5,14 +5,14 @@ import {
   useElements,
 } from '@stripe/react-stripe-js';
 
-import styles from './checkoutForm.module.scss';
+import styles from './stripeCheckoutForm.module.scss';
 import { redirectFromCheckoutURLSuccess } from '../../constants/Constants';
 
 interface IProps {
   orderId?: string;
 }
 
-export default function CheckoutForm(props: IProps) {
+export default function StripeCheckoutForm(props: IProps) {
   const { orderId } = props;
   const stripe = useStripe();
   const elements = useElements();

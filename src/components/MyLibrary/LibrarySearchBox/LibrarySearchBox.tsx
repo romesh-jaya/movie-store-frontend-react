@@ -1,25 +1,19 @@
 import React, { useState, useCallback, ReactElement } from 'react';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Card from '@mui/material/Card';
 import { ExportToCsv } from 'export-to-csv';
-import { useTheme } from '@mui/material/styles';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { CaretDownFill } from 'react-bootstrap-icons';
+import Card from 'react-bootstrap/esm/Card';
+import Button from 'react-bootstrap/esm/Button';
 
 import styles from './librarySearchBox.module.scss';
-import globStyles from '../../../index.module.scss';
 import { useAuth0 } from '@auth0/auth0-react';
 import { TextConstants } from '../../../constants/TextConstants';
 import { MovieType } from '../../../enums/MovieType';
 import GenreSelectModal from '../GenreSelectModal/GenreSelectModal';
 import { ISearchInfo } from '../../../interfaces/ISearchInfo';
 import IMovieLibrary from '../../../interfaces/IMovieLibrary';
-
 import { isAdmin } from '../../../utils/AuthUtil';
 import { formatExportData } from '../../../utils/ExportUtil';
 import SearchControls from './SearchControls/SearchControls';
-import { PREFERS_DARK_MODE_MEDIA_QUERY } from '../../../constants/Constants';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 const exportFileName = 'Export.csv';
 
@@ -45,14 +39,8 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
     setSearchYearIsBetweenValuesIncomplete,
   ] = useState(false);
   const [searchGenres, setSearchGenres] = useState<string[]>([]);
-  const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
   const { user } = useAuth0();
   const [isBoxExpanded, setIsBoxExpanded] = useState(true);
-  const theme = useTheme();
-  const prefersDarkMode = useMediaQuery(PREFERS_DARK_MODE_MEDIA_QUERY);
-  const boxShadowColor = prefersDarkMode
-    ? theme.palette.secondary.dark
-    : 'rgb(0 0 0 / 20%)';
 
   const { enableExportButton, setLastSearchInfo, exportMovies } = props;
 
@@ -126,7 +114,6 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   };
 
   const handleChangeSearchYear = (
-    __: string,
     isBetweenValuesIncomplete: boolean,
     value: string,
     valueSingle?: number,
@@ -208,30 +195,22 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
   };
 
   const renderButtons = (): ReactElement => (
-    <div className={styles['button-div']}>
-      <span className={globStyles['right-spacer']}>
-        <Button
-          id="search-button"
-          disabled={!isSearchTextValid()}
-          onClick={newSearch}
-          color="primary"
-          variant="contained"
-          autoFocus
-        >
-          Search
-        </Button>
-      </span>
-      <span className={globStyles['right-spacer']}>
-        <Button onClick={onResetClicked} color="secondary" variant="contained">
-          Reset
-        </Button>
-      </span>
+    <div className={`mt-4 mb-3 ${styles['buttons']}`}>
+      <Button
+        disabled={!isSearchTextValid()}
+        onClick={newSearch}
+        variant="primary"
+      >
+        Search
+      </Button>
+      <Button onClick={onResetClicked} variant="secondary">
+        Reset
+      </Button>
       {isAdmin(user) && (
         <Button
           disabled={!enableExportButton}
           onClick={onExportClicked}
-          color="secondary"
-          variant="contained"
+          variant="secondary"
         >
           Export to CSV
         </Button>
@@ -241,43 +220,30 @@ const LibrarySearchBox: React.FC<IProps> = (props) => {
 
   return (
     <>
-      <Card
-        className={styles['card-style']}
-        style={{
-          boxShadow: `0px 2px 1px -1px ${boxShadowColor}, 0px 1px 1px 0px ${boxShadowColor}, 0px 1px 3px 0px ${boxShadowColor}`,
-        }}
-      >
-        <Typography
-          className={styles['card-title']}
-          variant="h5"
-          color="textSecondary"
-          gutterBottom
-        >
-          <div className={styles.heading}>
-            Search Library
+      <Card className={`my-3 mx-auto p-2 ${styles['card-style']}`}>
+        <Card.Title className={`md:p-2 ${styles['card-title']}`}>
+          <div className={`my-3 fs-3 md:fs-2 ${styles.heading}`}>
+            <h2>Search Library</h2>
             <Button
-              classes={{
-                root: `${styles['expand-button']} ${
-                  isBoxExpanded ? '' : styles['expand-button-rotated']
-                }`,
-              }}
+              className={`ms-3 ${styles['expand-button']} ${
+                isBoxExpanded ? '' : styles['expand-button-rotated']
+              }`}
               onClick={() => setIsBoxExpanded(!isBoxExpanded)}
             >
-              <ExpandMoreIcon />
+              <CaretDownFill />
             </Button>
           </div>
-        </Typography>
+        </Card.Title>
+
         {isBoxExpanded && (
           <>
             <SearchControls
-              anchorEl={anchorEl}
               searchTitle={searchTitle}
               searchType={searchType}
               searchLanguage={searchLanguage}
               searchYearInput={searchYearInput}
               searchGenres={searchGenres}
               errorTextSearchYear={errorTextSearchYear}
-              setAnchorEl={setAnchorEl}
               handleChangeSearchTitle={handleChangeSearchTitle}
               handleKeyDown={handleKeyDown}
               handleChangeSearchType={handleChangeSearchType}

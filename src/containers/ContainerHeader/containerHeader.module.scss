@@ -1,38 +1,36 @@
 @import '../../styles/globalTheme.module.scss';
 
-.header-container {
-  background-color: #e8d2c0;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 90%;
-  margin: auto;
-  white-space: nowrap;
-}
-
-.nowrap-div {
-  display: inline-block;
-  vertical-align: top;
-}
-
-.div-logo {
-  padding: 15px;
-}
-
 .logo {
   height: 40px;
+  filter: $icon-filter-white;
   @media #{$md} {
     height: 50px;
   }
 }
 
-.header-text {
-  font-size: 1.5rem;
+.menu-item {
+  display: none !important;
+  @media #{$xs} {
+    display: block !important;
+  }
+}
 
-  @media #{$md} {
-    font-size: 1.8rem;
+.dropdown {
+  button {
+    display: flex;
+    place-items: center;
+    color: rgba(255, 255, 255, 0.55) !important;
+    background-color: var(--color-navbar-bg) !important;
+    border: none !important;
+  }
+
+  button:focus {
+    box-shadow: none !important;
+  }
+}
+
+.dropdown:hover {
+  button {
+    color: rgba(255, 255, 255, 0.75) !important;
   }
 }

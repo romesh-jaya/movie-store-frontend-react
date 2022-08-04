@@ -24,47 +24,92 @@ textarea {
   font-size: 1rem !important;
 }
 
-.spinner-full-page {
-  padding: 40px;
+:root {
+  // this setting enables UA stylesheet to be applied automatically for dark mode
+  color-scheme: light dark;
+
+  // Note: bootstrap doesn't support on-the-fly color swapping for light and dark modes
+  // Hence, we had to use css variables
+  --color-primary: #557a95;
+  --color-primary-hover: #48687f;
+  --color-body: #212529;
+  --color-body-bg: #fff;
+  --color-secondary: #e8d2c0;
+  --color-secondary-hover: #a29386;
+  --color-success: #198754;
+  --color-success-text: #198754;
+  --color-info: #cacfd4;
+
+  /* Box shadows and background colors, START */
+  --color-card-box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%),
+    0px 1px 1px 0px rgb(0 0 0 / 20%), 0px 1px 3px 0px rgb(0 0 0 / 20%);
+  /* Box shadows and background colors, END */
+
+  @media (prefers-color-scheme: dark) {
+    --color-body: #fff;
+    --color-body-bg: #212529;
+    --color-success: #115e3a;
+    --color-success-text: #479f76;
+    --color-card-box-shadow: 0px 24px 38px rgba(0, 0, 0, 0.14),
+      0px 9px 46px rgba(0, 0, 0, 0.12), 0px 11px 15px rgba(0, 0, 0, 0.2);
+    --color-dark-border: 1px solid rgba(255, 255, 255, 0.05);
+
+    /* Box shadows and background colors, START */
+    --color-accordion-header-box-shadow: 0px 16px 24px rgba(0, 0, 0, 0.14),
+      0px 6px 30px rgba(0, 0, 0, 0.12), 0px 8px 10px rgba(0, 0, 0, 0.2);
+
+    --color-navbar-box-shadow: 0px 12px 17px rgba(0, 0, 0, 0.14),
+      0px 5px 22px rgba(0, 0, 0, 0.12), 0px 7px 8px rgba(0, 0, 0, 0.2);
+
+    /* Elevation Overlay / 12dp */
+    --color-navbar-bg: linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.14),
+        rgba(255, 255, 255, 0.14)
+      ),
+      var(--color-body-bg);
+
+    /* Elevation Overlay / 24dp */
+    --color-card-bg: linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.16),
+        rgba(255, 255, 255, 0.16)
+      ),
+      var(--color-body-bg);
+    /* Box shadows and background colors, END */
+  }
 }
 
 /*
-Note: this is for the chart-js styling
+Note: chart-js styling, START
 */
 canvas {
   margin: 0 auto;
 }
+/*
+Note: chart-js styling, END
+*/
 
-.margin-b-10 {
-  margin-bottom: 20px;
+/*
+Note: global classes, START
+*/
+.snackbar-item-root {
+  div {
+    width: 100% !important;
+    div {
+      flex: 1;
+      justify-content: space-between;
+    }
+  }
 }
 
-.margin-b-20 {
-  margin-bottom: 20px;
-}
-
-.margin-t-20 {
-  margin-top: 20px;
-}
-
-.margin-r-10 {
-  margin-right: 10px;
-}
-
-.margin-r-30 {
-  margin-right: 30px;
-}
-
-.padding-30 {
-  padding: 30px;
+.snackbar-item-root-success {
+  background-color: var(--color-success) !important;
 }
 
 .error-text {
   color: red;
-}
-
-.right-spacer {
-  margin-right: 15px !important;
+  margin-top: 30px;
 }
 
 .error-text-small {
@@ -72,110 +117,9 @@ canvas {
   font-size: 0.8rem;
 }
 
-.chip-spacer {
-  margin-right: 3px;
+.spinner-full-page {
+  padding: 40px;
 }
-
-/* 
------------------------------------------------------------------------------
- UI related styles START
--- Note: some styles, if they are to be assigned individually within the instance itself
---       will require styles to be set at each and every instance of that class. Therefore, setting them globally. 
------------------------------------------------------------------------------
-*/
-
-:global(table td) {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  word-break: break-all;
-  max-width: 0;
-}
-
-:global(tr > td:hover) {
-  overflow: visible;
-  white-space: unset;
-}
-
-:global(.MuiToolbar-regular) {
-  min-height: auto !important;
-}
-
-/* 
------------------------------------------------------------------------------
- UI related styles END
------------------------------------------------------------------------------
-*/
-
-/* 
------------------------------------------------------------------------------
-Material UI related styles START
--- Note: some styles, if they are to be assigned individually within the instance itself
---       will require styles to be set at each and every instance of that class. E.g. TableCell
---       This is tedious. Therefore, setting them globally. 
------------------------------------------------------------------------------
-*/
-
-:global(.MuiChip-root) {
-  height: 26px !important;
-}
-
-:global(.MuiTableCell-root) {
-  padding-top: 10px !important;
-  padding-bottom: 10px !important;
-}
-
-:global(.MuiTabs-root) {
-  height: 38px !important;
-  min-height: auto !important;
-}
-
-:global(.MuiTab-root) {
-  min-height: auto !important;
-}
-
-:global(.MuiBox-root) {
-  padding: 0 !important;
-  @media #{$md} {
-    padding: 24px !important;
-  }
-  padding-top: 5px !important;
-}
-
-:global(.MuiPagination-root) {
-  display: flex;
-  justify-content: center;
-}
-
-:global(.MuiDialogActions-root) {
-  padding: 16px 24px !important;
-}
-
-:global(.MuiDialogTitle-root) {
-  text-align: left;
-  border-bottom: 1px solid #cacdd2;
-  padding: 16px 0px 16px 24px !important;
-}
-
-:global(.MuiDialogContent-root) {
-  padding: 0 !important;
-  border-bottom: 1px solid #cacdd2;
-  @media #{$md} {
-    padding: 24px !important;
-  }
-}
-
-:global(.MuiDialogContentText-root) {
-  margin-bottom: 0px !important;
-  text-align: left !important;
-}
-
-:global(.MuiTypography-root) {
-  font-size: unset !important;
-}
-
-/* 
------------------------------------------------------------------------------
-Material UI related styles END
------------------------------------------------------------------------------
+/*
+Note: global classes, END
 */

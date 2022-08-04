@@ -1,30 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 
 import {
+  pageSize,
   redirectFromCheckoutURLCancelled,
   redirectFromCheckoutURLSuccess,
   redirectFromCheckoutURLSuccessNoCheckout,
 } from '../../constants/Constants';
-import { cartItems } from '../../state/cart';
+import { cartItems, removeItem } from '../../state/cart';
 import styles from './cart.module.scss';
-import MovieDetails from '../Movies/MovieDetails/MovieDetails';
 import globStyles from '../../index.module.scss';
 import axios from '../../axios';
 import { initPrices, prices, titlePriceId } from '../../state/price';
 import Spinner from '../UI/Spinner/Spinner';
 import { getPrices } from '../../api/server/server';
-import CartItemsTable from './CartItemsTable/CartItemsTable';
 import CustomLink from '../CustomLink/CustomLink';
+import MovieTable from '../Movies/MovieTable/MovieTable';
+import Button from 'react-bootstrap/esm/Button';
 
 const Cart: React.FC = () => {
   const cartItemsArray = cartItems.use();
   const pricesArray = prices.use();
   const navigate = useNavigate();
-  const [selectedMovieIMDBId, setSelectedMovieIMDBId] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const pricePerTitle =
     pricesArray.find((price) => price.lookupKey === titlePriceId)?.price || 0;
@@ -90,6 +90,10 @@ const Cart: React.FC = () => {
     }
   };
 
+  const handleChangePage = (page: number): void => {
+    setCurrentPage(page);
+  };
+
   if (isLoading) {
     return (
       <div className={globStyles['spinner-full-page']}>
@@ -99,26 +103,39 @@ const Cart: React.FC = () => {
   }
 
   return (
-    <div className={styles.table}>
+    <div className={`py-4 ${styles.table}`}>
       <h2>My Cart</h2>
 
       {!error && (
         <>
           {cartItemsArray.length > 0 ? (
             <>
-              <CartItemsTable
-                pricePerTitle={pricePerTitle}
-                priceCurrency={priceCurrency}
-                setSelectedMovieIMDBId={(imdbID: string) =>
-                  setSelectedMovieIMDBId(imdbID)
-                }
+              <MovieTable
+                lastSearchMovieCount={cartItemsArray.length}
+                currentPage={currentPage}
+                pageSize={pageSize}
+                movies={cartItemsArray.map((item) => ({
+                  title: `${item.title} - ${pricePerTitle.toFixed(
+                    2
+                  )} ${priceCurrency.toUpperCase()}`,
+                  imdbID: item.imdbID,
+                }))}
+                handleChangePage={handleChangePage}
+                removeMovie={(imdbIDToRemove) => removeItem(imdbIDToRemove)}
+                resultsFoundText={`${cartItemsArray.length} items`}
               />
+              <p className={styles['subscription-info']}>
+                Your DVD subscription is currently <span>active</span>.
+              </p>
               {pricePerTitle === 0 ? (
                 <p className={styles['subscription-info']}>
-                  Your DVD subscription is currently <span>active</span>.
+                  Total:{' '}
+                  <span>{`${(pricePerTitle * cartItemsArray.length).toFixed(
+                    2
+                  )} ${priceCurrency.toUpperCase()}`}</span>
                 </p>
               ) : (
-                <p className={styles['subscription-info']}>
+                <p className={`my-4 ${styles['subscription-info']}`}>
                   Enjoy free DVD rentals with a{' '}
                   <span>
                     <CustomLink to="/my-subscriptions">Subscription</CustomLink>
@@ -126,18 +143,14 @@ const Cart: React.FC = () => {
                   .
                 </p>
               )}
-              <div className={styles['button-div']}>
-                <span className={globStyles['right-spacer']}>
-                  <Button
-                    id="pay-button"
-                    color="primary"
-                    variant="contained"
-                    autoFocus
-                    onClick={proceedToRent}
-                  >
-                    Proceed to Rent
-                  </Button>
-                </span>
+              <div className="mt-4">
+                <Button
+                  id="pay-button"
+                  variant="primary"
+                  onClick={proceedToRent}
+                >
+                  Proceed to Rent
+                </Button>
               </div>
             </>
           ) : (
@@ -146,12 +159,6 @@ const Cart: React.FC = () => {
         </>
       )}
       {error && <p className={globStyles['error-text']}>{error}</p>}
-      {selectedMovieIMDBId && (
-        <MovieDetails
-          selectedMovieIMDBId={selectedMovieIMDBId}
-          closeDrawer={() => setSelectedMovieIMDBId('')}
-        />
-      )}
     </div>
   );
 };

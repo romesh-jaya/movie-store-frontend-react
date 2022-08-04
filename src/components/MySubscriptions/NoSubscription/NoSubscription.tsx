@@ -1,12 +1,9 @@
-import Button from '@mui/material/Button';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
 import { useNavigate } from 'react-router-dom';
+import Button from 'react-bootstrap/esm/Button';
+import ToggleButton from 'react-bootstrap/esm/ToggleButton';
+import ToggleButtonGroup from 'react-bootstrap/esm/ToggleButtonGroup';
 
 import { subscriptionTypes } from '../../../constants/SubscriptionTypes';
-import styles from '../mySubscriptions.module.scss';
 import { useEffect, useState } from 'react';
 import { prices } from '../../../state/price';
 
@@ -20,10 +17,8 @@ export default function NoSubscription(props: IProps) {
   const pricesArray = prices.use();
   const navigate = useNavigate();
 
-  const handleChangeSubscriptionType = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setChosenSubscription((event.target as HTMLInputElement).value);
+  const handleChangeSubscriptionType = (value: string) => {
+    setChosenSubscription(value);
   };
 
   const getSubscriptionPrice = (lookupKey: string) => {
@@ -35,46 +30,42 @@ export default function NoSubscription(props: IProps) {
 
   useEffect(() => {}, []);
 
+  // Note: onChange() in the ToggleButtonGroup didn't fire, so used onClick in the ToggleButton instead
   return (
     <>
-      <p className={styles.intro}>
+      <p className="mt-4">
         Sign up today and get a <strong>limited time offer</strong> on annual
         and half-yearly subscriptions!
       </p>
-      <FormControl>
-        <RadioGroup
-          onChange={handleChangeSubscriptionType}
-          classes={{
-            root: styles['radio-group'],
-          }}
-        >
-          {subscriptionTypes.map((type) => (
-            <FormControlLabel
-              value={type.name}
-              key={type.name}
-              control={<Radio />}
-              label={`${type.value} (${
-                type.description
-              }) - ${getSubscriptionPrice(type.name)}`}
-            />
-          ))}
-        </RadioGroup>
-      </FormControl>
-      <div className={styles['button-div']}>
+      <ToggleButtonGroup
+        type="radio"
+        className="d-flex gap-3"
+        value={chosenSubscription}
+        name="group1"
+      >
+        {subscriptionTypes.map((type) => (
+          <ToggleButton
+            value={type.name}
+            key={type.name}
+            onClick={() => handleChangeSubscriptionType(type.name)}
+            variant={chosenSubscription === type.name ? 'info' : 'outline-info'}
+          >
+            {`${type.value} (${type.description}) - ${getSubscriptionPrice(
+              type.name
+            )}`}
+          </ToggleButton>
+        ))}
+      </ToggleButtonGroup>
+      <div className="d-flex justify-content-center gap-3 mt-4">
         <Button
-          color="primary"
-          variant="contained"
-          autoFocus
+          variant="primary"
           onClick={() => proceedToSubscribe(chosenSubscription)}
           disabled={!chosenSubscription}
         >
           Subscribe
         </Button>
-        <Button
-          color="secondary"
-          variant="contained"
-          onClick={() => navigate('/')}
-        >
+
+        <Button variant="secondary" onClick={() => navigate('/')}>
           Back to Home
         </Button>
       </div>

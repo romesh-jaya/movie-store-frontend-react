@@ -1,34 +1,17 @@
 @import '../../../styles/globalTheme.module.scss';
 
-.drawer {
-  max-width: 550px !important;
-}
-
-.container {
-  min-height: 100%;
-  padding: 20px 0;
-}
-
-.movie-details {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-  width: 90%;
-  margin: 0 auto;
-  text-align: center;
-}
-
 .content {
   display: flex;
   flex-direction: column;
   flex: 1;
-  min-height: 100%;
+}
 
-  padding: 20px 10px;
+.plot {
+  margin: auto;
+  max-width: $md-screen;
 }
 
 .top-half {
-  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   min-height: 100%;
@@ -43,35 +26,14 @@
   margin: auto 0;
 }
 
-.header-custom {
-  min-height: 40px;
-  display: flex;
-  margin: 0;
-}
-
-.header-custom-span {
-  display: flex;
-  width: 100%;
-  font-weight: bold;
-  align-items: center;
-  justify-content: left !important;
-  text-align: left !important;
-  padding: 5px 15px;
-}
-
-.close-button {
-  height: 40px;
-  width: 40px;
-  min-width: unset;
-  padding: 0 !important;
-}
-
-.Button:disabled {
-  color: #ccc;
-  cursor: not-allowed;
-}
-
 .spinner-div {
   height: 2.6em;
   padding: 20px;
+}
+
+.year-type {
+  display: flex;
+  justify-content: center;
+  place-items: center;
+  gap: 15px;
 }

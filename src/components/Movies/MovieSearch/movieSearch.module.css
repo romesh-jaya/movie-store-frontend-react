@@ -1,12 +1,7 @@
-.search-input {
-  margin-bottom: 20px;
-  margin-top: 10px;
-}
-
-.movies {
+.movie-search {
   display: flex;
-  flex-flow: row wrap;
+  flex-wrap: wrap;
+  gap: 15px;
   justify-content: center;
-  width: 80%;
-  margin: auto;
+  place-items: center;
 }

@@ -1,27 +1,25 @@
-/* eslint-disable react/jsx-no-duplicate-props */
 import React, {
   useState,
   useEffect,
   ReactElement,
   useCallback,
   useRef,
+  ChangeEvent,
 } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import Form from 'react-bootstrap/esm/Form';
 import { useSnackbar } from 'notistack';
-import useMediaQuery from '@mui/material/useMediaQuery';
-
+import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
+import Button from 'react-bootstrap/esm/Button';
 import { useAuth0 } from '@auth0/auth0-react';
-import styles from './movieDetailsInput.module.css';
+
+import styles from './movieDetailsInput.module.scss';
 import globStyles from '../../../../index.module.scss';
 import { ICheckboxValue } from '../../../../interfaces/ICheckboxValue';
 import { TextConstants } from '../../../../constants/TextConstants';
 import { isAdmin } from '../../../../utils/AuthUtil';
 import { addItem, removeItem, cartItems } from '../../../../state/cart';
 import { getSettingValue } from '../../../../state/settings';
-import { PREFERS_DARK_MODE_MEDIA_QUERY } from '../../../../constants/Constants';
+import CustomLink from '../../../CustomLink/CustomLink';
 
 interface IProps {
   languagesInitial: string[];
@@ -32,7 +30,7 @@ interface IProps {
     selectedLanguages: string[],
     movieTotal: number
   ) => Promise<boolean>;
-  handleDrawerClose: () => void;
+  onDeleteClicked?: () => void;
 }
 
 const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
@@ -42,7 +40,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
     imdbID,
     title,
     onSaveClicked,
-    handleDrawerClose,
+    onDeleteClicked,
   } = props;
   const [movieTotal, setMovieTotal] = useState(0);
   const [movieValuesChanged, setMovieValuesChanged] = useState(false);
@@ -56,7 +54,6 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
   const { user } = useAuth0();
   const cartItemsArray = cartItems.use();
   const { enqueueSnackbar } = useSnackbar();
-  const prefersDarkMode = useMediaQuery(PREFERS_DARK_MODE_MEDIA_QUERY);
 
   const itemExists = (imdbID: string): boolean => {
     return !!cartItemsArray.find((itemOne) => itemOne.imdbID === imdbID);
@@ -117,11 +114,9 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
     setMovieTotal(movieTotalInitial);
   }, [movieTotalInitial]);
 
-  const onLanguageChecked = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean
-  ): void => {
+  const onLanguageChecked = (event: ChangeEvent<HTMLInputElement>): void => {
     const checkboxName = event.target.name;
+    const checked = event.target.checked;
 
     setErrorTextLanguages('');
     setMovieValuesChanged(true);
@@ -161,41 +156,47 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
     }
   };
 
+  const renderAddedToCart = () => {
+    return (
+      <>
+        <span className="me-4">Title added to cart</span>
+        <CustomLink to="/my-cart" ignoreDarkMode>
+          View
+        </CustomLink>
+      </>
+    );
+  };
+
   const onAddRemoveFromCart = (isAdd: boolean) => {
     if (isAdd) {
-      addItem({ title, imdbID, id: imdbID });
-      enqueueSnackbar('Title added to cart', { variant: 'success' });
+      addItem({ title, imdbID });
+      enqueueSnackbar(renderAddedToCart(), {
+        variant: 'success',
+        className: globStyles['snackbar-item-root-success'],
+      });
     } else {
       removeItem(imdbID);
       enqueueSnackbar('Title removed from cart');
     }
-
-    handleDrawerClose();
   };
 
   const renderLanguages = (): ReactElement => {
     return (
-      <div className={globStyles['margin-b-20']}>
-        <div className={globStyles['margin-b-10']}>Movie Languages:</div>
-        <div className={styles['language-container']}>
-          {languages.map((language) => {
-            return (
-              <FormControlLabel
-                key={`label${language}`}
-                control={
-                  <Checkbox
-                    disabled={!isAdmin(user)}
-                    checked={getCheckboxValue(language)}
-                    onChange={onLanguageChecked}
-                    name={`is${language}`}
-                    color="primary"
-                  />
-                }
-                label={language}
-              />
-            );
-          })}
-        </div>
+      <div className="mb-4">
+        <div className="mb-2">Movie Languages:</div>
+        <Form className={styles['language-container']}>
+          {languages.map((language) => (
+            <Form.Check
+              type="checkbox"
+              key={`label${language}`}
+              label={language}
+              disabled={!isAdmin(user)}
+              checked={getCheckboxValue(language)}
+              onChange={onLanguageChecked}
+              name={`is${language}`}
+            />
+          ))}
+        </Form>
         <div className={globStyles['error-text-small']}>
           <small>{errorTextLanguages}</small>
         </div>
@@ -208,49 +209,32 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
       <>
         {isAdmin(user) && (
           <>
-            <div className={globStyles['margin-b-20']}>
-              <span className={globStyles['margin-r-10']}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={onAddClicked}
-                >
-                  +1 to library
-                </Button>
-              </span>
+            <div className={`mb-3 ${styles['non-language']}`}>
+              <Button variant="primary" onClick={onAddClicked}>
+                +1 to library
+              </Button>
               <Button
-                variant="contained"
-                color="secondary"
+                variant="secondary"
                 onClick={onRemoveClicked}
                 disabled={movieTotal < 2}
               >
                 -1 from library
               </Button>
-            </div>
-            <div className={globStyles['margin-b-20']}>
-              <span className={globStyles['margin-r-30']}>
-                <TextField
-                  id="outlined-basic"
-                  label="Total Count"
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  inputProps={{
-                    style: { textAlign: 'right', width: '90px' },
-                  }}
-                  value={movieTotal}
-                  type="number"
-                  variant="standard"
-                />
-              </span>
-              <span className={styles['first-button']}>
-                <Button onClick={onReset} color="primary" variant="contained">
-                  Reset
+              {onDeleteClicked && (
+                <Button variant="secondary" onClick={onDeleteClicked}>
+                  Delete from library
                 </Button>
-              </span>
+              )}
+            </div>
+            <div className={`mb-3 ${styles['movie-count']}`}>
+              <FloatingLabel label="Total Count">
+                <Form.Control value={movieTotal} disabled />
+              </FloatingLabel>
+              <Button onClick={onReset} variant="primary">
+                Reset
+              </Button>
               <Button
-                variant="contained"
-                color="secondary"
+                variant="secondary"
                 onClick={onSaveClickedInternal}
                 disabled={!(movieValuesChanged && movieTotal)}
               >
@@ -259,15 +243,11 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
             </div>
           </>
         )}
-        <div>
+        <div className={`${styles['footer']}`}>
           <a
             href={`https://www.imdb.com/title/${imdbID}`}
             target="_blank"
             rel="noopener noreferrer"
-            className={styles['imdb-link']}
-            style={{
-              color: prefersDarkMode ? 'white' : '',
-            }}
           >
             View in IMDB
           </a>
@@ -275,8 +255,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
             <>
               {!itemExists(imdbID) && (
                 <Button
-                  variant="contained"
-                  color="primary"
+                  variant="primary"
                   onClick={() => onAddRemoveFromCart(true)}
                 >
                   Add to Cart
@@ -284,8 +263,7 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
               )}
               {itemExists(imdbID) && (
                 <Button
-                  variant="contained"
-                  color="secondary"
+                  variant="secondary"
                   onClick={() => onAddRemoveFromCart(false)}
                 >
                   Remove from Cart

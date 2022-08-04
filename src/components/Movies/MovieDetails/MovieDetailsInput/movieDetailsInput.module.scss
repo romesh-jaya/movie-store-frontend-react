@@ -1,0 +1,32 @@
+.language-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.non-language {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+.movie-count {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  place-items: center;
+
+  button {
+    height: 40px;
+  }
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  place-items: center;
+}
