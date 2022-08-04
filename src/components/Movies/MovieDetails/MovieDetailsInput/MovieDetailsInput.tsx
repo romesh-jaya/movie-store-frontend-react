@@ -8,7 +8,6 @@ import React, {
 } from 'react';
 import Form from 'react-bootstrap/esm/Form';
 import { useSnackbar } from 'notistack';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
 import Button from 'react-bootstrap/esm/Button';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -20,7 +19,6 @@ import { TextConstants } from '../../../../constants/TextConstants';
 import { isAdmin } from '../../../../utils/AuthUtil';
 import { addItem, removeItem, cartItems } from '../../../../state/cart';
 import { getSettingValue } from '../../../../state/settings';
-import { PREFERS_DARK_MODE_MEDIA_QUERY } from '../../../../constants/Constants';
 import CustomLink from '../../../CustomLink/CustomLink';
 
 interface IProps {
@@ -56,7 +54,6 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
   const { user } = useAuth0();
   const cartItemsArray = cartItems.use();
   const { enqueueSnackbar } = useSnackbar();
-  const prefersDarkMode = useMediaQuery(PREFERS_DARK_MODE_MEDIA_QUERY);
 
   const itemExists = (imdbID: string): boolean => {
     return !!cartItemsArray.find((itemOne) => itemOne.imdbID === imdbID);
@@ -251,10 +248,6 @@ const MovieDetailsInput: React.FC<IProps> = (props: IProps) => {
             href={`https://www.imdb.com/title/${imdbID}`}
             target="_blank"
             rel="noopener noreferrer"
-            className={styles['imdb-link']}
-            style={{
-              color: prefersDarkMode ? 'white' : '',
-            }}
           >
             View in IMDB
           </a>

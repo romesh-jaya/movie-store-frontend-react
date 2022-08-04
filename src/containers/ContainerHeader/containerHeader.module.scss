@@ -17,6 +17,8 @@
 
 .dropdown {
   button {
+    display: flex;
+    place-items: center;
     color: rgba(255, 255, 255, 0.55) !important;
     background-color: var(--color-navbar-bg) !important;
     border: none !important;
