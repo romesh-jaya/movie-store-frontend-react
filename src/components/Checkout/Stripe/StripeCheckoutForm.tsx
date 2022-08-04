@@ -6,7 +6,7 @@ import {
 } from '@stripe/react-stripe-js';
 
 import styles from './stripeCheckoutForm.module.scss';
-import { redirectFromCheckoutURLSuccess } from '../../constants/Constants';
+import { redirectFromCheckoutURLSuccess } from '../../../constants/Constants';
 
 interface IProps {
   orderId?: string;
