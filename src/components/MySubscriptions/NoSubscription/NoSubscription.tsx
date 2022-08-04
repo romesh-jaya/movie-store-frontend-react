@@ -48,11 +48,7 @@ export default function NoSubscription(props: IProps) {
             value={type.name}
             key={type.name}
             onClick={() => handleChangeSubscriptionType(type.name)}
-            variant={
-              chosenSubscription === type.name
-                ? 'secondary'
-                : 'outline-secondary'
-            }
+            variant={chosenSubscription === type.name ? 'info' : 'outline-info'}
           >
             {`${type.value} (${type.description}) - ${getSubscriptionPrice(
               type.name

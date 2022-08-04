@@ -5,7 +5,15 @@ Boostrap classes override START
 
 body {
   color: var(--color-body) !important;
-  background-color: unset !important;
+  background-color: var(--color-body-bg) !important;
+}
+
+.card {
+  color: var(--color-body) !important;
+  box-shadow: var(--color-card-box-shadow);
+  @media (prefers-color-scheme: dark) {
+    background: var(--color-card-bg) !important;
+  }
 }
 
 .btn-primary {
@@ -36,8 +44,36 @@ body {
   border-color: var(--color-secondary-hover) !important;
 }
 
-.btn-outline-secondary {
-  color: black !important;
+.btn-info {
+  color: var(--color-body) !important;
+  background-color: var(--color-info) !important;
+  border-color: var(--color-info) !important;
+  @media (prefers-color-scheme: dark) {
+    color: var(--color-body-bg) !important;
+  }
+}
+
+.btn-outline-info {
+  color: var(--color-body) !important;
+  border-color: var(--color-info) !important;
+}
+
+.btn-outline-info:hover {
+  background-color: var(--color-info) !important;
+  box-shadow: 0 0 0 0.1rem var(--color-primary) !important;
+}
+
+.btn-check:checked + .btn-info:focus,
+.btn-check:active + .btn-info:focus,
+.btn-info:active:focus,
+.btn-info.active:focus,
+.show > .btn-info.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.1rem var(--color-primary) !important;
+}
+
+.btn-check:focus + .btn-outline-info,
+.btn-outline-info:focus {
+  box-shadow: none !important;
 }
 
 .navbar-nav .dropdown-menu {
@@ -72,21 +108,35 @@ body {
   background-color: #e9ecef !important;
 }
 
+/* Related to pagination, START */
 .page-link {
   /* related to pagination */
-  color: #{var(--color-primary)} !important;
+  color: var(--color-body) !important;
+  box-shadow: var(--color-card-box-shadow);
+  border: var(--color-dark-border) !important;
+  @media (prefers-color-scheme: dark) {
+    background: var(--color-card-bg) !important;
+  }
+}
+
+.page-item.disabled .page-link {
+  color: #6c757d !important;
 }
 
 .page-item.active {
-  /* related to pagination */
   .page-link {
-    color: white !important;
+    color: var(--color-body-bg) !important;
+    background-color: var(--color-primary) !important;
+    @media (prefers-color-scheme: dark) {
+      color: var(--color-body) !important;
+    }
   }
 }
 
 .pagination {
   margin-bottom: 0 !important;
 }
+/* Related to pagination, END */
 
 .form-control {
   // resetting to UA defaults
@@ -109,14 +159,6 @@ body {
   @media (prefers-color-scheme: dark) {
     /* Fill color to white */
     background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") !important;
-  }
-}
-
-.card {
-  color: var(--color-body) !important;
-  box-shadow: var(--color-card-box-shadow);
-  @media (prefers-color-scheme: dark) {
-    background: var(--color-card-bg) !important;
   }
 }
 
@@ -167,6 +209,11 @@ body {
   @media (prefers-color-scheme: dark) {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
   }
+}
+
+.form-check-input:checked {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
 }
 
 /* 

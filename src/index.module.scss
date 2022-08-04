@@ -37,7 +37,8 @@ textarea {
   --color-secondary: #e8d2c0;
   --color-secondary-hover: #a29386;
   --color-success: #198754;
-  --color-info: #adb5bd;
+  --color-success-text: #198754;
+  --color-info: #cacfd4;
 
   /* Box shadows and background colors, START */
   --color-card-box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%),
@@ -47,6 +48,8 @@ textarea {
   @media (prefers-color-scheme: dark) {
     --color-body: #fff;
     --color-body-bg: #212529;
+    --color-success: #115e3a;
+    --color-success-text: #479f76;
     --color-card-box-shadow: 0px 24px 38px rgba(0, 0, 0, 0.14),
       0px 9px 46px rgba(0, 0, 0, 0.12), 0px 11px 15px rgba(0, 0, 0, 0.2);
     --color-dark-border: 1px solid rgba(255, 255, 255, 0.05);
@@ -98,6 +101,10 @@ Note: global classes, START
       justify-content: space-between;
     }
   }
+}
+
+.snackbar-item-root-success {
+  background-color: var(--color-success) !important;
 }
 
 .error-text {
