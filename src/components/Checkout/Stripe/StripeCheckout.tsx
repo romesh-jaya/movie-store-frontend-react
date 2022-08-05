@@ -59,9 +59,6 @@ export default function StripeCheckout() {
   };
 
   useEffect(() => {
-    if (titlesRented.length === 0) {
-      navigate('/'); // probably came here by directly typing the URL
-    }
     createPaymentIntent();
   }, []);
 

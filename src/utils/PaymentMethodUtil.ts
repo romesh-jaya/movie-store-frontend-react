@@ -11,3 +11,13 @@ export const getPaymentMethod = () => {
       throw new Error(`Payment method ${paymentMethod} doesn't exist`);
   }
 };
+
+export const getPayPalClientID = () => {
+  const payPalClientID = import.meta.env.VITE_PAYPAL_CLIENT_ID;
+
+  if (!payPalClientID) {
+    throw new Error(`PayPal Client ID doesn't exist`);
+  }
+
+  return payPalClientID;
+};
