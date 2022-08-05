@@ -1,11 +1,21 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 import { PaymentMethodType } from '../../enums/PaymentMethodType';
-import { getPaymentMethod } from '../../utils/PaymentMethodUtil';
+import {
+  getPaymentMethod,
+  getPayPalClientID,
+} from '../../utils/PaymentMethodUtil';
 import StripeCheckout from './Stripe/StripeCheckout';
 import { cartItems } from '../../state/cart';
 import PayPalCheckout from './PayPal/PayPalCheckout';
+import styles from './checkout.module.scss';
+
+const payPalOptions = {
+  'client-id': getPayPalClientID(),
+  components: 'buttons',
+};
 
 const paymentMethod = getPaymentMethod();
 
@@ -20,9 +30,14 @@ export default function Checkout() {
     }
   }, []);
 
-  if (paymentMethod === PaymentMethodType.Stripe) {
-    return <StripeCheckout />;
-  }
-
-  return <PayPalCheckout />;
+  return (
+    <div className={`my-4 ${styles['container']}`}>
+      {paymentMethod === PaymentMethodType.Stripe && <StripeCheckout />}
+      {paymentMethod === PaymentMethodType.PayPal && (
+        <PayPalScriptProvider options={payPalOptions}>
+          <PayPalCheckout />
+        </PayPalScriptProvider>
+      )}
+    </div>
+  );
 }

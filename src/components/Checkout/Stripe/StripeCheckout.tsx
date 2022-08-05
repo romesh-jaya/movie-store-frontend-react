@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 import StripeCheckoutForm from './StripeCheckoutForm';
 import axios from '../../../axios';
 import { cartItems } from '../../../state/cart';
-import styles from './stripeCheckout.module.scss';
 import globStyles from '../../../index.module.scss';
 import { redirectFromCheckoutURLSuccessNoCheckout } from '../../../constants/Constants';
 import Button from 'react-bootstrap/esm/Button';
@@ -68,7 +67,7 @@ export default function StripeCheckout() {
   };
 
   return (
-    <div className={`my-4 ${styles['container']}`}>
+    <>
       {clientSecret && (
         <Elements options={options} stripe={stripePromise}>
           <StripeCheckoutForm orderId={orderId} />
@@ -86,6 +85,6 @@ export default function StripeCheckout() {
           </div>
         </>
       )}
-    </div>
+    </>
   );
 }

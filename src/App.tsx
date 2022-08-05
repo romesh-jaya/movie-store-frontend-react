@@ -3,14 +3,12 @@ import { Route, Routes } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { SnackbarProvider } from 'notistack';
 import Container from 'react-bootstrap/Container';
-import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 import globStyles from './index.module.scss';
 import axios from './axios';
 import ContainerHeader from './containers/ContainerHeader/ContainerHeader';
 import Spinner from './components/UI/Spinner/Spinner';
 import { manageUserSession } from './utils/UserSession';
-import { getPayPalClientID } from './utils/PaymentMethodUtil';
 
 const Login = React.lazy(() => import('./components/Login/Login'));
 const TransactionResult = React.lazy(
@@ -34,10 +32,6 @@ const MySubscriptions = React.lazy(
 );
 
 const SERVER_PATH = import.meta.env.VITE_NODE_SERVER || '';
-
-const payPalOptions = {
-  'client-id': getPayPalClientID(),
-};
 
 const App: React.FC = () => {
   const { getAccessTokenSilently, isLoading: isLoadingAuth } = useAuth0();
@@ -98,12 +92,10 @@ const App: React.FC = () => {
       anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
       classes={{ root: globStyles['snackbar-item-root'] }}
     >
-      <PayPalScriptProvider deferLoading options={payPalOptions}>
-        <Container fluid className="d-flex flex-column min-vh-100 px-0">
-          <ContainerHeader />
-          {renderContent()}
-        </Container>
-      </PayPalScriptProvider>
+      <Container fluid className="d-flex flex-column min-vh-100 px-0">
+        <ContainerHeader />
+        {renderContent()}
+      </Container>
     </SnackbarProvider>
   );
 };
