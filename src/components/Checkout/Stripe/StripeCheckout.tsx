@@ -6,13 +6,14 @@ import {
 } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { useNavigate } from 'react-router-dom';
+import Button from 'react-bootstrap/esm/Button';
 
 import StripeCheckoutForm from './StripeCheckoutForm';
 import axios from '../../../axios';
 import { cartItems } from '../../../state/cart';
 import globStyles from '../../../index.module.scss';
 import { redirectFromCheckoutURLSuccessNoCheckout } from '../../../constants/Constants';
-import Button from 'react-bootstrap/esm/Button';
+import Spinner from '../../UI/Spinner/Spinner';
 
 // Note: the code for this has mostly been taken from Stripe's examples
 // Make sure to call loadStripe outside of a component’s render to avoid
@@ -28,6 +29,7 @@ export default function StripeCheckout() {
   const [orderId, setOrderId] = useState('');
   const [error, setError] = useState('');
   const cartItemsArray = cartItems.use();
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const titlesRented = cartItemsArray.map((item) => item.title);
 
@@ -54,6 +56,8 @@ export default function StripeCheckout() {
       setOrderId(orderId);
     } catch (error) {
       setError(`Error while creating payment intent: ${error}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -65,6 +69,14 @@ export default function StripeCheckout() {
     clientSecret,
     appearance,
   };
+
+  if (isLoading) {
+    return (
+      <div className={globStyles['spinner-full-page']}>
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <>
