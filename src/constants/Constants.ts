@@ -1,5 +1,7 @@
 export const SEARCH_URL = import.meta.env.VITE_SEARCH_URL || '';
 
+export const storeName = 'Ultra Movie Shop';
+
 export const pageSize = 10;
 
 export const redirectFromCheckoutURLCancelled =

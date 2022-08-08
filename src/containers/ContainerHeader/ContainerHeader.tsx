@@ -12,6 +12,7 @@ import logo from '../../assets/img/movie.svg';
 import styles from './containerHeader.module.scss';
 import { isAdmin } from '../../utils/AuthUtil';
 import Dropdown from 'react-bootstrap/esm/Dropdown';
+import { storeName } from '../../constants/Constants';
 
 const ContainerHeader: React.FC = () => {
   const location = useLocation();
@@ -38,7 +39,7 @@ const ContainerHeader: React.FC = () => {
               alt="movies"
               className={styles.logo}
             />
-            <div>Ultra Movie Shop</div>
+            <div>{storeName}</div>
           </Navbar.Brand>
           {!dontShowNavBarPaths && (
             <>

@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/esm/Button';
 
 import globStyles from '../../index.module.scss';
 import styles from './login.module.css';
+import { storeName } from '../../constants/Constants';
 
 // Note: the Auth0 hosted Universal classic login screen has been customized in order to pass a custom
 //       param - passwordLoginOnly. The customized login screen can be accessed via:
@@ -42,8 +43,7 @@ const Login: React.FC = () => {
         <div className="my-4">
           {!isAdminLogin && (
             <p>
-              Welcome! Sign in to browse movies and TV series at Ultra Movie
-              Shop
+              {`Welcome! Sign in to browse movies and TV series at ${storeName}`}
             </p>
           )}
         </div>

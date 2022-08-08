@@ -1,4 +1,4 @@
-import { PayPalButtons } from '@paypal/react-paypal-js';
+import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/esm/Button';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,11 @@ import { cartItems } from '../../../state/cart';
 import { prices, titlePriceId } from '../../../state/price';
 import globStyles from '../../../index.module.scss';
 import Spinner from '../../UI/Spinner/Spinner';
+import {
+  storeName,
+  redirectFromCheckoutURLSuccessNoCheckout,
+} from '../../../constants/Constants';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export default function PayPalCheckout() {
   const navigate = useNavigate();
@@ -17,6 +22,8 @@ export default function PayPalCheckout() {
   const titlesRented = cartItemsArray.map((item) => item.title);
   const pricesArray = prices.use();
   const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth0();
+  const [{ isPending, isRejected }] = usePayPalScriptReducer();
 
   const pricePerTitle =
     pricesArray.find((price) => price.lookupKey === titlePriceId)?.price || 0;
@@ -33,13 +40,21 @@ export default function PayPalCheckout() {
             value: pricePerTitle * cartItemsArray.length,
           },
           reference_id: orderId,
+          description: storeName,
+          payee: {
+            email: user?.email,
+          },
         },
       ],
+      application_context: {
+        shipping_preference: 'NO_SHIPPING',
+        brand_name: storeName,
+      },
     });
   };
   const onApprove = async (_: any, actions: any) => {
     await actions.order.capture();
-    alert(`Transaction completed`);
+    navigate(`${redirectFromCheckoutURLSuccessNoCheckout}?orderId=${orderId}`);
   };
 
   const createPaymentIntent = async () => {
@@ -67,7 +82,7 @@ export default function PayPalCheckout() {
     createPaymentIntent();
   }, []);
 
-  if (isLoading) {
+  if (isLoading || isPending) {
     return (
       <div className={globStyles['spinner-full-page']}>
         <Spinner />
@@ -77,7 +92,7 @@ export default function PayPalCheckout() {
 
   return (
     <>
-      {!error && (
+      {!error && !isRejected && (
         <PayPalButtons
           createOrder={(data, actions) => createOrder(data, actions)}
           onApprove={(data, actions) => onApprove(data, actions)}
