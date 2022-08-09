@@ -34,6 +34,7 @@ Tech Stack used:
   - Payments with pre-built checkout page and Stripe React library
   - Subscriptions
   - Webhooks for payment completion
+- Paypal checkout
 - Pagination
 - Material UI [in this branch](https://github.com/romesh-jaya/movie-store-frontend-react/tree/material-ui)
   - useMediaQuery hook
@@ -61,6 +62,16 @@ Stripe is running in TEST mode currently. Test cards to use are as follows:
 - Payment requires authentication: 4000 0025 0000 3155
 - Payment is declined: 4000 0000 0000 9995
 
+Any CVC and expiry date will work for the above.
+
+## PayPal payments
+
+PayPal is running in sandbox mode currently. Test cards to use are as follows:
+
+- Card No - 4032039029917251
+- Expiry - 12/2027
+- CVC - 593
+
 ## .env variables
 
 All fields mentioned in .env.example must be filled with correct values and renamed as .env.
@@ -69,6 +80,8 @@ All fields mentioned in .env.example must be filled with correct values and rena
 - VITE_REDIRECT_TO_STRIPE - Whether to use Stripe Prebuilt Checkout Page or React Components
 - VITE_STRIPE_PK_TEST - Stripe public key
 - VITE_NODE_SERVER - Backend Server URL
+- VITE_PAYMENT_METHOD - either 'PAYPAL' or 'STRIPE'
+- VITE_PAYPAL_CLIENT_ID - Paypal Client ID
 
 ## Backend Server Source
 
