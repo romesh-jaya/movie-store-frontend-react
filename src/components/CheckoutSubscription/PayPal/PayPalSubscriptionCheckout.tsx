@@ -1,9 +1,13 @@
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import Button from 'react-bootstrap/esm/Button';
 import { useNavigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 
 import globStyles from '../../../index.module.scss';
-import { redirectFromCheckoutURLSuccessSubscription } from '../../../constants/Constants';
+import {
+  redirectFromCheckoutURLSuccessSubscription,
+  storeName,
+} from '../../../constants/Constants';
 import Spinner from '../../UI/Spinner/Spinner';
 
 interface IProps {
@@ -14,10 +18,16 @@ export default function PayPalSubscriptionCheckout(props: IProps) {
   const navigate = useNavigate();
   const { planIDPayPal } = props;
   const [{ isPending, isRejected }] = usePayPalScriptReducer();
+  const { user } = useAuth0();
 
   const createSubscription = (_: any, actions: any) => {
     return actions.subscription.create({
       plan_id: planIDPayPal,
+      application_context: {
+        shipping_preference: 'NO_SHIPPING',
+        brand_name: storeName,
+      },
+      custom_id: user?.email,
     });
   };
 
