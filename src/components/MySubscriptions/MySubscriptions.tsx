@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import styles from './mySubscriptions.module.scss';
 import globStyles from '../../index.module.scss';
@@ -13,10 +14,10 @@ import {
   getSubscriptionTypeValue,
 } from '../../utils/SubscriptionUtil';
 
-import { initPrices, prices } from '../../state/price';
-import { getPrices } from '../../api/server/server';
 import SubscriptionExists from './SubscriptionExists/SubscriptionExists';
 import NoSubscription from './NoSubscription/NoSubscription';
+import { getPaymentMethod } from '../../utils/PaymentMethodUtil';
+import { PaymentMethodType } from '../../enums/PaymentMethodType';
 
 interface ISubscriptionInfo {
   lookupKey?: string;
@@ -24,10 +25,12 @@ interface ISubscriptionInfo {
   currentPeriodEnd: Date;
 }
 
+const paymentMethod = getPaymentMethod();
+
 const MySubscriptions: React.FC = () => {
-  const pricesArray = prices.use();
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   const [subscriptionInfo, setSubscriptionInfo] = useState<ISubscriptionInfo>({
     currentPeriodEnd: new Date(),
@@ -48,27 +51,31 @@ const MySubscriptions: React.FC = () => {
   const proceedToSubscribe = async (chosenSubscription: string) => {
     setError('');
 
-    try {
-      setIsLoading(true);
-      const response = await axios.post(
-        `${
-          import.meta.env.VITE_NODE_SERVER
-        }/payments/stripe/subscriptions/create-checkout-session-subscription`,
-        {
-          lookup_key: chosenSubscription,
-          redirectFromCheckoutURLCancelled:
-            redirectFromCheckoutURLCancelledSubscription,
-          redirectFromCheckoutURLSuccess:
-            redirectFromCheckoutURLSuccessSubscription,
-        }
-      );
-      const newURL = response.data.url;
-      console.info('Redirecting to : ', newURL);
-      window.location.href = newURL;
-    } catch (error) {
-      setError(`Error while submitting payment: ${error}`);
-      setIsLoading(false);
+    if (paymentMethod === PaymentMethodType.Stripe) {
+      try {
+        setIsLoading(true);
+        const response = await axios.post(
+          `${
+            import.meta.env.VITE_NODE_SERVER
+          }/payments/stripe/subscriptions/create-checkout-session-subscription`,
+          {
+            lookup_key: chosenSubscription,
+            redirectFromCheckoutURLCancelled:
+              redirectFromCheckoutURLCancelledSubscription,
+            redirectFromCheckoutURLSuccess:
+              redirectFromCheckoutURLSuccessSubscription,
+          }
+        );
+        const newURL = response.data.url;
+        console.info('Redirecting to : ', newURL);
+        window.location.href = newURL;
+      } catch (error) {
+        setError(`Error while submitting payment: ${error}`);
+        setIsLoading(false);
+      }
+      return;
     }
+    navigate(`/checkout-subscription?chosenSubscription=${chosenSubscription}`);
   };
 
   const proceedToCustomerPortal = async () => {
@@ -117,25 +124,11 @@ const MySubscriptions: React.FC = () => {
     }
   };
 
-  const fetchPrices = async () => {
-    try {
-      const priceInfo = await getPrices();
-      initPrices(priceInfo);
-    } catch (error) {
-      setError(`Error while fetching prices: ${error}`);
-    }
-  };
-
   useEffect(() => {
     const loadData = async () => {
-      const promiseArray = [retrieveSubscriptionInfo()];
-      if (pricesArray.length === 0) {
-        promiseArray.push(fetchPrices());
-      }
-
       setError('');
       setIsLoading(true);
-      await Promise.all(promiseArray);
+      await retrieveSubscriptionInfo();
       setIsLoading(false);
     };
     loadData();

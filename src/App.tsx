@@ -27,6 +27,9 @@ const PrivateRoute = React.lazy(() => import('./components/PrivateRoute'));
 const AdminRoute = React.lazy(() => import('./components/AdminRoute'));
 const ErrorPage = React.lazy(() => import('./components/Error/Error'));
 const Checkout = React.lazy(() => import('./components/Checkout/Checkout'));
+const CheckoutSubscription = React.lazy(
+  () => import('./components/CheckoutSubscription/CheckoutSubscription')
+);
 const MySubscriptions = React.lazy(
   () => import('./components/MySubscriptions/MySubscriptions')
 );
@@ -68,6 +71,10 @@ const App: React.FC = () => {
             <Route path="/" element={<MyLibrary />} />
             <Route path="/my-cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route
+              path="/checkout-subscription"
+              element={<CheckoutSubscription />}
+            />
             <Route path="/my-subscriptions" element={<MySubscriptions />} />
             <Route path="/transaction-result" element={<TransactionResult />} />
             <Route path="/" element={<AdminRoute />}>

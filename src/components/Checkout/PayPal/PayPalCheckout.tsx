@@ -12,7 +12,6 @@ import {
   storeName,
   redirectFromCheckoutURLSuccessNoCheckout,
 } from '../../../constants/Constants';
-import { useAuth0 } from '@auth0/auth0-react';
 
 export default function PayPalCheckout() {
   const navigate = useNavigate();
@@ -22,7 +21,6 @@ export default function PayPalCheckout() {
   const titlesRented = cartItemsArray.map((item) => item.title);
   const pricesArray = prices.use();
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = useAuth0();
   const [{ isPending, isRejected }] = usePayPalScriptReducer();
 
   const pricePerTitle =
@@ -41,9 +39,6 @@ export default function PayPalCheckout() {
           },
           reference_id: orderId,
           description: storeName,
-          payee: {
-            email: user?.email,
-          },
         },
       ],
       application_context: {
@@ -52,6 +47,7 @@ export default function PayPalCheckout() {
       },
     });
   };
+
   const onApprove = async (_: any, actions: any) => {
     await actions.order.capture();
     navigate(`${redirectFromCheckoutURLSuccessNoCheckout}?orderId=${orderId}`);

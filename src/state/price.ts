@@ -6,6 +6,7 @@ export interface IPrice {
   lookupKey: string;
   price: number;
   currency: string;
+  planIDPayPal?: string;
 }
 
 export const prices = entity<IPrice[]>([]);
