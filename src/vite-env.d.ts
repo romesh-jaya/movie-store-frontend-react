@@ -18,6 +18,7 @@ interface ImportMetaEnv {
   readonly VITE_STRIPE_PK_TEST: string;
   readonly VITE_PAYMENT_METHOD: string;
   readonly VITE_PAYPAL_CLIENT_ID: string;
+  readonly VITE_PAYPAL_MANAGE_SUB_URL: string;
   // more env variables...
 }
 

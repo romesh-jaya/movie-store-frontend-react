@@ -82,6 +82,7 @@ All fields mentioned in .env.example must be filled with correct values and rena
 - VITE_NODE_SERVER - Backend Server URL
 - VITE_PAYMENT_METHOD - either 'PAYPAL' or 'STRIPE'
 - VITE_PAYPAL_CLIENT_ID - Paypal Client ID
+- VITE_PAYPAL_MANAGE_SUB_URL - URL to manage client Paypal Subscriptions
 
 ## Backend Server Source
 

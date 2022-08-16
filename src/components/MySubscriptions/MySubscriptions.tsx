@@ -81,28 +81,37 @@ const MySubscriptions: React.FC = () => {
   const proceedToCustomerPortal = async () => {
     setError('');
 
-    try {
-      setIsLoading(true);
-      const response = await axios.post(
-        `${
-          import.meta.env.VITE_NODE_SERVER
-        }/payments/stripe/portal/create-customer-portal-session`,
-        {
-          redirectFromCheckoutURLSuccess:
-            redirectFromCheckoutURLSuccessSubscription,
-        }
-      );
-      const newURL = response.data.url;
-      console.info('Redirecting to : ', newURL);
-      window.open(
-        newURL,
-        '_blank' // open in a new tab
-      );
-    } catch (error) {
-      setError(`Error while redirecting to customer portal: ${error}`);
-    } finally {
-      setIsLoading(false);
+    if (paymentMethod === PaymentMethodType.Stripe) {
+      try {
+        setIsLoading(true);
+        const response = await axios.post(
+          `${
+            import.meta.env.VITE_NODE_SERVER
+          }/payments/stripe/portal/create-customer-portal-session`,
+          {
+            redirectFromCheckoutURLSuccess:
+              redirectFromCheckoutURLSuccessSubscription,
+          }
+        );
+        const newURL = response.data.url;
+        console.info('Redirecting to : ', newURL);
+        window.open(
+          newURL,
+          '_blank' // open in a new tab
+        );
+      } catch (error) {
+        setError(`Error while redirecting to customer portal: ${error}`);
+      } finally {
+        setIsLoading(false);
+      }
+      return;
     }
+    const newURL = import.meta.env.VITE_PAYPAL_MANAGE_SUB_URL;
+    console.info('Redirecting to : ', newURL);
+    window.open(
+      newURL,
+      '_blank' // open in a new tab
+    );
   };
 
   const retrieveSubscriptionInfo = async () => {
