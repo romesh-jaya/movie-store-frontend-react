@@ -30,6 +30,7 @@ export default function PayPalCheckout() {
     '';
 
   const createOrder = (_: any, actions: any) => {
+    // TODO: need verification later in server that the amount receieved was actually the total price
     return actions.order.create({
       purchase_units: [
         {
@@ -65,7 +66,14 @@ export default function PayPalCheckout() {
           titlesRented,
         }
       );
-      const { orderId } = response.data;
+      const { orderId, subscriptionActive } = response.data;
+      if (subscriptionActive) {
+        navigate(
+          `${redirectFromCheckoutURLSuccessNoCheckout}?orderId=${orderId}`
+        );
+        return;
+      }
+
       setOrderId(orderId);
     } catch (error) {
       setError(`Error while creating payment intent: ${error}`);

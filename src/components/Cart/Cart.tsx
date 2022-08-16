@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -11,8 +11,9 @@ import { cartItems, removeItem } from '../../state/cart';
 import styles from './cart.module.scss';
 import globStyles from '../../index.module.scss';
 import axios from '../../axios';
-import { prices, titlePriceId } from '../../state/price';
+import { initPrices, prices, titlePriceId } from '../../state/price';
 import Spinner from '../UI/Spinner/Spinner';
+import { getPrices } from '../../api/server/server';
 import CustomLink from '../CustomLink/CustomLink';
 import MovieTable from '../Movies/MovieTable/MovieTable';
 import Button from 'react-bootstrap/esm/Button';
@@ -22,7 +23,7 @@ const Cart: React.FC = () => {
   const pricesArray = prices.use();
   const navigate = useNavigate();
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
   const pricePerTitle =
@@ -30,6 +31,12 @@ const Cart: React.FC = () => {
   const priceCurrency =
     pricesArray.find((price) => price.lookupKey === titlePriceId)?.currency ||
     '';
+
+  useEffect(() => {
+    // fetchPrices must always be called on visiting this page,
+    // as there may have been a price change due to subscription changes
+    fetchPrices();
+  }, []);
 
   const proceedToRent = async () => {
     const titlesRented = cartItemsArray.map((item) => item.title);
@@ -64,6 +71,19 @@ const Cart: React.FC = () => {
       navigate(url);
     } catch (error) {
       setError(`Error while submitting payment: ${error}`);
+      setIsLoading(false);
+    }
+  };
+
+  const fetchPrices = async () => {
+    setError('');
+
+    try {
+      const priceInfo = await getPrices();
+      initPrices(priceInfo);
+    } catch (error) {
+      setError(`Error while fetching prices: ${error}`);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -103,14 +123,14 @@ const Cart: React.FC = () => {
                 resultsFoundText={`${cartItemsArray.length} items`}
               />
               <p className={styles['subscription-info']}>
-                Your DVD subscription is currently <span>active</span>.
+                Total:{' '}
+                <span>{`${(pricePerTitle * cartItemsArray.length).toFixed(
+                  2
+                )} ${priceCurrency.toUpperCase()}`}</span>
               </p>
               {pricePerTitle === 0 ? (
                 <p className={styles['subscription-info']}>
-                  Total:{' '}
-                  <span>{`${(pricePerTitle * cartItemsArray.length).toFixed(
-                    2
-                  )} ${priceCurrency.toUpperCase()}`}</span>
+                  Your DVD subscription is currently <span>active</span>.
                 </p>
               ) : (
                 <p className={`my-4 ${styles['subscription-info']}`}>
