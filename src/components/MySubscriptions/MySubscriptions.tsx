@@ -110,7 +110,7 @@ const MySubscriptions: React.FC = () => {
       const response = await axios.get(
         `${
           import.meta.env.VITE_NODE_SERVER
-        }/payments/stripe/subscriptions/get-user-subscription`
+        }/payments/${paymentMethod.toLowerCase()}/subscriptions/get-user-subscription`
       );
       setSubscriptionInfo({
         lookupKey: response.data.lookupKey,

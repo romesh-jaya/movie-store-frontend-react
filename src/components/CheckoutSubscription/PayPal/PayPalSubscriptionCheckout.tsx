@@ -5,7 +5,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 import globStyles from '../../../index.module.scss';
 import {
-  redirectFromCheckoutURLSuccessSubscription,
+  redirectFromCheckoutURLSuccessSubscriptionPayPal,
   storeName,
 } from '../../../constants/Constants';
 import Spinner from '../../UI/Spinner/Spinner';
@@ -32,9 +32,7 @@ export default function PayPalSubscriptionCheckout(props: IProps) {
   };
 
   const onApprove = async () => {
-    const newURL = redirectFromCheckoutURLSuccessSubscription;
-    console.info('Redirecting to : ', newURL);
-    window.location.href = newURL;
+    navigate(redirectFromCheckoutURLSuccessSubscriptionPayPal);
   };
 
   if (isPending) {

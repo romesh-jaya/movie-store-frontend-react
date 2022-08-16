@@ -10,3 +10,4 @@ export const redirectFromCheckoutURLSuccess = `${window.location.origin.toString
 export const redirectFromCheckoutURLSuccessNoCheckout = `/transaction-result`;
 export const redirectFromCheckoutURLSuccessSubscription = `${window.location.origin.toString()}/my-subscriptions`;
 export const redirectFromCheckoutURLCancelledSubscription = `${window.location.origin.toString()}/my-subscriptions`;
+export const redirectFromCheckoutURLSuccessSubscriptionPayPal = `/my-subscriptions`;
