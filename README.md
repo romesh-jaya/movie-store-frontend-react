@@ -34,7 +34,10 @@ Tech Stack used:
   - Payments with pre-built checkout page and Stripe React library
   - Subscriptions
   - Webhooks for payment completion
-- Paypal checkout
+- Paypal
+  - Payments with Paypal React library
+  - Subscriptions
+  - Webhooks for payment completion
 - Pagination
 - Material UI [in this branch](https://github.com/romesh-jaya/movie-store-frontend-react/tree/material-ui)
   - useMediaQuery hook
@@ -114,7 +117,5 @@ The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
 
 ## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
