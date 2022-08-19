@@ -13,12 +13,14 @@ import styles from './containerHeader.module.scss';
 import { isAdmin } from '../../utils/AuthUtil';
 import Dropdown from 'react-bootstrap/esm/Dropdown';
 import { storeName } from '../../constants/Constants';
+import { cartItems } from '../../state/cart';
 
 const ContainerHeader: React.FC = () => {
   const location = useLocation();
   const { user, logout } = useAuth0();
   const dontShowNavBarPaths = location.pathname.includes('login');
   const { closeSnackbar } = useSnackbar();
+  const cartItemsArray = cartItems.use();
 
   const onLogoutClicked = (): void => {
     logout({ returnTo: `${window.location.origin}/login` });
@@ -27,6 +29,19 @@ const ContainerHeader: React.FC = () => {
   useEffect(() => {
     closeSnackbar();
   }, [location]);
+
+  const renderCartLabel = () => {
+    return (
+      <div>
+        Cart
+        {cartItemsArray.length > 0 && (
+          <span className={styles['number-items']}>
+            {cartItemsArray.length}
+          </span>
+        )}
+      </div>
+    );
+  };
 
   return (
     <>
@@ -53,7 +68,9 @@ const ContainerHeader: React.FC = () => {
                   </LinkContainer>
                   {!isAdmin(user) && (
                     <LinkContainer to="/my-cart">
-                      <Nav.Link eventKey="/my-cart">Cart</Nav.Link>
+                      <Nav.Link eventKey="/my-cart">
+                        {renderCartLabel()}
+                      </Nav.Link>
                     </LinkContainer>
                   )}
                   {isAdmin(user) && (
@@ -81,7 +98,7 @@ const ContainerHeader: React.FC = () => {
                   {!isAdmin(user) && (
                     <LinkContainer to="/my-cart">
                       <Dropdown.Item className={styles['menu-item']}>
-                        Cart
+                        {renderCartLabel()}
                       </Dropdown.Item>
                     </LinkContainer>
                   )}
