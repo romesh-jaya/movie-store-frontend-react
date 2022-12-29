@@ -11,6 +11,8 @@ const DOMAIN = import.meta.env.VITE_AUTH0_DOMAIN || '';
 const CLIENT_ID = import.meta.env.VITE_AUTH0_CLIENT_ID || '';
 const AUDIENCE = import.meta.env.VITE_AUTH0_AUDIENCE;
 
+// Note: used Refresh Token Rotation and cacheLocation to “localstorage” when initializing the Auth0 client.
+// as per https://community.auth0.com/t/why-is-authentication-lost-after-refreshing-my-single-page-application/56276
 ReactDOM.render(
   <ErrorBoundary>
     <Auth0Provider
@@ -18,6 +20,8 @@ ReactDOM.render(
       clientId={CLIENT_ID}
       audience={AUDIENCE}
       redirectUri={window.location.origin}
+      useRefreshTokens
+      cacheLocation="localstorage"
     >
       <Router>
         <App />
