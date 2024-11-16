@@ -8,9 +8,6 @@ Movie Shop is an app that can be used for managing a movie library in a DVD rent
 
 The app also allows potential customers to login and browse the available titles.
 
-The app is hosted here:
-https://movie-shop-dev.web.app/
-
 Quick start guide can be found [here](https://github.com/romesh-jaya/movie-store-frontend-react/blob/master/Quick%20Start%20Guide.pdf?raw=true).
 
 ## Technical details
