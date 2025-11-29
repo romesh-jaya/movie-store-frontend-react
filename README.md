@@ -45,12 +45,43 @@ Tech Stack used:
 
 This project uses OMDB API to search for movie data. The latter has a 1,000 daily API call limit. Another free alternative might be TMDB: https://developers.themoviedb.org/3/getting-started
 
-This app communicates with the backend - which is available in a separate git project: movie-shop-backend.
+## Screenshots
 
-To deploy to Firebase hosting, first perform a build, then run the following command from the terminal:
-firebase deploy --only hosting
 
-Note: MongoDB automatically goes to inactive state after a period of inactivity, and needs restarting manually.
+<p align="center">
+Movie Search
+</p>
+
+<div align="center">
+  <img width="902" height="894" alt="Movie Search" src="https://github.com/user-attachments/assets/948a67e6-7038-4393-b047-77dcae91eafb" style="object-fit: contain;"  />
+</div>
+
+---
+
+<p align="center">
+Movie Search results
+</p>
+
+<div align="center">
+  <img width="874" height="1006" alt="Movie Search results" src="https://github.com/user-attachments/assets/bcd1b07f-91e7-4419-8f01-07abfe979b72" style="object-fit: contain;" />
+</div>
+
+---
+
+<p align="center">
+Paypal payments
+</p>
+
+<div align="center">
+  <img width="778" height="588" alt="Paypal payments" src="https://github.com/user-attachments/assets/c6d8587f-2312-49b5-b208-e6a28804ef22" style="object-fit: contain;"/>
+</div>
+
+
+
+
+
+
+
 
 ## Stripe payments
 
